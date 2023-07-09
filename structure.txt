@@ -1,0 +1,58 @@
+moja gra ColonyBattle:
+
+szkic:
+
+abstract Person:
+-health:int
+-energy:int
+-strength
+-Vector2d
+-colony:Colony
+-land_appropriation:int //stopien przywlaszaczania ziemi (im wyzszy, tym szybciej dane pole jest przywlaszczone przez kolonię)
++attack()
++run() //przemieszczenie na inny wektor
++die() 
++regenerate() //szybkosc regeneracji energii
++give_birth //gdy dwie osoby z tej samej kolonii są na tym samym polu to warunki rodzenia nowej osoby tu są podane
+
+----------------
+Warrior extends Person:
+//ma dużo siły
+-------------
+Farmer extends Person:
+// wysoki stopień przywłaszczania ziemi (gdy wchodzi na dane pole to od razu to pole staje się wlasnością kolonii)
+-------------
+Defender extends Person:
+//ma dużo zdrowia
+-------------
+Wizard extends Person implements Magic:
+// ma bardzo dużo energii która się szybko regeneruje
+// override wand() //leczy postacie w zasięgu 3 kratek raz na kilka sekund.
+// override heal_myself() //leczy się raz na kilka sekund
+
+-----------
+interface Magic:
+wand()
+heal_myself()
+
+-----------
+Vector2d:
+-x
+-y
+-membership //(okresla przynaleznosc do kolonii - referencja do odpowiedniej instancji Colony)
+- appropriation_rate:int //okresla jak bardzo dane pole przynalezy do danej 
+
+------------
+Colony:
+-people:<Person> pokazuje osoby w kolonii
+-fields:hashSet<Vector2d> okresla  pola które przynależą do tej kolonii
+- points: int okresla ilosc punktow
+
+------------
+board:
+-size:int CONSTANT 20
+-all_Colonies <Colony> //wszystkie kolonie
+
+
+
+
