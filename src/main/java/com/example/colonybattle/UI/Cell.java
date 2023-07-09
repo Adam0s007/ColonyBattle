@@ -15,7 +15,7 @@ public class Cell extends JPanel {
         initColor();  // Domyślny kolor
 
         // Tworzenie obramowania
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        Border border = BorderFactory.createLineBorder(new Color(0,184,70));
         this.setBorder(border);
     }
 

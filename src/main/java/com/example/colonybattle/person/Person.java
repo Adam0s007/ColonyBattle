@@ -4,8 +4,9 @@ import com.example.colonybattle.*;
 
 import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.Colors.Color;
+import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.UI.Cell;
-import javafx.scene.shape.Rectangle;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -14,13 +15,6 @@ public abstract class Person implements Runnable{
     protected int energy;
     protected int strength;
     protected int id;
-
-    private Cell cell;
-
-    public void setCell(Cell cell) {
-        this.cell = cell;
-    }
-
 
     public void setPosition(Vector2d position) {
         this.position = position;
@@ -39,7 +33,7 @@ public abstract class Person implements Runnable{
         this.colony = colony;
         this.landAppropriation = landAppropriation;
         this.id = id;
-        Engine.getFrame().setColorAtPosition(this.position);
+        newColorAt(this.position);
     }
     // konstruktor z domyslnymi parametrami i randomowym polozeniem
     public Person(){
@@ -49,7 +43,8 @@ public abstract class Person implements Runnable{
         this.position = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));
         this.colony = null;
         this.landAppropriation = 1;
-        Engine.getFrame().setColorAtPosition(this.position);
+        this.id = -1;
+        newColorAt(this.position);
     }
 
     public void attack(){};
@@ -57,16 +52,23 @@ public abstract class Person implements Runnable{
 
     private void move(Vector2d newPosition) {
         // Aktualizujemy referencję do komórki
-        Engine.getFrame().setInitColor(this.position);
-        this.cell = Engine.getFrame().getCellAtPosition(newPosition);
-
+        resetColor(this.position);
         // Aktualizujemy pozycję
         this.position = newPosition;
-
         // Aktualizujemy kolor komórki na planszy
-        ColonyColor color = this.colony.getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
-        Engine.getFrame().setColorAtPosition(newPosition);
+        newColorAt(newPosition);
     }
+
+    public void resetColor(Vector2d position){
+        Engine.getFrame().setInitColor(position);
+    }
+
+    public void newColorAt(Vector2d newPosition){
+        Color color = this.colony.getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
+        Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(color));
+    }
+
+
     public void walk() {
         Direction[] directions = Direction.values();
         Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
@@ -78,13 +80,11 @@ public abstract class Person implements Runnable{
                 newPosition.getY() >= 0 && newPosition.getY() < Board.SIZE) {
             this.move(newPosition);
         }
-        // Jeżeli nowa pozycja jest poza granicami planszy, person nie porusza się
-       // System.out.println("Person " + id + " is walking to " + position);
+
     }
     @Override
     public void run(){
         while(running){
-            //randomowo dlugo czeka (od sekundy do 3 sekund) i wykonuje metodę walk()
             try {
                 Thread.sleep(ThreadLocalRandom.current().nextInt(200, 800));
                 walk();

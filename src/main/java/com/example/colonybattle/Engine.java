@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Engine {
     private static MyFrame frame;
@@ -20,16 +21,15 @@ public class Engine {
         // Stworzenie 10 osób
         Set<Person> people = new HashSet<>();
 
-
         frame = new MyFrame(20);
-
+        Colony colony = new Colony(people,null,0, ColonyColor.COLONY1);
         for (int i = 0; i < 10; i++) {
-            Vector2d startPosition = new Vector2d(i, i); // Tu możemy dostosować początkowe pozycje osób
-            Colony testColony = new Colony(); // Zakładamy, że mamy konstruktor bezparametrowy dla Colony
-            people.add(new Farmer(100, 100, 10, startPosition, testColony, i));
+            Vector2d startPosition = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));; // Tu możemy dostosować początkowe pozycje osób
+
+            people.add(new Farmer(100, 100, 10, startPosition, colony, i));
         }
         // Dodanie osób do kolonii
-        Colony colony = new Colony(people,null,0, ColonyColor.COLONY1);
+
         colony.addPeople(people);
         List<Colony> allColonies = new ArrayList<>();
         allColonies.add(colony);
