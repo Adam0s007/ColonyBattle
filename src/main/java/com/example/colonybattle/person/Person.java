@@ -2,10 +2,9 @@ package com.example.colonybattle.person;
 
 import com.example.colonybattle.*;
 
-import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.Colors.Color;
 import com.example.colonybattle.Colors.ColorConverter;
-import com.example.colonybattle.UI.Cell;
+import com.example.colonybattle.colony.Colony;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -47,7 +46,7 @@ public abstract class Person implements Runnable{
         newColorAt(this.position);
     }
 
-    public void attack(){};
+    public  void  attack(){};
 
 
     private void move(Vector2d newPosition) {
@@ -86,7 +85,7 @@ public abstract class Person implements Runnable{
     public void run(){
         while(running){
             try {
-                Thread.sleep(ThreadLocalRandom.current().nextInt(200, 800));
+                Thread.sleep(ThreadLocalRandom.current().nextInt(50, 300));
                 walk();
             } catch (InterruptedException e) {
                 e.printStackTrace();

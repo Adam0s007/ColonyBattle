@@ -1,5 +1,7 @@
 package com.example.colonybattle;
 
+import com.example.colonybattle.colony.Colony;
+
 public class Vector2d {
     private int x;
     private int y;

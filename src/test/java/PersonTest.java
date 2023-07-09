@@ -1,4 +1,4 @@
-import com.example.colonybattle.Colony;
+import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.person.Farmer;
 import com.example.colonybattle.person.Person;

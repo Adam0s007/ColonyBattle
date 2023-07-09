@@ -1,4 +1,4 @@
-package com.example.colonybattle;
+package com.example.colonybattle.colony;
 
 import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.Vector2d;
@@ -10,6 +10,7 @@ import java.util.Set;
 public class Colony {
 
     private ColonyColor color;
+    private ColonyType type;
 
     public ColonyColor getColor() {
         return color;
@@ -65,12 +66,17 @@ public class Colony {
         this.fields = new HashSet<>();
         this.points = 0;
     }
-    public Colony(Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color) {
+    public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color) {
+        this.type = type;
         this.people = people;
         this.fields = fields;
         this.points = points;
         this.color = color;
 
+    }
+
+    public ColonyType getType() {
+        return type;
     }
 
     public Person containsPerson(Vector2d position) {

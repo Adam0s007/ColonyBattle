@@ -2,10 +2,12 @@ package com.example.colonybattle;
 
 import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.UI.MyFrame;
+import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.colony.ColonyFactory;
+import com.example.colonybattle.colony.ColonyType;
 import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.Farmer;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,22 +20,21 @@ public class Engine {
         return frame;
     }
     public static void main(String[] args) throws InterruptedException {
-        // Stworzenie 10 osób
-        Set<Person> people = new HashSet<>();
 
         frame = new MyFrame(20);
-        Colony colony = new Colony(people,null,0, ColonyColor.COLONY1);
-        for (int i = 0; i < 10; i++) {
-            Vector2d startPosition = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));; // Tu możemy dostosować początkowe pozycje osób
 
-            people.add(new Farmer(100, 100, 10, startPosition, colony, i));
-        }
-        // Dodanie osób do kolonii
+        ColonyFactory colonyFactory = new ColonyFactory();
 
-        colony.addPeople(people);
+        Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1);
+        Colony colony2 = colonyFactory.createColony(ColonyType.COLONY2);
+        Colony colony3 = colonyFactory.createColony(ColonyType.COLONY3);
+        Colony colony4 = colonyFactory.createColony(ColonyType.COLONY4);
+
         List<Colony> allColonies = new ArrayList<>();
-        allColonies.add(colony);
-
+        allColonies.add(colony1);
+        allColonies.add(colony2);
+        allColonies.add(colony3);
+        allColonies.add(colony4);
 
         Board board = new Board(allColonies);
 

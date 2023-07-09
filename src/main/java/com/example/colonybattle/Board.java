@@ -1,7 +1,7 @@
 package com.example.colonybattle;
 
 import com.example.colonybattle.Colors.Color;
-import com.example.colonybattle.UI.MyFrame;
+import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.person.Person;
 
 import java.util.List;
