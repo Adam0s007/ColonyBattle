@@ -13,11 +13,11 @@ public class PersonTest {
     public void testWalk() {
         Vector2d startPosition = new Vector2d(10, 10); // Umieszczamy naszą osobę na środku mapy o rozmiarze 20x20
         Colony testColony = null;
-        Person person = new Farmer(100, 100, 10, startPosition, testColony);
+        Person person = new Farmer(100, 100, 10, startPosition, testColony,-1);
 
         for (int i = 0; i < 100; i++) {  // Wykonujemy 100 kroków
             person.walk();
-            System.out.println(person.getPosition());
+
             Vector2d position = person.getPosition();
 
             assertTrue(position.getX() >= 0);

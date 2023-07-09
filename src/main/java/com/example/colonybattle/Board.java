@@ -24,8 +24,44 @@ public class Board {
         }
     }
 
+    public void stopPeople() {
+        for (Colony colony : allColonies) {
+            for (Person person : colony.getPeople()) {
+                person.stop();
+            }
+        }
+    }
+
     public void stop() {
+        this.stopPeople();
         executorService.shutdown();
+    }
+
+    public void printBoard() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                Person person = getPersonAtPosition(i, j); // Metoda do implementacji: zwraca osobę na danej pozycji lub null, jeśli nie ma tam osoby
+                if (person != null) {
+                    System.out.print(person.getColony().getColonyColor().getColor() + "P" + Color.RESET + " ");
+                } else {
+                    System.out.print("- ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    private Person getPersonAtPosition(int i, int j) {
+        Vector2d position = new Vector2d(i, j);
+
+        //wiemy że getPeople zwraca hashset,
+        for (Colony colony : allColonies) {
+            Person person = colony.containsPerson(position);
+            if (person != null) {
+                return person;
+            }
+        }
+        return null;
     }
 
 

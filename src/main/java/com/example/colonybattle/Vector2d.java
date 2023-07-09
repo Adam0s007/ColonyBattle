@@ -1,10 +1,13 @@
 package com.example.colonybattle;
 
+import com.example.colonybattle.person.Person;
+
 public class Vector2d {
     private int x;
     private int y;
     private Colony membership;
     private int appropriationRate;
+
 
     public Vector2d(int x, int y, Colony membership, int appropriationRate) {
         this.x = x;
@@ -88,6 +91,7 @@ public class Vector2d {
     public void setAppropriationRate(int appropriationRate) {
         this.appropriationRate = appropriationRate;
     }
+
 
 }
 
