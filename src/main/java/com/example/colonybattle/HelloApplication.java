@@ -1,16 +1,16 @@
 package com.example.colonybattle;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import com.example.colonybattle.UI.MyFrame;
 
-import java.io.IOException;
+import javax.swing.JFrame;
 
+import java.awt.Color;
 public class HelloApplication{
 
     public static void main(String[] args) {
         //launch();
-        System.out.println("Hello World!");
+        //System.out.println("Hello World!");
+        MyFrame frame = new MyFrame(20);
+
     }
 }

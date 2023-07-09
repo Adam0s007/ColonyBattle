@@ -1,5 +1,7 @@
 package com.example.colonybattle;
 
+import com.example.colonybattle.Colors.Color;
+import com.example.colonybattle.UI.MyFrame;
 import com.example.colonybattle.person.Person;
 
 import java.util.List;
@@ -8,12 +10,14 @@ import java.util.concurrent.Executors;
 
 public class Board {
     public static final int SIZE = 20;
+
     private List<Colony> allColonies;
     private ExecutorService executorService;
     public Board(List<Colony> allColonies) {
         this.allColonies = allColonies;
         int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
         this.executorService = Executors.newFixedThreadPool(totalPeopleCount);
+
     }
 
     public void start() {
@@ -38,17 +42,21 @@ public class Board {
     }
 
     public void printBoard() {
+        // Wyczyszczenie okna konsoli
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 Person person = getPersonAtPosition(i, j); // Metoda do implementacji: zwraca osobę na danej pozycji lub null, jeśli nie ma tam osoby
                 if (person != null) {
-                    System.out.print(person.getColony().getColonyColor().getColor() + "P" + Color.RESET + " ");
+                    System.out.print(person.getColony().getColonyColor().getColor() + "x" + Color.RESET+" ");
                 } else {
-                    System.out.print("- ");
+                    System.out.print(Color.YELLOW+"o "+Color.RESET);
                 }
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     private Person getPersonAtPosition(int i, int j) {
@@ -63,6 +71,8 @@ public class Board {
         }
         return null;
     }
+
+
 
 
 }

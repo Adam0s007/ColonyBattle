@@ -1,9 +1,10 @@
 package com.example.colonybattle;
 
+import com.example.colonybattle.Colors.ColonyColor;
+import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.person.Person;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Colony {

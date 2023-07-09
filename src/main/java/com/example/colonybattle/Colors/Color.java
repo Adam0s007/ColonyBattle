@@ -1,4 +1,4 @@
-package com.example.colonybattle;
+package com.example.colonybattle.Colors;
 
 public enum Color {
     RED("\033[0;31m"),

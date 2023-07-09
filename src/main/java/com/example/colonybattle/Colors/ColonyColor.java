@@ -1,4 +1,4 @@
-package com.example.colonybattle;
+package com.example.colonybattle.Colors;
 
 public enum ColonyColor {
     COLONY1(Color.RED),
