@@ -16,28 +16,48 @@ public abstract class Person implements Runnable{
     protected int strength;
     protected int id;
 
-    private static final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
-
-
-    public void setPosition(Vector2d position) {
-        this.position = position;
-    }
-
     protected Vector2d position;
+
     protected Colony colony;
     protected int landAppropriation;
     private volatile boolean running = true;
+
+    private static final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
+
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (!(other instanceof Person))
+            return false;
+        Person that = (Person) other;
+        return this.id == that.id;
+    }
+    //toString niech wypisze "osoba o id ..." i tyle
+    @Override
+    public String toString() {
+        return "Person[" + "id=" + id + ']';
+    }
+
 
     public Person(int health, int energy, int strength, Vector2d position, Colony colony, int landAppropriation,int id) {
         this.health = health;
         this.energy = energy;
         this.strength = strength;
-        this.position = position;
-        connectColony(colony);
         this.landAppropriation = landAppropriation;
         this.id = id;
+        changePosConnections(null,position);
+        connectColony(colony);
+        //gui changes
         newColorAt(this.position);
     }
+
 
     // konstruktor z domyslnymi parametrami i randomowym polozeniem
     public Person(){
@@ -49,6 +69,10 @@ public abstract class Person implements Runnable{
         this.id = -1;
         connectColony(null);
         newColorAt(this.position);
+    }
+
+    public void setPosition(Vector2d position) {
+        this.position = position;
     }
 
     public void connectColony(Colony colony){
@@ -66,13 +90,27 @@ public abstract class Person implements Runnable{
 
 
     private void move(Vector2d newPosition) {
-        // Aktualizujemy referencję do komórki
-        resetColor(this.position);
-        // Aktualizujemy pozycję
-        this.position = newPosition;
-        // Aktualizujemy kolor komórki na planszy
+        Vector2d oldPosition = this.position;
+        changePosConnections(oldPosition,newPosition);
+
+        //gui changes
+        resetColor(oldPosition);
         newColorAt(newPosition);
     }
+
+    //metoda to teko kodu:
+    // Przesuń osobę na nową pozycję
+//        newPosition.addPerson(this);
+//    // Aktualizujemy pozycję
+//        this.position = newPosition;
+
+    private void changePosConnections(Vector2d oldPosition,Vector2d newPosition){
+        if(oldPosition != null && oldPosition.containPerson(this))
+            oldPosition.popPerson(this);
+        newPosition.addPerson(this);
+        this.position = newPosition;
+    }
+
 
     public void resetColor(Vector2d position){
         Engine.getFrame().setInitColor(position);

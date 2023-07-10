@@ -101,4 +101,12 @@ public class Colony {
     public ColonyColor getColonyColor() {
         return color;
     }
+
+
+    @Override
+    public String toString() {
+        return "Colony[" +
+                "type=" + type +
+                ']';
+    }
 }

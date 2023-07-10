@@ -1,12 +1,18 @@
 package com.example.colonybattle;
 
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.person.Person;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Vector2d {
     private int x;
     private int y;
-    private Colony membership;
-    private int appropriationRate;
+    private Colony membership;//okresla przynaleznosc do kolonii
+    private int appropriationRate; //okresla stopien przynaleznosci do kolonii
+    private Set<Person> people = new HashSet<>(); //wskazanie na osoby na tym polu
+
 
 
     public Vector2d(int x, int y, Colony membership, int appropriationRate) {
@@ -14,6 +20,13 @@ public class Vector2d {
         this.y = y;
         this.membership = membership;
         this.appropriationRate = appropriationRate;
+    }
+    public Vector2d(int x, int y, Colony membership, int appropriationRate,Person people) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
+        this.x = x;
+        this.y = y;
+        this.membership = membership;
+        this.appropriationRate = appropriationRate;
+        this.people.add(people);
     }
     public Vector2d(int x, int y) {
         this.x = x;
@@ -90,6 +103,32 @@ public class Vector2d {
 
     public void setAppropriationRate(int appropriationRate) {
         this.appropriationRate = appropriationRate;
+    }
+
+    public Set<Person> getPeople() {
+        return people;
+    }
+    public void setPeople(Set<Person> people) {
+        this.people = people;
+    }
+    public void addPerson(Person person) {
+        this.people.add(person);
+    }
+
+    public Person popPerson(Person person) {
+        this.people.remove(person);
+        return person;
+    }
+    public Boolean containPerson(Person person) {
+        return this.people.contains(person);
+    }
+    //funkcja sprawdzająca, czy osoby na tym polu są z dwóch roznych kolonii
+    public Boolean isConflict() {
+        if (this.people.size() > 1) {
+            Person[] peopleArray = this.people.toArray(new Person[0]);
+            return peopleArray[0].getColony().getType() != peopleArray[1].getColony().getType();
+        }
+        return false;
     }
 
 
