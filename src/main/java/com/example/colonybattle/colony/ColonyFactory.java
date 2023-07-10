@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.colonybattle.Board;
 import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.person.PersonType;
 
 
 public class ColonyFactory {
@@ -68,31 +69,25 @@ public class ColonyFactory {
         // Dodajemy rolników (farmers)
         for (int i = 0; i < 3; i++) {
             Vector2d position = getRandomPositionWithin(startPos, endPos);
-            Person person = personFactory.createPerson("farmer", position, colony);
-            people.add(person);
+            personFactory.createPerson(PersonType.FARMER, position, colony);
         }
 
         // Dodajemy obrońców (defenders)
         for (int i = 0; i < 2; i++) {
             Vector2d position = getRandomPositionWithin(startPos, endPos);
-            Person person = personFactory.createPerson("defender", position, colony);
-            people.add(person);
+            personFactory.createPerson(PersonType.DEFENDER, position, colony);
+
         }
 
         // Dodajemy maga (wizard)
         Vector2d wizardPosition = getRandomPositionWithin(startPos, endPos);
-        Person wizard = personFactory.createPerson("wizard", wizardPosition, colony);
-        people.add(wizard);
+        personFactory.createPerson(PersonType.WIZARD, wizardPosition, colony);
 
         // Dodajemy wojowników (warriors)
         for (int i = 0; i < 4; i++) {
             Vector2d position = getRandomPositionWithin(startPos, endPos);
-            Person person = personFactory.createPerson("warrior", position, colony);
-            people.add(person);
+            personFactory.createPerson(PersonType.WARRIOR, position, colony);
         }
-
-        // Dodajemy osoby do kolonii
-        colony.addPeople(people);
 
         return colony;
     }

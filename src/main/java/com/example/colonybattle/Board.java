@@ -28,6 +28,14 @@ public class Board {
         }
     }
 
+    public void startPerson(Person person) {//zakladamy ze osoba jest juz zwiazana z kolonią
+        executorService.submit(person);
+    }
+
+    public void removePerson(Person person) { // disconnects person from colony and removes it from board
+        person.die();
+    }
+
     public void stopPeople() {
         for (Colony colony : allColonies) {
             for (Person person : colony.getPeople()) {

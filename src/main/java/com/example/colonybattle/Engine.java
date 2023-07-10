@@ -41,7 +41,7 @@ public class Engine {
         board.start();
 
         int iter = 0;
-        while(iter < 20) {
+        while(iter < 3) {
             //board.printBoard();
             Thread.sleep(2000);
             iter++;

@@ -29,21 +29,33 @@ public abstract class Person implements Runnable{
         this.energy = energy;
         this.strength = strength;
         this.position = position;
-        this.colony = colony;
+        connectColony(colony);
         this.landAppropriation = landAppropriation;
         this.id = id;
         newColorAt(this.position);
     }
+
     // konstruktor z domyslnymi parametrami i randomowym polozeniem
     public Person(){
-        this.health = 100;
-        this.energy = 100;
-        this.strength = 10;
+        this.health = 20;
+        this.energy = 20;
+        this.strength = 20;
         this.position = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));
-        this.colony = null;
-        this.landAppropriation = 1;
+        this.landAppropriation = 20;
         this.id = -1;
+        connectColony(null);
         newColorAt(this.position);
+    }
+
+    public void connectColony(Colony colony){
+        this.colony = colony;
+        if(this.colony != null)
+            this.colony.addPerson(this);
+    }
+    public void disconnectColony(){
+        if(this.colony != null)
+            this.colony.removePerson(this);
+        this.colony = null;
     }
 
     public  void  attack(){};
@@ -85,7 +97,7 @@ public abstract class Person implements Runnable{
     public void run(){
         while(running){
             try {
-                Thread.sleep(ThreadLocalRandom.current().nextInt(50, 300));
+                Thread.sleep(ThreadLocalRandom.current().nextInt(200, 300));
                 walk();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -93,7 +105,11 @@ public abstract class Person implements Runnable{
 
         }
     };
-    public void die(){};
+    public void die(){
+        resetColor(this.position);
+        this.disconnectColony();
+        this.stop();
+    }
     public void regenerate(){};
     public  void giveBirth(){};
 
@@ -102,8 +118,10 @@ public abstract class Person implements Runnable{
     }
 
     public void stop() {
+        resetColor(this.position);
         running = false;
     }
+
 
     public Colony getColony() {
         return colony;

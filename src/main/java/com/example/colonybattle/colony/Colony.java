@@ -52,13 +52,22 @@ public class Colony {
         return people.size();
     }
 
-    public void addPeople(Set<Person> people) {
+    public synchronized void addPeople(Set<Person> people) {
 
         this.people.addAll(people);
         //kazda osoba musi miec wskaznik do tej kolonii
         for (Person person : people) {
             person.setColony(this);
         }
+    }
+    public synchronized void addPerson(Person person) {
+        this.people.add(person);
+        //person.setColony(this); - to jest robione w klasie Person
+    }
+
+    public synchronized void removePerson(Person person) {
+        //person.setColony(null); - to jest robione w klasie Person
+        this.people.remove(person);
     }
 
     public Colony() {

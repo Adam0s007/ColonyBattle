@@ -14,20 +14,16 @@ public class PersonFactory {
         return available_id++;
     }
 
-    public Person createPerson(String type, Vector2d pos, Colony colony){
-        switch (type.toLowerCase()) {
-            case "farmer":
-                return new Farmer(8, 8, 5, pos, colony, incrementId());
-
-            case "defender":
-                return new Defender(14, 12, pos, colony, 10, incrementId());
-
-            case "warrior":
-                return new Warrior(12, 15, pos, colony, 8, incrementId());
-
-            case "wizard":
-                return new Wizard(14, 15, pos, colony, 14, incrementId());
-
+    public Person createPerson(PersonType type, Vector2d pos, Colony colony){
+        switch (type) {
+            case FARMER:
+                return new Farmer(type.getHealth(), type.getEnergy(), type.getStrength(), pos, colony, incrementId());
+            case DEFENDER:
+                return new Defender(type.getHealth(), type.getEnergy(), pos, colony, type.getStrength(), incrementId());
+            case WARRIOR:
+                return new Warrior(type.getHealth(), type.getEnergy(), pos, colony, type.getStrength(), incrementId());
+            case WIZARD:
+                return new Wizard(type.getHealth(), type.getEnergy(), pos, colony, type.getStrength(), incrementId());
             default:
                 System.out.println("Wrong person type");
                 return null;
