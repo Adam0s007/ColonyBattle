@@ -8,5 +8,10 @@ public class Farmer extends Person {
         super(health, energy, strength, position, colony, 20,id);  // Wartość 10 to przykładowa wartość landAppropriation dla Farmer
     }
 
+    @Override
+    public Character getInitial() {
+        return 'F'; // Dla Obrońcy
+    }
+
     // Implementacja metod...
 }

@@ -10,6 +10,10 @@ public class Wizard extends Person implements Magic {
     }
 
     @Override
+    public Character getInitial() {
+        return 'W'; // Dla Obrońcy
+    }
+    @Override
     public void wand() {
         // Implementacja...
     }
@@ -18,6 +22,8 @@ public class Wizard extends Person implements Magic {
     public void healMyself() {
         // Implementacja...
     }
+
+
 
     // Implementacja pozostałych metod...
 }

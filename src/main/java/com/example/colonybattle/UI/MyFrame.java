@@ -13,7 +13,7 @@ public class MyFrame extends JFrame {
         this.setTitle("Colony Battle");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
-        this.setSize(600, 600);
+        this.setSize(800, 800);
 
         this.setLayout(new GridLayout(gridSize, gridSize));
         grid = new Cell[gridSize][gridSize];
@@ -37,6 +37,15 @@ public class MyFrame extends JFrame {
 
     public void setInitColor(Vector2d position){
         grid[position.getX()][position.getY()].initColor();
+    }
+
+    // Metoda do ustawiania liczby żyć na danej pozycji
+    public void setLifeAtPosition(Vector2d position, int life) {
+        grid[position.getX()][position.getY()].updateLife(life);
+    }
+
+    public void setInitial(Vector2d position,Character initial){
+        grid[position.getX()][position.getY()].updateInitial(initial);
     }
 
 }

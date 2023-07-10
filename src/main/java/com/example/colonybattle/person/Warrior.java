@@ -8,6 +8,11 @@ public class Warrior extends Person {
         super(health, energy, 20, position, colony, landAppropriation,id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
     }
 
+    @Override
+    public Character getInitial() {
+        return 'A'; // Dla Wojownika
+    }
+
 
 
     // Implementacja metod...

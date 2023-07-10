@@ -57,7 +57,7 @@ public abstract class Person implements Runnable{
         changePosConnections(null,position);
         connectColony(colony);
         //gui changes
-        newColorAt(this.position);
+        newCellAt(this.position);
     }
 
 
@@ -70,7 +70,7 @@ public abstract class Person implements Runnable{
         this.landAppropriation = 20;
         this.id = -1;
         connectColony(null);
-        newColorAt(this.position);
+        newCellAt(this.position);
     }
     public Board getBoard() {
         return this.colony.getBoard();
@@ -100,7 +100,7 @@ public abstract class Person implements Runnable{
         this.colony = null;
     }
 
-    public  void  attack(){};
+
 
 
     private void move(Vector2d newPosition) {
@@ -108,15 +108,10 @@ public abstract class Person implements Runnable{
         changePosConnections(oldPosition,newPosition);
 
         //gui changes
-        resetColor(oldPosition);
-        newColorAt(newPosition);
+        resetCell(oldPosition);
+        newCellAt(newPosition);
     }
 
-    //metoda to teko kodu:
-    // Przesuń osobę na nową pozycję
-//        newPosition.addPerson(this);
-//    // Aktualizujemy pozycję
-//        this.position = newPosition;
 
     private void changePosConnections(Vector2d oldPosition,Vector2d newPosition){
         if(oldPosition != null && oldPosition.containPerson(this))
@@ -126,13 +121,17 @@ public abstract class Person implements Runnable{
     }
 
 
-    public void resetColor(Vector2d position){
+    public void resetCell(Vector2d position){
         Engine.getFrame().setInitColor(position);
+        Engine.getFrame().setLifeAtPosition(position, 0);
+        Engine.getFrame().setInitial(position, ' ');
     }
 
-    public void newColorAt(Vector2d newPosition){
+    public void newCellAt(Vector2d newPosition){
         Color color = this.colony.getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
         Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(color));
+        Engine.getFrame().setLifeAtPosition(newPosition, health); // Ustawiamy aktualną ilość życia osoby
+        Engine.getFrame().setInitial(position, this.getInitial());
     }
 
 
@@ -180,19 +179,22 @@ public abstract class Person implements Runnable{
     public void die(){
         this.changePosConnections(this.position,null);
         this.disconnectColony();
-        resetColor(this.position);
+        resetCell(this.position);
         releasePositionLock(this.position);
         this.stop();
     }
+    public  void  attack(){};
     public void regenerate(){};
     public  void giveBirth(){};
+
+    public abstract Character getInitial(); // Nowa metoda zwracająca inicjały osoby
 
     public Vector2d getPosition() {
         return position;
     }
 
     public void stop() {
-        resetColor(this.position);
+        resetCell(this.position);
         running = false;
     }
 
