@@ -3,7 +3,7 @@ package com.example.colonybattle.colony;
 import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.person.Person;
-
+import com.example.colonybattle.Board;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +11,12 @@ public class Colony {
 
     private ColonyColor color;
     private ColonyType type;
+    private Set<Person> people;
+    private Set<Vector2d> fields;
+    private int points;
+
+    private Board board;
+
 
     public ColonyColor getColor() {
         return color;
@@ -44,9 +50,10 @@ public class Colony {
         this.points = points;
     }
 
-    private Set<Person> people;
-    private Set<Vector2d> fields;
-    private int points;
+
+    public Board getBoard(){
+        return this.board;
+    }
 
     public int getTotalPeopleCount() {
         return people.size();
@@ -75,13 +82,13 @@ public class Colony {
         this.fields = new HashSet<>();
         this.points = 0;
     }
-    public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color) {
+    public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color, Board board) {
         this.type = type;
         this.people = people;
         this.fields = fields;
         this.points = points;
         this.color = color;
-
+        this.board = board;
     }
 
     public ColonyType getType() {

@@ -22,22 +22,24 @@ public class Engine {
     public static void main(String[] args) throws InterruptedException {
 
         frame = new MyFrame(20);
+        List<Colony> allColonies = new ArrayList<>();
+        Board board = new Board(allColonies);
 
         ColonyFactory colonyFactory = new ColonyFactory();
 
-        Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1);
-        Colony colony2 = colonyFactory.createColony(ColonyType.COLONY2);
-        Colony colony3 = colonyFactory.createColony(ColonyType.COLONY3);
-        Colony colony4 = colonyFactory.createColony(ColonyType.COLONY4);
+        Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1,board);
+        Colony colony2 = colonyFactory.createColony(ColonyType.COLONY2,board);
+        Colony colony3 = colonyFactory.createColony(ColonyType.COLONY3,board);
+        Colony colony4 = colonyFactory.createColony(ColonyType.COLONY4,board);
 
-        List<Colony> allColonies = new ArrayList<>();
+
         allColonies.add(colony1);
         allColonies.add(colony2);
         allColonies.add(colony3);
         allColonies.add(colony4);
 
-        Board board = new Board(allColonies);
 
+        board.initFields();
         board.start();
 
         int iter = 0;

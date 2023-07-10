@@ -4,28 +4,44 @@ import com.example.colonybattle.Colors.Color;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.person.Person;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Board {
     public static final int SIZE = 20;
 
+    private Map<String,Vector2d> fields = new HashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
     private List<Colony> allColonies;
     private ExecutorService executorService;
     public Board(List<Colony> allColonies) {
         this.allColonies = allColonies;
-        int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
-        this.executorService = Executors.newFixedThreadPool(totalPeopleCount);
-
     }
 
     public void start() {
+        int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
+        this.executorService = Executors.newFixedThreadPool(totalPeopleCount);
+
         for (Colony colony : allColonies) {
             for (Person person : colony.getPeople()) {
                 executorService.submit(person);
             }
         }
+    }
+    //dodajmy wszystkie pola osob z wszystkich kolonii do hashSetu fields
+    public void initFields() {
+        for (Colony colony : allColonies) {
+            for (Person person : colony.getPeople()) {
+                fields.put(person.getPosition().toString(),person.getPosition());
+            }
+        }
+    }
+    //funckja sprawdzająca czy dany wektor Vector2d znajduje się w fields
+    public boolean isFieldOccupied(String stringPos) {
+        return fields.containsKey(stringPos);
+    }
+    public Vector2d getVector2d(String stringPos) {
+        return fields.get(stringPos);
     }
 
     public void startPerson(Person person) {//zakladamy ze osoba jest juz zwiazana z kolonią
@@ -43,6 +59,7 @@ public class Board {
             }
         }
     }
+
 
     public void stop() {
         this.stopPeople();

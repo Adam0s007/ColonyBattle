@@ -36,12 +36,12 @@ public class ColonyFactory {
     }
 
 
-    public Colony createColony(ColonyType type){
+    public Colony createColony(ColonyType type,Board board){
         // Tworzymy puste zbiory ludzi i pól
         Set<Person> people = new HashSet<>();
         Set<Vector2d> fields = new HashSet<>();
         ColonyColor color = getColonyColor(type);
-        Colony colony = new Colony(type, people, fields, 0, color);
+        Colony colony = new Colony(type, people, fields, 0, color,board);
         Vector2d startPos;
         Vector2d endPos;
 

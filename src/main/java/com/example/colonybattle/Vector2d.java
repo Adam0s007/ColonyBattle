@@ -20,6 +20,7 @@ public class Vector2d {
         this.y = y;
         this.membership = membership;
         this.appropriationRate = appropriationRate;
+        this.people = new HashSet<>();
     }
     public Vector2d(int x, int y, Colony membership, int appropriationRate,Person people) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
         this.x = x;
@@ -32,7 +33,8 @@ public class Vector2d {
         this.x = x;
         this.y = y;
         this.membership = null;
-        this.appropriationRate = 0;
+        this.appropriationRate = 10;
+        this.people = new HashSet<>();
     }
 
     public Vector2d newVector(int x, int y) {
@@ -64,9 +66,9 @@ public class Vector2d {
         if (!(other instanceof Vector2d))
             return false;
         Vector2d that = (Vector2d) other;
-        return this.x == that.x && this.y == that.y && this.membership == that.membership && this.appropriationRate == that.appropriationRate;
+        return this.x == that.x && this.y == that.y;
     }
-    // Override toString
+
     @Override
     public String toString() {
         return "(" + this.x + "," + this.y + ")";

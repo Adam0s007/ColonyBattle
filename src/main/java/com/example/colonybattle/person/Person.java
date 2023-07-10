@@ -22,6 +22,8 @@ public abstract class Person implements Runnable{
     protected int landAppropriation;
     private volatile boolean running = true;
 
+    private Board board;
+
     private static final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
 
 
@@ -70,6 +72,18 @@ public abstract class Person implements Runnable{
         connectColony(null);
         newColorAt(this.position);
     }
+    public Board getBoard() {
+        return this.colony.getBoard();
+    }
+
+    //funkcja sprawdzająca, czy w Bardzie w field znajduje się dany Vector2d
+    public boolean isFieldOccupied(Vector2d field){
+        return this.getBoard().isFieldOccupied(field.toString());
+    }
+    public Vector2d getVectorFromBoard(Vector2d field){
+        return this.getBoard().getVector2d(field.toString());
+    }
+
 
     public void setPosition(Vector2d position) {
         this.position = position;
@@ -126,8 +140,10 @@ public abstract class Person implements Runnable{
         Direction[] directions = Direction.values();
         Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
         Vector2d directionVector = randomDirection.getVector();
-        Vector2d newPosition = position.addVector(directionVector);
 
+        Vector2d newPosition = position.addVector(directionVector);//tworzy nowy Vector
+        if(isFieldOccupied(newPosition))
+            newPosition = this.getVectorFromBoard(newPosition);
         // Sprawdzenie czy nowa pozycja jest w granicach planszy
         if (newPosition != null && newPosition.getX() >= 0 && newPosition.getX() < Board.SIZE &&
                 newPosition.getY() >= 0 && newPosition.getY() < Board.SIZE && this.position.equals(newPosition) == false) {
@@ -162,8 +178,10 @@ public abstract class Person implements Runnable{
         }
     };
     public void die(){
-        resetColor(this.position);
+        this.changePosConnections(this.position,null);
         this.disconnectColony();
+        resetColor(this.position);
+        releasePositionLock(this.position);
         this.stop();
     }
     public void regenerate(){};
