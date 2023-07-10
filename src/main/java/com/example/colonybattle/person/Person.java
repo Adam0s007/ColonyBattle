@@ -4,6 +4,7 @@ import com.example.colonybattle.*;
 
 import com.example.colonybattle.Colors.Color;
 import com.example.colonybattle.Colors.ColorConverter;
+import com.example.colonybattle.LockManagement.LockMapPosition;
 import com.example.colonybattle.colony.Colony;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,6 +15,9 @@ public abstract class Person implements Runnable{
     protected int energy;
     protected int strength;
     protected int id;
+
+    private static final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
+
 
     public void setPosition(Vector2d position) {
         this.position = position;
@@ -87,14 +91,28 @@ public abstract class Person implements Runnable{
         Vector2d newPosition = position.addVector(directionVector);
 
         // Sprawdzenie czy nowa pozycja jest w granicach planszy
-        if (newPosition.getX() >= 0 && newPosition.getX() < Board.SIZE &&
-                newPosition.getY() >= 0 && newPosition.getY() < Board.SIZE) {
+        if (newPosition != null && newPosition.getX() >= 0 && newPosition.getX() < Board.SIZE &&
+                newPosition.getY() >= 0 && newPosition.getY() < Board.SIZE && this.position.equals(newPosition) == false) {
+            Vector2d oldPosition = this.position;
+            aquirePositionLock(newPosition);
             this.move(newPosition);
+            releasePositionLock(oldPosition);
         }
 
     }
+    protected void aquirePositionLock(Vector2d position){
+        try {
+            lockManager.acquireLock(position);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    protected void releasePositionLock(Vector2d position){
+        lockManager.releaseLock(position);
+    }
     @Override
     public void run(){
+        aquirePositionLock(position);
         while(running){
             try {
                 Thread.sleep(ThreadLocalRandom.current().nextInt(200, 300));
