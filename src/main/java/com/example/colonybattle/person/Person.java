@@ -20,6 +20,7 @@ public abstract class Person implements Runnable{
     protected PersonStatus status;
     protected CellHelper cellHelper;
     protected BoardRef boardRef;
+    protected ConnectionHelper connectionHelper;
     @Override
     public int hashCode() {
         return this.status.id;
@@ -41,8 +42,9 @@ public abstract class Person implements Runnable{
         this.status = new PersonStatus(health,energy,strength,landAppropriation,id);
         this.cellHelper = new CellHelper(this);
         this.boardRef = new BoardRef(this);
-        changePosConnections(null,position);
-        connectColony(colony);
+        this.connectionHelper = new ConnectionHelper(this);
+        connectionHelper.changePosConnections(null,position);
+        connectionHelper.connectColony(colony);
         cellHelper.newCellAt(this.position);
     }
     public Person(){
@@ -50,34 +52,21 @@ public abstract class Person implements Runnable{
         this.status = new PersonStatus(20,20,20,20,-1);
         this.cellHelper = new CellHelper(this);
         this.boardRef = new BoardRef(this);
-        connectColony(null);
+        this.connectionHelper = new ConnectionHelper(this);
+        connectionHelper.connectColony(null);
         cellHelper.newCellAt(this.position);
     }
     public void setPosition(Vector2d position) {
         this.position = position;
     }
-    public void connectColony(Colony colony){
-        this.colony = colony;
-        if(this.colony != null)
-            this.colony.addPerson(this);
-    }
-    public void disconnectColony(){
-        if(this.colony != null)
-            this.colony.removePerson(this);
-        this.colony = null;
-    }
+
     private void move(Vector2d newPosition) {
         Vector2d oldPosition = this.position;
-        changePosConnections(oldPosition,newPosition);
+        connectionHelper.changePosConnections(oldPosition,newPosition);
         cellHelper.resetCell(oldPosition);
         cellHelper.newCellAt(newPosition);
     }
-    private void changePosConnections(Vector2d oldPosition,Vector2d newPosition){
-        if(oldPosition != null && oldPosition.containPerson(this))
-            oldPosition.popPerson(this);
-        newPosition.addPerson(this);
-        this.position = newPosition;
-    }
+
     public void walk() {
         Direction[] directions = Direction.values();
         Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
@@ -120,8 +109,8 @@ public abstract class Person implements Runnable{
         }
     };
     public void die(){
-        this.changePosConnections(this.position,null);
-        this.disconnectColony();
+        connectionHelper.changePosConnections(this.position,null);
+        connectionHelper.disconnectColony();
         cellHelper.resetCell(this.position);
         releasePositionLock(this.position);
         this.stop();
