@@ -66,6 +66,12 @@ public class Board {
     public void stop() {
         this.stopPeople();
         executorService.shutdown();
+        try{
+            executorService.awaitTermination(1, java.util.concurrent.TimeUnit.SECONDS);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+
     }
 
     public void printBoard() {
