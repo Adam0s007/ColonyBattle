@@ -21,6 +21,7 @@ public abstract class Person implements Runnable{
     protected CellHelper cellHelper;
     protected BoardRef boardRef;
     protected ConnectionHelper connectionHelper;
+    protected PosLock posLock;
     @Override
     public int hashCode() {
         return this.status.id;
@@ -45,6 +46,7 @@ public abstract class Person implements Runnable{
         this.connectionHelper = new ConnectionHelper(this);
         connectionHelper.changePosConnections(null,position);
         connectionHelper.connectColony(colony);
+        posLock = new PosLock(boardRef);
         cellHelper.newCellAt(this.position);
     }
     public Person(){
@@ -54,6 +56,7 @@ public abstract class Person implements Runnable{
         this.boardRef = new BoardRef(this);
         this.connectionHelper = new ConnectionHelper(this);
         connectionHelper.connectColony(null);
+        posLock = new PosLock(boardRef);
         cellHelper.newCellAt(this.position);
     }
     public void setPosition(Vector2d position) {
@@ -79,25 +82,16 @@ public abstract class Person implements Runnable{
         if (newPosition != null && newPosition.getX() >= 0 && newPosition.getX() < Board.SIZE &&
                 newPosition.getY() >= 0 && newPosition.getY() < Board.SIZE && this.position.equals(newPosition) == false) {
             Vector2d oldPosition = this.position;
-            aquirePositionLock(newPosition);
+            posLock.aquirePositionLock(newPosition);
             this.move(newPosition);
-            releasePositionLock(oldPosition);
+            posLock.releasePositionLock(oldPosition);
         }
 
     }
-    protected void aquirePositionLock(Vector2d position){
-        try {
-            boardRef.getBoard().getLockManager().acquireLock(position);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    protected void releasePositionLock(Vector2d position){
-        boardRef.getBoard().getLockManager().releaseLock(position);
-    }
+
     @Override
     public void run(){
-        aquirePositionLock(position);
+        posLock.aquirePositionLock(position);
         while(running){
             try {
                 Thread.sleep(ThreadLocalRandom.current().nextInt(800, 1500));
@@ -112,7 +106,7 @@ public abstract class Person implements Runnable{
         connectionHelper.changePosConnections(this.position,null);
         connectionHelper.disconnectColony();
         cellHelper.resetCell(this.position);
-        releasePositionLock(this.position);
+        posLock.releasePositionLock(this.position);
         this.stop();
     }
     public  void  attack(){};
