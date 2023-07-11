@@ -22,9 +22,6 @@ public abstract class Person implements Runnable{
     protected int landAppropriation;
     private volatile boolean running = true;
 
-    private Board board;
-
-    private static final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
 
 
     @Override
@@ -155,20 +152,20 @@ public abstract class Person implements Runnable{
     }
     protected void aquirePositionLock(Vector2d position){
         try {
-            lockManager.acquireLock(position);
+            getBoard().getLockManager().acquireLock(position);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
     protected void releasePositionLock(Vector2d position){
-        lockManager.releaseLock(position);
+        getBoard().getLockManager().releaseLock(position);
     }
     @Override
     public void run(){
         aquirePositionLock(position);
         while(running){
             try {
-                Thread.sleep(ThreadLocalRandom.current().nextInt(200, 300));
+                Thread.sleep(ThreadLocalRandom.current().nextInt(800, 1500));
                 walk();
             } catch (InterruptedException e) {
                 e.printStackTrace();

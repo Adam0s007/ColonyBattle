@@ -1,6 +1,7 @@
 package com.example.colonybattle;
 
 import com.example.colonybattle.Colors.Color;
+import com.example.colonybattle.LockManagement.LockMapPosition;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.person.Person;
 
@@ -12,6 +13,7 @@ public class Board {
     public static final int SIZE = 20;
 
     private Map<String,Vector2d> fields = new HashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
+    private  final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
     private List<Colony> allColonies;
     private ExecutorService executorService;
     public Board(List<Colony> allColonies) {
@@ -98,6 +100,9 @@ public class Board {
     }
 
 
+    public LockMapPosition getLockManager() {
+        return lockManager;
+    }
 
 
 }
