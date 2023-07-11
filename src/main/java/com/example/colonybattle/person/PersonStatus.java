@@ -9,7 +9,7 @@ public class PersonStatus {
     int id;
     int landAppropriation;
 
-    public PersonStatus(int health, int energy, int strength, int landAppropriation,int id) {
+    PersonStatus(int health, int energy, int strength, int landAppropriation,int id) {
         this.health = health;
         this.energy = energy;
         this.strength = strength;
