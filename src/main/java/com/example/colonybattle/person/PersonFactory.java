@@ -1,11 +1,11 @@
 package com.example.colonybattle.person;
 
-import com.example.colonybattle.Board;
-
 import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.colony.Colony;
-
-import java.util.concurrent.ThreadLocalRandom;
+import com.example.colonybattle.person.ConcreteCharacters.Defender;
+import com.example.colonybattle.person.ConcreteCharacters.Farmer;
+import com.example.colonybattle.person.ConcreteCharacters.Warrior;
+import com.example.colonybattle.person.ConcreteCharacters.Wizard;
 
 public class PersonFactory {
     private static int available_id = 0;

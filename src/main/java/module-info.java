@@ -13,4 +13,6 @@ module com.example.colonybattle {
     opens com.example.colonybattle.Colors to javafx.fxml;
     exports com.example.colonybattle.colony;
     opens com.example.colonybattle.colony to javafx.fxml;
+    exports com.example.colonybattle.person.ConcreteCharacters;
+    opens com.example.colonybattle.person.ConcreteCharacters to javafx.fxml;
 }

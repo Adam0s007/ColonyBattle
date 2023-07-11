@@ -5,28 +5,24 @@ import com.example.colonybattle.*;
 import com.example.colonybattle.Colors.Color;
 import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.LockManagement.LockMapPosition;
+import com.example.colonybattle.UI.Cell;
 import com.example.colonybattle.colony.Colony;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 
 public abstract class Person implements Runnable{
-    protected int health;
-    protected int energy;
-    protected int strength;
-    protected int id;
 
     protected Vector2d position;
 
     protected Colony colony;
-    protected int landAppropriation;
     private volatile boolean running = true;
-
-
+    protected PersonStatus status;
+    protected CellHelper cellHelper;
 
     @Override
     public int hashCode() {
-        return this.id;
+        return this.status.id;
     }
 
     @Override
@@ -36,38 +32,29 @@ public abstract class Person implements Runnable{
         if (!(other instanceof Person))
             return false;
         Person that = (Person) other;
-        return this.id == that.id;
+        return this.status.id == that.status.id;
     }
     //toString niech wypisze "osoba o id ..." i tyle
     @Override
     public String toString() {
-        return "Person[" + "id=" + id + ']';
+        return "Person[" + "id=" + this.status + ']';
     }
-
 
     public Person(int health, int energy, int strength, Vector2d position, Colony colony, int landAppropriation,int id) {
-        this.health = health;
-        this.energy = energy;
-        this.strength = strength;
-        this.landAppropriation = landAppropriation;
-        this.id = id;
+        this.status = new PersonStatus(health,energy,strength,landAppropriation,id);
+        this.cellHelper = new CellHelper(this);
         changePosConnections(null,position);
         connectColony(colony);
-        //gui changes
-        newCellAt(this.position);
+        cellHelper.newCellAt(this.position);
     }
 
 
-    // konstruktor z domyslnymi parametrami i randomowym polozeniem
     public Person(){
-        this.health = 20;
-        this.energy = 20;
-        this.strength = 20;
         this.position = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));
-        this.landAppropriation = 20;
-        this.id = -1;
+        this.status = new PersonStatus(20,20,20,20,-1);
+        this.cellHelper = new CellHelper(this);
         connectColony(null);
-        newCellAt(this.position);
+        cellHelper.newCellAt(this.position);
     }
     public Board getBoard() {
         return this.colony.getBoard();
@@ -105,8 +92,8 @@ public abstract class Person implements Runnable{
         changePosConnections(oldPosition,newPosition);
 
         //gui changes
-        resetCell(oldPosition);
-        newCellAt(newPosition);
+        cellHelper.resetCell(oldPosition);
+        cellHelper.newCellAt(newPosition);
     }
 
 
@@ -118,18 +105,7 @@ public abstract class Person implements Runnable{
     }
 
 
-    public void resetCell(Vector2d position){
-        Engine.getFrame().setInitColor(position);
-        Engine.getFrame().setLifeAtPosition(position, 0);
-        Engine.getFrame().setInitial(position, ' ');
-    }
 
-    public void newCellAt(Vector2d newPosition){
-        Color color = this.colony.getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
-        Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(color));
-        Engine.getFrame().setLifeAtPosition(newPosition, health); // Ustawiamy aktualną ilość życia osoby
-        Engine.getFrame().setInitial(position, this.getInitial());
-    }
 
 
     public void walk() {
@@ -176,7 +152,7 @@ public abstract class Person implements Runnable{
     public void die(){
         this.changePosConnections(this.position,null);
         this.disconnectColony();
-        resetCell(this.position);
+        cellHelper.resetCell(this.position);
         releasePositionLock(this.position);
         this.stop();
     }
@@ -191,7 +167,7 @@ public abstract class Person implements Runnable{
     }
 
     public void stop() {
-        resetCell(this.position);
+        cellHelper.resetCell(this.position);
         running = false;
     }
 

@@ -1,18 +1,12 @@
 package com.example.colonybattle;
 
-import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.UI.MyFrame;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.colony.ColonyFactory;
 import com.example.colonybattle.colony.ColonyType;
-import com.example.colonybattle.person.Person;
-import com.example.colonybattle.person.Farmer;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Engine {
     private static MyFrame frame;

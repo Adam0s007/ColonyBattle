@@ -1,7 +1,8 @@
-package com.example.colonybattle.person;
+package com.example.colonybattle.person.ConcreteCharacters;
 
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.person.Person;
 
 public class Farmer extends Person {
     public Farmer(int health, int energy, int strength, Vector2d position, Colony colony,int id) {

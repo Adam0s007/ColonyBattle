@@ -1,8 +1,9 @@
-package com.example.colonybattle.person;
+package com.example.colonybattle.person.ConcreteCharacters;
 
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.Magic;
 import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.person.Person;
 
 public class Wizard extends Person implements Magic {
     public Wizard(int health, int strength, Vector2d position, Colony colony,int landAppropriation,int id) {
