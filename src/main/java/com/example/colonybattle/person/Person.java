@@ -99,14 +99,19 @@ public abstract class Person implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            // jesli wylosuje liczbe 3 z zakresu od 1 do 5 to die()
+//            if (ThreadLocalRandom.current().nextInt(1, 5) == 3) {
+//                die();
+//            }
 
         }
     };
     public void die(){
+        Vector2d oldPosition = new Vector2d(this.position.getX(),this.position.getY());
         connectionHelper.changePosConnections(this.position,null);
         connectionHelper.disconnectColony();
-        cellHelper.resetCell(this.position);
-        posLock.releasePositionLock(this.position);
+        cellHelper.resetCell(oldPosition);
+        posLock.releasePositionLock(oldPosition);
         this.stop();
     }
     public  void  attack(){};
@@ -117,7 +122,6 @@ public abstract class Person implements Runnable{
         return position;
     }
     public void stop() {
-        cellHelper.resetCell(this.position);
         running = false;
     }
     public Colony getColony() {

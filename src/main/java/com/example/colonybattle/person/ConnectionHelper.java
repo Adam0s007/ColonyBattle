@@ -24,7 +24,8 @@ public class ConnectionHelper {
     public void changePosConnections(Vector2d oldPosition, Vector2d newPosition){
         if(oldPosition != null && oldPosition.containPerson(this.person))
             oldPosition.popPerson(this.person);
-        newPosition.addPerson(this.person);
+        if(newPosition != null)
+            newPosition.addPerson(this.person);
         this.person.position = newPosition;
     }
 
