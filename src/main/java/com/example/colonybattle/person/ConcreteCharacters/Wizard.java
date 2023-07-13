@@ -4,10 +4,11 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.Magic;
 import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.person.Person;
+import com.example.colonybattle.person.PersonType;
 
 public class Wizard extends Person implements Magic {
-    public Wizard(int health, int strength, Vector2d position, Colony colony,int landAppropriation,int id) {
-        super(health, 20, strength, position, colony, landAppropriation,id);  // Wartość 10 to przykładowa wartość landAppropriation dla Wizard
+    public Wizard(PersonType type, Vector2d position, Colony colony, int id) {
+        super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
     }
 
     @Override

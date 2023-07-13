@@ -1,11 +1,5 @@
 package com.example.colonybattle.person;
-
 import com.example.colonybattle.*;
-
-import com.example.colonybattle.Colors.Color;
-import com.example.colonybattle.Colors.ColorConverter;
-import com.example.colonybattle.LockManagement.LockMapPosition;
-import com.example.colonybattle.UI.Cell;
 import com.example.colonybattle.colony.Colony;
 
 import java.util.Set;
@@ -23,8 +17,6 @@ public abstract class Person implements Runnable{
     protected BoardRef boardRef;
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
-
-
     protected Attack attackPerformer;
     private boolean isAttacking = true;
     @Override
@@ -123,13 +115,8 @@ public abstract class Person implements Runnable{
         this.stop();
     }
     public void attack(Person person) {
-        // Sprawdź, czy osoba ma wystarczającą energię do ataku
         if (this.getStatus().getEnergy() > 0) {
-            // Zmniejsz zdrowie ofiary o wartość siły atakującego
-            person.getStatus().addHealth(-2);
-            // Zmniejsz energię atakującego
-            //this.getStatus().addEnergy(-1);
-            //gui update
+            person.getStatus().addHealth(-1);
             person.cellHelper.updateLife(person.getStatus().getHealth());
 
         }
@@ -137,7 +124,6 @@ public abstract class Person implements Runnable{
 
 
     public void AttackingTime(long timeEnd) {
-
         int maxIter = ThreadLocalRandom.current().nextInt(1, 4);
         int currIter = 0;
         //podziel timeEnd przez 5 , zrzutuj na long

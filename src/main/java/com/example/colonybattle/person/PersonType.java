@@ -1,19 +1,23 @@
 package com.example.colonybattle.person;
 
 public enum PersonType {
-    FARMER(8, 8, 5),
-    DEFENDER(14, 12, 10),
-    WARRIOR(12, 15, 8),
-    WIZARD(14, 15, 14);
+    FARMER(8, 8, 5,20),
+    DEFENDER(20, 12, 10,10),
+    WARRIOR(12, 15, 20,10),
+    WIZARD(14, 20, 14,10);
 
     private final int health;
     private final int energy;
     private final int strength;
 
-    PersonType(int health, int energy, int strength) {
+    private final int landAppropriation;
+
+    PersonType(int health, int energy, int strength,int landAppropriation){
         this.health = health;
         this.energy = energy;
         this.strength = strength;
+        this.landAppropriation = landAppropriation;
+
     }
 
     public int getHealth() {
@@ -26,6 +30,16 @@ public enum PersonType {
 
     public int getStrength() {
         return strength;
+    }
+
+    public int getLandAppropriation() {
+        return landAppropriation;
+    }
+
+
+    @Override
+    public String toString() {
+        return super.toString().toLowerCase();
     }
 }
 

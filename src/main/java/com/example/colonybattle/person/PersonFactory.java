@@ -17,13 +17,13 @@ public class PersonFactory {
     public Person createPerson(PersonType type, Vector2d pos, Colony colony){
         switch (type) {
             case FARMER:
-                return new Farmer(type.getHealth(), type.getEnergy(), type.getStrength(), pos, colony, incrementId());
+                return new Farmer(type, pos, colony, incrementId());
             case DEFENDER:
-                return new Defender(type.getHealth(), type.getEnergy(), pos, colony, type.getStrength(), incrementId());
+                return new Defender(type, pos, colony, incrementId());
             case WARRIOR:
-                return new Warrior(type.getHealth(), type.getEnergy(), pos, colony, type.getStrength(), incrementId());
+                return new Warrior(type, pos, colony, incrementId());
             case WIZARD:
-                return new Wizard(type.getHealth(), type.getEnergy(), pos, colony, type.getStrength(), incrementId());
+                return new Wizard(type, pos, colony, incrementId());
             default:
                 System.out.println("Wrong person type");
                 return null;

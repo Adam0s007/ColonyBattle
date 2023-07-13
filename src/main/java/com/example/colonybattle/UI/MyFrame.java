@@ -15,7 +15,7 @@ public class MyFrame extends JFrame {
         this.setResizable(false);
         this.setSize(800, 800);
 
-        this.setLayout(new GridLayout(gridSize, gridSize));
+        this.setLayout(new GridLayout(gridSize, gridSize,0,0));
         grid = new Cell[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
