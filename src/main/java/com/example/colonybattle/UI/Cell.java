@@ -16,7 +16,7 @@ public class Cell extends JPanel {
     private JLabel imageLabel;
 
     public Cell(int x, int y) {
-        super(new GridLayout(2, 1));
+        super(new GridLayout(2, 2));
         this.position = new Vector2d(x, y);
         this.setOpaque(true);
         initColor();
@@ -42,6 +42,8 @@ public class Cell extends JPanel {
         add(imageLabel);
     }
 
+
+
     public Vector2d getPosition() {
         return position;
     }
@@ -58,6 +60,7 @@ public class Cell extends JPanel {
         }
         lifeLabel.setText(this.life);
     }
+
 
     public void updateInitial(Character initial) {
         if (initial == ' ') {

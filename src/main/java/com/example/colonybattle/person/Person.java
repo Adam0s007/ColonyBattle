@@ -92,6 +92,7 @@ public abstract class Person implements Runnable{
         // Sprawdzenie czy nowa pozycja jest w granicach planszy
         if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
             Vector2d oldPosition = this.position;
+            this.boardRef.getBoard().getFields().put(newPosition.toString(),newPosition);
             if(!posLock.aquirePositionLock(newPosition)){
                 attackNearby();//zaatakuj jesli sie nie da tam wejsc
                 walk();

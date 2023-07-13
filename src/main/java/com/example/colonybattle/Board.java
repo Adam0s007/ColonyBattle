@@ -6,13 +6,14 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.person.Person;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Board {
     public static final int SIZE = 20;
 
-    private Map<String,Vector2d> fields = new HashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
+    private Map<String,Vector2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
     private  final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
     private List<Colony> allColonies;
     private ExecutorService executorService;
@@ -20,6 +21,9 @@ public class Board {
         this.allColonies = allColonies;
     }
 
+    public Map<String, Vector2d> getFields() {
+        return fields;
+    }
     public void start() {
         int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
         this.executorService = Executors.newFixedThreadPool(totalPeopleCount);
