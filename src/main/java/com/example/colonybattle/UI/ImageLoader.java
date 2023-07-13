@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ImageLoader {
+public class ImageLoader implements ImageLoaderInterface {
     private static ImageLoader instance = null;
 
     private Map<PersonType, ImageIcon> imageMap = new HashMap<>();

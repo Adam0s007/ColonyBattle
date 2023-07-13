@@ -86,5 +86,10 @@ public class Cell extends JPanel {
         image = null;
         imageLabel.setIcon(null);
     }
+
+    public void updateBackground(Color color) {
+
+        this.setBackground(color);
+    }
 }
 

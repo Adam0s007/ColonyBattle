@@ -1,6 +1,7 @@
 package com.example.colonybattle.UI;
 
 import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.person.PersonType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,8 +32,8 @@ public class MyFrame extends JFrame {
         return grid[position.getX()][position.getY()];
     }
     // Metoda do ustawiania koloru komórki na podstawie pozycji
-    public void setColorAtPosition(Vector2d position,Color color) {
-        grid[position.getX()][position.getY()].setBackground(color);
+    public void setColorAtPosition(Vector2d position, Color color) {
+        grid[position.getX()][position.getY()].updateBackground(color);
     }
 
     public void setInitColor(Vector2d position){

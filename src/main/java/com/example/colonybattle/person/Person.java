@@ -1,6 +1,7 @@
 package com.example.colonybattle.person;
 import com.example.colonybattle.*;
 import com.example.colonybattle.UI.ImageLoader;
+import com.example.colonybattle.UI.ImageLoaderInterface;
 import com.example.colonybattle.colony.Colony;
 
 import javax.swing.*;
@@ -23,7 +24,7 @@ public abstract class Person implements Runnable{
 
     protected PersonType type;
     protected ImageIcon image;
-    protected ImageLoader imageLoader = ImageLoader.getInstance();
+    protected ImageLoaderInterface imageLoader;
 
     @Override
     public int hashCode() {
