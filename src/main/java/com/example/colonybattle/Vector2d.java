@@ -133,6 +133,10 @@ public class Vector2d {
         return false;
     }
 
+    public boolean properCoordinates(int size) {
+        return this.x >= 0 && this.x < size && this.y >= 0 && this.y < size;
+    }
+
 
 }
 

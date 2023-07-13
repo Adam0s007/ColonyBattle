@@ -17,6 +17,10 @@ public class CellHelper {
         Engine.getFrame().setLifeAtPosition(person.position, person.status.getHealth());
     }
 
+    void deathColor(){
+        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(Color.PURPLE));
+    }
+
     void resetCell(Vector2d position){
         Engine.getFrame().setInitColor(position);
         Engine.getFrame().setLifeAtPosition(position, 0);

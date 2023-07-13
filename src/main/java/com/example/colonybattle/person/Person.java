@@ -23,6 +23,10 @@ public abstract class Person implements Runnable{
     protected BoardRef boardRef;
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
+
+
+    protected Attack attackPerformer;
+    private boolean isAttacking = true;
     @Override
     public int hashCode() {
         return this.status.id;
@@ -49,6 +53,7 @@ public abstract class Person implements Runnable{
         connectionHelper.connectColony(colony);
         posLock = new PosLock(boardRef);
         cellHelper.newCellAt(this.position);
+        attackPerformer = new Attack(this,boardRef);
     }
     public Person(){
         this.position = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));
@@ -59,6 +64,7 @@ public abstract class Person implements Runnable{
         connectionHelper.connectColony(null);
         posLock = new PosLock(boardRef);
         cellHelper.newCellAt(this.position);
+        attackPerformer = new Attack(this,boardRef);
     }
     public void setPosition(Vector2d position) {
         this.position = position;
@@ -80,12 +86,15 @@ public abstract class Person implements Runnable{
         if(boardRef.isFieldOccupied(newPosition))
             newPosition = boardRef.getVectorFromBoard(newPosition);
         // Sprawdzenie czy nowa pozycja jest w granicach planszy
-        if (newPosition != null && newPosition.getX() >= 0 && newPosition.getX() < Board.SIZE &&
-                newPosition.getY() >= 0 && newPosition.getY() < Board.SIZE && this.position.equals(newPosition) == false) {
+        if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
             Vector2d oldPosition = this.position;
-            posLock.aquirePositionLock(newPosition);
-            this.move(newPosition);
-            posLock.releasePositionLock(oldPosition);
+            if(!posLock.aquirePositionLock(newPosition))
+               walk();
+            else{
+                this.move(newPosition);
+                posLock.releasePositionLock(oldPosition);
+            }
+
         }
 
     }
@@ -93,17 +102,15 @@ public abstract class Person implements Runnable{
     @Override
     public void run(){
         posLock.aquirePositionLock(position);
+
         while(running){
             PersonWaiting();
             if(this.getStatus().getHealth() <= 0){
                 die();
             }
             walk();
-            // jesli wylosuje liczbe 3 z zakresu od 1 do 5 to die()
-//            if (ThreadLocalRandom.current().nextInt(1, 5) == 3) {
-//                die();
-//            }
-
+            attackNearby();
+            //regenerate();
         }
     };
     public void die(){
@@ -120,44 +127,31 @@ public abstract class Person implements Runnable{
             // Zmniejsz zdrowie ofiary o wartość siły atakującego
             person.getStatus().addHealth(-2);
             // Zmniejsz energię atakującego
-            this.getStatus().addEnergy(-1);
-
+            //this.getStatus().addEnergy(-1);
+            //gui update
             person.cellHelper.updateLife(person.getStatus().getHealth());
+
         }
     }
-    public void regenerate(){
-        int energy = this.getStatus().getEnergy();
-        this.getStatus().setEnergy(energy + 1);
-    };
-    public  void giveBirth(){};
-    public abstract Character getInitial(); // Nowa metoda zwracająca inicjały osoby
-    public Vector2d getPosition() {
-        return position;
-    }
-    public void stop() {
-        running = false;
-    }
-    public Colony getColony() {
-        return colony;
-    }
-    public void setColony(Colony colony) {
-        this.colony = colony;
-    }
+
 
     public void AttackingTime(long timeEnd) {
 
-        int maxIter = ThreadLocalRandom.current().nextInt(1, 5);
+        int maxIter = ThreadLocalRandom.current().nextInt(1, 2);
         int currIter = 0;
         //podziel timeEnd przez 5 , zrzutuj na long
         long passingTime = (int) (timeEnd / maxIter);
         while (currIter++ < maxIter) {
             try {
-                Thread.sleep(passingTime);
                 attackNearby();
+                Thread.sleep((int)(passingTime));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            attackNearby();
         }
+
+
     }
 
     public void PersonWaiting(){
@@ -175,44 +169,34 @@ public abstract class Person implements Runnable{
             e.printStackTrace();
         }
         executor.shutdown();
-
-        //czekajmy aż wątek z AttackingTime się skończy
-
     }
 
     public void attackNearby() {
-        Vector2d[] offsets = {
-                new Vector2d(-1, -1), new Vector2d(-1, 0), new Vector2d(-1, 1),
-                new Vector2d(0, -1),                    new Vector2d(0, 1),
-                new Vector2d(1, -1), new Vector2d(1, 0), new Vector2d(1, 1),
-        };
-        //System.out.println("Atakujemy");
-        for (Vector2d offset : offsets) {
-            //edge cases for offset
-            if(offset.getX() < 0 || offset.getX() >= Board.SIZE || offset.getY() < 0 || offset.getY() >= Board.SIZE)
-                continue;
-            Vector2d targetPos = position.addVector(offset);
-            if(boardRef.isFieldOccupied(targetPos))
-                targetPos = boardRef.getVectorFromBoard(targetPos);
-            else continue;
-            //this.posLock.aquirePositionLock(targetPos);
-             //return set of people from targetPos
-            Set<Person> people = targetPos.getPeople();
-            //iterujemy po osobach w peopleArray, jesli sa z innej kolonii to je atakujemy
-            for (Person person : people) {
-
-                if (person.getColony().getType() != this.getColony().getType()) {
-                    System.out.println("Nastepuje atak");
-                    this.attack(person);
-
-                }
-            }
-            //this.posLock.releasePositionLock(targetPos);
-        }
+        attackPerformer.executeNearbyAttack();
     }
 
     public PersonStatus getStatus(){
         return this.status;
+    }
+
+    public void regenerate(){
+        this.getStatus().addEnergy(2);
+        this.getStatus().addHealth(1);
+
+    };
+    public  void giveBirth(){};
+    public abstract Character getInitial(); // Nowa metoda zwracająca inicjały osoby
+    public Vector2d getPosition() {
+        return position;
+    }
+    public void stop() {
+        running = false;
+    }
+    public Colony getColony() {
+        return colony;
+    }
+    public void setColony(Colony colony) {
+        this.colony = colony;
     }
 
 
