@@ -13,6 +13,9 @@ public class CellHelper {
         this.person = person;
 
     }
+    void updateLife(int life){
+        Engine.getFrame().setLifeAtPosition(person.position, person.status.getHealth());
+    }
 
     void resetCell(Vector2d position){
         Engine.getFrame().setInitColor(position);

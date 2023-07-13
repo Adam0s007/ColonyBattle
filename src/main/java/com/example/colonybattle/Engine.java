@@ -37,7 +37,7 @@ public class Engine {
         board.start();
 
         int iter = 0;
-        while(iter < 3) {
+        while(iter <500000) {
             //board.printBoard();
             Thread.sleep(2000);
             iter++;

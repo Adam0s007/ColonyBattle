@@ -8,7 +8,8 @@ import com.example.colonybattle.LockManagement.LockMapPosition;
 import com.example.colonybattle.UI.Cell;
 import com.example.colonybattle.colony.Colony;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Set;
+import java.util.concurrent.*;
 
 
 public abstract class Person implements Runnable{
@@ -93,12 +94,11 @@ public abstract class Person implements Runnable{
     public void run(){
         posLock.aquirePositionLock(position);
         while(running){
-            try {
-                Thread.sleep(ThreadLocalRandom.current().nextInt(800, 1500));
-                walk();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            PersonWaiting();
+            if(this.getStatus().getHealth() <= 0){
+                die();
             }
+            walk();
             // jesli wylosuje liczbe 3 z zakresu od 1 do 5 to die()
 //            if (ThreadLocalRandom.current().nextInt(1, 5) == 3) {
 //                die();
@@ -114,8 +114,21 @@ public abstract class Person implements Runnable{
         posLock.releasePositionLock(oldPosition);
         this.stop();
     }
-    public  void  attack(){};
-    public void regenerate(){};
+    public void attack(Person person) {
+        // Sprawdź, czy osoba ma wystarczającą energię do ataku
+        if (this.getStatus().getEnergy() > 0) {
+            // Zmniejsz zdrowie ofiary o wartość siły atakującego
+            person.getStatus().addHealth(-2);
+            // Zmniejsz energię atakującego
+            this.getStatus().addEnergy(-1);
+
+            person.cellHelper.updateLife(person.getStatus().getHealth());
+        }
+    }
+    public void regenerate(){
+        int energy = this.getStatus().getEnergy();
+        this.getStatus().setEnergy(energy + 1);
+    };
     public  void giveBirth(){};
     public abstract Character getInitial(); // Nowa metoda zwracająca inicjały osoby
     public Vector2d getPosition() {
@@ -130,5 +143,78 @@ public abstract class Person implements Runnable{
     public void setColony(Colony colony) {
         this.colony = colony;
     }
+
+    public void AttackingTime(long timeEnd) {
+
+        int maxIter = ThreadLocalRandom.current().nextInt(1, 5);
+        int currIter = 0;
+        //podziel timeEnd przez 5 , zrzutuj na long
+        long passingTime = (int) (timeEnd / maxIter);
+        while (currIter++ < maxIter) {
+            try {
+                Thread.sleep(passingTime);
+                attackNearby();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void PersonWaiting(){
+        long timeEnd = ThreadLocalRandom.current().nextInt(800, 1500);
+        //funckja AttackingTime powinna sie tutaj wykonywac rownolegle w osobnym wątku
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Future<?> future = executor.submit(() -> AttackingTime(timeEnd));
+        try {
+
+            Thread.sleep(timeEnd);
+            future.get();
+            // Czekaj, aż wątek z AttackingTime się skończy
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        executor.shutdown();
+
+        //czekajmy aż wątek z AttackingTime się skończy
+
+    }
+
+    public void attackNearby() {
+        Vector2d[] offsets = {
+                new Vector2d(-1, -1), new Vector2d(-1, 0), new Vector2d(-1, 1),
+                new Vector2d(0, -1),                    new Vector2d(0, 1),
+                new Vector2d(1, -1), new Vector2d(1, 0), new Vector2d(1, 1),
+        };
+        //System.out.println("Atakujemy");
+        for (Vector2d offset : offsets) {
+            //edge cases for offset
+            if(offset.getX() < 0 || offset.getX() >= Board.SIZE || offset.getY() < 0 || offset.getY() >= Board.SIZE)
+                continue;
+            Vector2d targetPos = position.addVector(offset);
+            if(boardRef.isFieldOccupied(targetPos))
+                targetPos = boardRef.getVectorFromBoard(targetPos);
+            else continue;
+            //this.posLock.aquirePositionLock(targetPos);
+             //return set of people from targetPos
+            Set<Person> people = targetPos.getPeople();
+            //iterujemy po osobach w peopleArray, jesli sa z innej kolonii to je atakujemy
+            for (Person person : people) {
+
+                if (person.getColony().getType() != this.getColony().getType()) {
+                    System.out.println("Nastepuje atak");
+                    this.attack(person);
+
+                }
+            }
+            //this.posLock.releasePositionLock(targetPos);
+        }
+    }
+
+    public PersonStatus getStatus(){
+        return this.status;
+    }
+
+
 
 }

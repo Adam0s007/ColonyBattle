@@ -56,7 +56,7 @@ public class Vector2d {
     // Override hashcode oraz equals
     @Override
     public int hashCode() {
-        return this.x + this.y;
+        return this.x*31 + this.y;
     }
 
     @Override
