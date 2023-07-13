@@ -1,11 +1,14 @@
 package packageForTesting;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class Main1 {
     public static void main(String[] args) {
-        ImageIcon image = new ImageIcon("heads/wizard.png");
+        ImageIcon image = new ImageIcon("src/main/resources/heads/wizard.png");
+        Border border = BorderFactory.createLineBorder(Color.GREEN, 3);
+
         JLabel label = new JLabel();
         label.setText("Hello");
 
@@ -13,6 +16,14 @@ public class Main1 {
         label.setVerticalTextPosition(JLabel.TOP);
         label.setForeground(new Color(0x00FF00));
         label.setFont(new Font("MV Boli", Font.PLAIN, 20));
+        label.setBackground(Color.BLACK);
+        label.setOpaque(true);
+        label.setIcon(image);
+        label.setIconTextGap(-20);
+        label.setBorder(border);
+
+        label.setVerticalAlignment(JLabel.CENTER);
+        label.setHorizontalAlignment(JLabel.CENTER);
 
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,10 +34,9 @@ public class Main1 {
         int width = frame.getWidth();
         int height = frame.getHeight();
         //image resized to fit label
-        image = new ImageIcon(image.getImage().getScaledInstance(width/2, height/2, Image.SCALE_DEFAULT));
-        label.setIcon(image);
-        label.setIconTextGap(0);
-        label.setBounds(width/4, height/4, width/2, height/2);
+
+
+
         frame.getContentPane().setBackground(new Color(0x123456));
     }
 }

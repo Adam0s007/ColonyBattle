@@ -15,8 +15,6 @@ public class ImageLoader implements ImageLoaderInterface {
     private ImageLoader() {
         for (PersonType type : PersonType.values()) {
             imageMap.put(type, new ImageIcon(path + type.toString().toLowerCase() + ".png"));
-       //path from src to resources folder:
-         //src\main\java\com\example\colonybattle\UI\heads
         }
     }
 
