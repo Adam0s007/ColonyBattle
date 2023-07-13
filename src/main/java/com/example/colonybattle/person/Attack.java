@@ -34,8 +34,8 @@ public class Attack {
     }
 
     private void executeAttackInDirection(Vector2d offset) {
-        Vector2d targetPos = attacker.calculateNewPosition(attacker.getPosition(),offset);
-
+        Vector2d position = attacker.getPosition();
+        Vector2d targetPos = position.calculateNewPosition(attacker.getPosition(),offset,boardRef);
         Set<Person> people = targetPos.getPeople();
         attackEnemiesInSet(people);
     }

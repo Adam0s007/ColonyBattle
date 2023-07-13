@@ -46,14 +46,17 @@ public abstract class Person implements Runnable{
     public Person(int health, int energy, int strength, Vector2d position, Colony colony, int landAppropriation,int id) {
         this.imageLoader = ImageLoader.getInstance();
         this.status = new PersonStatus(health,energy,strength,landAppropriation,id);
-        this.cellHelper = new CellHelper(this);
         this.boardRef = new BoardRef(this);
         this.connectionHelper = new ConnectionHelper(this);
         connectionHelper.changePosConnections(null,position);
         connectionHelper.connectColony(colony);
         posLock = new PosLock(boardRef);
-        cellHelper.newCellAt(this.position);
         attackPerformer = new Attack(this,boardRef);
+    }
+
+    public void initGUI(){
+        this.cellHelper = new CellHelper(this);
+        cellHelper.newCellAt(this.position);
     }
     public Person(){
         this.position = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));
@@ -76,25 +79,13 @@ public abstract class Person implements Runnable{
         cellHelper.resetCell(oldPosition);
         cellHelper.newCellAt(newPosition);
     }
-    Vector2d calculateNewPosition(Vector2d position, Vector2d directionVector) {
-        Vector2d newPosition = position.addVector(directionVector);
-        if (boardRef.isFieldOccupied(newPosition)) {
-            newPosition = boardRef.getVectorFromBoard(newPosition);
-        }
-        return newPosition;
-    }
 
     public void walk() {
-        Direction[] directions = Direction.values();
-        Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        Vector2d directionVector = randomDirection.getVector();
-        Vector2d newPosition = calculateNewPosition(position, directionVector);
-        // Sprawdzenie czy nowa pozycja jest w granicach planszy
+        Vector2d newPosition = position.generateRandomPosition(position, boardRef);
         if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
-            Vector2d oldPosition = this.position;
-            this.boardRef.getBoard().getFields().put(newPosition.toString(),newPosition);
+            Vector2d oldPosition = position;
+            this.boardRef.addVectorToBoard(newPosition);
             if(!posLock.aquirePositionLock(newPosition)){
-                attackNearby();//zaatakuj jesli sie nie da tam wejsc
                 walk();
             }
             else{
@@ -106,13 +97,12 @@ public abstract class Person implements Runnable{
 
     @Override
     public void run(){
+        initGUI();
         posLock.aquirePositionLock(position);
-
         while(running){
             PersonWaiting();
-            if(this.getStatus().getHealth() <= 0){
+            if(this.getStatus().getHealth() <= 0)
                 die();
-            }
             walk();
             //regenerate();
         }
@@ -135,10 +125,10 @@ public abstract class Person implements Runnable{
 
 
     public void AttackingTime(long timeEnd) {
-        int maxIter = ThreadLocalRandom.current().nextInt(1, 4);
+        int maxIter = ThreadLocalRandom.current().nextInt(1, 3);
         int currIter = 0;
         //podziel timeEnd przez 5 , zrzutuj na long
-        long passingTime = (int) (Math.abs(timeEnd-200) / maxIter);
+        long passingTime = (int) (Math.abs(timeEnd) / maxIter);
         while (currIter++ < maxIter) {
             try {
                     attackNearby();

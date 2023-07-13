@@ -1,10 +1,12 @@
 package com.example.colonybattle;
 
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.person.BoardRef;
 import com.example.colonybattle.person.Person;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Vector2d {
     private int x;
@@ -135,6 +137,21 @@ public class Vector2d {
 
     public boolean properCoordinates(int size) {
         return this.x >= 0 && this.x < size && this.y >= 0 && this.y < size;
+    }
+
+    public Vector2d calculateNewPosition(Vector2d position, Vector2d directionVector, BoardRef boardRef) {
+        Vector2d newPosition = position.addVector(directionVector);
+        if (boardRef.isFieldOccupied(newPosition)) {
+            newPosition = boardRef.getVectorFromBoard(newPosition);
+        }
+        return newPosition;
+    }
+
+    public Vector2d generateRandomPosition(Vector2d position, BoardRef boardRef) {
+        Direction[] directions = Direction.values();
+        Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        Vector2d directionVector = randomDirection.getVector();
+        return calculateNewPosition(position, directionVector, boardRef);
     }
 
 
