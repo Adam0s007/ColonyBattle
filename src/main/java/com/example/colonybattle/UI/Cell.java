@@ -2,44 +2,42 @@ package com.example.colonybattle.UI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.Vector2d;
 import java.awt.*;
 
 
-public class Cell extends JPanel {
+public class Cell extends JLabel {
     private Vector2d position;
     private String life = "";
-    private String initial = "";
-    private ImageIcon image = null;
-    private JLabel lifeLabel;
-    private JLabel initialLabel;
-    private JLabel imageLabel;
+
+    private Border border;
+    private ImageIcon image= null;
+
 
     public Cell(int x, int y) {
-        super(new GridLayout(2, 2));
         this.position = new Vector2d(x, y);
         this.setOpaque(true);
         initColor();
-
+        this.setText(life);
         // Tworzenie etykiety z napisem
-        lifeLabel = new JLabel(life);
-        lifeLabel.setHorizontalAlignment(JLabel.CENTER);
-        lifeLabel.setVerticalAlignment(JLabel.CENTER);
+        //lifeLabel = new JLabel(life);
 
-        // Tworzenie etykiety z początkową wartością
-        initialLabel = new JLabel(initial);
-        initialLabel.setHorizontalAlignment(JLabel.CENTER);
-        initialLabel.setVerticalAlignment(JLabel.CENTER);
 
+        this.setHorizontalTextPosition(JLabel.CENTER);
+        this.setVerticalTextPosition(JLabel.BOTTOM);
+        //font names:
+
+        this.setFont(new Font("Arial", Font.BOLD, 16));
+        this.setHorizontalAlignment(JLabel.CENTER);
+        this.setVerticalAlignment(JLabel.CENTER);
+        this.setIconTextGap(-20);
+        // Tworzenie etykiety z początkową wartością//przezroczysty kolor tla:
+        border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
         // Tworzenie etykiety z ikoną
-        imageLabel = new JLabel();
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        imageLabel.setVerticalAlignment(JLabel.CENTER);
 
-        // Dodawanie etykiet do panelu
-        add(lifeLabel);
-        add(initialLabel);
-        add(imageLabel);
+
     }
 
 
@@ -49,7 +47,11 @@ public class Cell extends JPanel {
     }
 
     public void initColor() {
-        this.setBackground(new Color(36, 255, 103));
+
+       // this.setBackground(new Color(36, 255, 103));
+        this.setBackground(Color.BLACK);
+        border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
+        this.setBorder(border);
     }
 
     public void updateLife(int life) {
@@ -58,41 +60,37 @@ public class Cell extends JPanel {
         } else {
             this.life = Integer.toString(life);
         }
-        lifeLabel.setText(this.life);
+        this.setText(this.life);
     }
 
 
     public void updateInitial(Character initial) {
-        if (initial == ' ') {
-            this.initial = "";
-        } else {
-            this.initial = initial.toString();
-        }
-        initialLabel.setText(this.initial);
+        //TODO
     }
 
     public void setImageIcon(ImageIcon icon) {
         if (icon == null) {
             System.out.println("Image is null");
-            image = null;
-            imageLabel.setIcon(null);
+            this.image = null;
+            this.setIcon(image);
             return;
         }
         Image originalImage = icon.getImage();
-        Image scaledImage = originalImage.getScaledInstance(imageLabel.getWidth(), imageLabel.getHeight(), Image.SCALE_SMOOTH);
+        Image scaledImage = originalImage.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        image = scaledIcon;
-        imageLabel.setIcon(scaledIcon);
+        this.image = scaledIcon;
+        this.setIcon(image);
     }
 
     public void removeImageIcon() {
         image = null;
-        imageLabel.setIcon(null);
+        this.setIcon(image);
     }
 
     public void updateBackground(Color color) {
-
-        this.setBackground(color);
+        border = BorderFactory.createLineBorder(color, 2);
+        this.setBorder(border);
+        this.setForeground(Color.WHITE);
     }
 }
 

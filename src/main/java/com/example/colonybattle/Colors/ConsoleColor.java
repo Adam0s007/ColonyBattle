@@ -1,6 +1,6 @@
 package com.example.colonybattle.Colors;
 
-public enum Color {
+public enum ConsoleColor {
     RED("\033[0;31m"),
     GREEN("\033[0;32m"),
     BLUE("\033[0;34m"),
@@ -20,7 +20,7 @@ public enum Color {
 
     private final String code;
 
-    Color(String code) {
+    ConsoleColor(String code) {
         this.code = code;
     }
 

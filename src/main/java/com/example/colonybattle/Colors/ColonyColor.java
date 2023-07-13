@@ -1,19 +1,19 @@
 package com.example.colonybattle.Colors;
 
 public enum ColonyColor {
-    COLONY1(Color.RED),
-    COLONY2(Color.BLUE),
-    COLONY3(Color.GREEN),
-    COLONY4(Color.YELLOW);
+    COLONY1(ConsoleColor.RED),
+    COLONY2(ConsoleColor.BLUE),
+    COLONY3(ConsoleColor.GREEN),
+    COLONY4(ConsoleColor.YELLOW);
 
-    private final Color color;
+    private final ConsoleColor consoleColor;
 
-    ColonyColor(Color color) {
-        this.color = color;
+    ColonyColor(ConsoleColor consoleColor) {
+        this.consoleColor = consoleColor;
     }
 
-    public Color getColor() {
-        return color;
+    public ConsoleColor getColor() {
+        return consoleColor;
     }
 }
 

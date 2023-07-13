@@ -1,10 +1,10 @@
 package com.example.colonybattle.person;
 
-import com.example.colonybattle.Colors.Color;
+import com.example.colonybattle.Colors.ConsoleColor;
 import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.Engine;
 import com.example.colonybattle.Vector2d;
-import com.example.colonybattle.colony.Colony;
+
 public class CellHelper {
 
 
@@ -18,7 +18,7 @@ public class CellHelper {
     }
 
     void deathColor(){
-        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(Color.PURPLE));
+        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.PURPLE));
     }
 
     void resetCell(Vector2d position){
@@ -30,8 +30,8 @@ public class CellHelper {
     }
 
     void newCellAt(Vector2d newPosition){
-        Color color = person.colony.getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
-        Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(color));
+        ConsoleColor consoleColor = person.colony.getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
+        Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(consoleColor));
         Engine.getFrame().setLifeAtPosition(newPosition, person.status.health); // Ustawiamy aktualną ilość życia osoby
         Engine.getFrame().setInitial(person.position, person.getInitial());
         addImageToCell(newPosition);

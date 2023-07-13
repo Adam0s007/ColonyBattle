@@ -1,6 +1,6 @@
 package com.example.colonybattle;
 
-import com.example.colonybattle.Colors.Color;
+import com.example.colonybattle.Colors.ConsoleColor;
 import com.example.colonybattle.LockManagement.LockMapPosition;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.person.Person;
@@ -86,9 +86,9 @@ public class Board {
             for (int j = 0; j < SIZE; j++) {
                 Person person = getPersonAtPosition(i, j); // Metoda do implementacji: zwraca osobę na danej pozycji lub null, jeśli nie ma tam osoby
                 if (person != null) {
-                    System.out.print(person.getColony().getColonyColor().getColor() + "x" + Color.RESET+" ");
+                    System.out.print(person.getColony().getColonyColor().getColor() + "x" + ConsoleColor.RESET+" ");
                 } else {
-                    System.out.print(Color.YELLOW+"o "+Color.RESET);
+                    System.out.print(ConsoleColor.YELLOW+"o "+ ConsoleColor.RESET);
                 }
             }
             System.out.println();
