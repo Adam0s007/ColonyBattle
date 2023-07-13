@@ -1,9 +1,15 @@
+import com.example.colonybattle.Board;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.colony.ColonyFactory;
+import com.example.colonybattle.colony.ColonyType;
 import com.example.colonybattle.person.ConcreteCharacters.Farmer;
 import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.PersonType;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,9 +18,13 @@ public class PersonTest {
     //przetestujmy metodę walk()
     @Test
     public void testWalk() {
-        Vector2d startPosition = new Vector2d(10, 10); // Umieszczamy naszą osobę na środku mapy o rozmiarze 20x20
-        Colony testColony = null;
-        Person person = new Farmer(PersonType.FARMER, startPosition, testColony,-1);
+        List<Colony> allColonies = new ArrayList<>();
+        Board board = new Board(allColonies);
+        ColonyFactory colonyFactory = new ColonyFactory();
+        Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1,board);
+        allColonies.add(colony1);
+        board.initFields();
+        Person person = colony1.getPeople().stream().filter(p -> p.getType() == PersonType.FARMER).findFirst().get();
 
         for (int i = 0; i < 100; i++) {  // Wykonujemy 100 kroków
             person.walk();

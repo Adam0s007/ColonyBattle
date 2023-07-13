@@ -76,6 +76,7 @@ public abstract class Person implements Runnable{
     private void move(Vector2d newPosition) {
         Vector2d oldPosition = this.position;
         connectionHelper.changePosConnections(oldPosition,newPosition);
+        if(cellHelper == null) return;
         cellHelper.resetCell(oldPosition);
         cellHelper.newCellAt(newPosition);
     }
@@ -184,6 +185,10 @@ public abstract class Person implements Runnable{
     }
     public void setColony(Colony colony) {
         this.colony = colony;
+    }
+
+    public PersonType getType() {
+        return type;
     }
 
     public abstract ImageIcon getImage();

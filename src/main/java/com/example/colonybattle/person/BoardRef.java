@@ -16,13 +16,14 @@ public final class BoardRef {
 
     //funkcja sprawdzająca, czy w Bardzie w field znajduje się dany Vector2d
     public boolean isFieldOccupied(Vector2d field){
-        return getBoard().isFieldOccupied(field.toString());
+        return getBoard() != null ? getBoard().isFieldOccupied(field.toString()) : false;
     }
     public Vector2d getVectorFromBoard(Vector2d field){
-        return getBoard().getVector2d(field.toString());
+        return getBoard() != null ? getBoard().getVector2d(field.toString()) : null;
     }
 
     void addVectorToBoard(Vector2d vector){
-        getBoard().getFields().put(vector.toString(),vector);
+        if(getBoard() != null)
+            getBoard().getFields().put(vector.toString(),vector);
     }
 }
