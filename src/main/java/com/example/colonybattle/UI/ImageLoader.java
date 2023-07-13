@@ -8,17 +8,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageLoader {
+    private static ImageLoader instance = null;
 
     private Map<PersonType, ImageIcon> imageMap = new HashMap<>();
 
-    public ImageLoader() {
+    private ImageLoader() {
         for (PersonType type : PersonType.values()) {
-            imageMap.put(type, new ImageIcon(  type.toString() + ".png"));
+            imageMap.put(type, new ImageIcon(type.toString() + ".png"));
         }
+    }
+
+    public static ImageLoader getInstance() {
+        if (instance == null) {
+            instance = new ImageLoader();
+        }
+        return instance;
     }
 
     public ImageIcon getImageForType(PersonType type) {
         return imageMap.get(type);
     }
 }
+
 

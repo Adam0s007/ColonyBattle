@@ -1,7 +1,9 @@
 package com.example.colonybattle.person;
 import com.example.colonybattle.*;
+import com.example.colonybattle.UI.ImageLoader;
 import com.example.colonybattle.colony.Colony;
 
+import javax.swing.*;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -18,7 +20,11 @@ public abstract class Person implements Runnable{
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
     protected Attack attackPerformer;
-    private boolean isAttacking = true;
+
+    protected PersonType type;
+    protected ImageIcon image;
+    protected ImageLoader imageLoader = ImageLoader.getInstance();
+
     @Override
     public int hashCode() {
         return this.status.id;
@@ -37,6 +43,7 @@ public abstract class Person implements Runnable{
         return "Person[" + "id=" + this.status + ']';
     }
     public Person(int health, int energy, int strength, Vector2d position, Colony colony, int landAppropriation,int id) {
+        this.imageLoader = ImageLoader.getInstance();
         this.status = new PersonStatus(health,energy,strength,landAppropriation,id);
         this.cellHelper = new CellHelper(this);
         this.boardRef = new BoardRef(this);
@@ -68,14 +75,19 @@ public abstract class Person implements Runnable{
         cellHelper.resetCell(oldPosition);
         cellHelper.newCellAt(newPosition);
     }
+    Vector2d calculateNewPosition(Vector2d position, Vector2d directionVector) {
+        Vector2d newPosition = position.addVector(directionVector);
+        if (boardRef.isFieldOccupied(newPosition)) {
+            newPosition = boardRef.getVectorFromBoard(newPosition);
+        }
+        return newPosition;
+    }
 
     public void walk() {
         Direction[] directions = Direction.values();
         Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
         Vector2d directionVector = randomDirection.getVector();
-        Vector2d newPosition = position.addVector(directionVector);//tworzy nowy Vector
-        if(boardRef.isFieldOccupied(newPosition))
-            newPosition = boardRef.getVectorFromBoard(newPosition);
+        Vector2d newPosition = calculateNewPosition(position, directionVector);
         // Sprawdzenie czy nowa pozycja jest w granicach planszy
         if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
             Vector2d oldPosition = this.position;
@@ -86,11 +98,8 @@ public abstract class Person implements Runnable{
             else{
                 this.move(newPosition);
                 posLock.releasePositionLock(oldPosition);
-
             }
-
         }
-
     }
 
     @Override
@@ -185,6 +194,5 @@ public abstract class Person implements Runnable{
         this.colony = colony;
     }
 
-
-
+    public abstract ImageIcon getImage();
 }

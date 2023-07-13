@@ -25,6 +25,7 @@ public class CellHelper {
         Engine.getFrame().setInitColor(position);
         Engine.getFrame().setLifeAtPosition(position, 0);
         Engine.getFrame().setInitial(position, ' ');
+        removeImageFromCell(position);
     }
 
     void newCellAt(Vector2d newPosition){
@@ -32,5 +33,14 @@ public class CellHelper {
         Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(color));
         Engine.getFrame().setLifeAtPosition(newPosition, person.status.health); // Ustawiamy aktualną ilość życia osoby
         Engine.getFrame().setInitial(person.position, person.getInitial());
+        addImageToCell(newPosition);
+    }
+
+    void addImageToCell(Vector2d position){
+        Engine.getFrame().setImageAtPosition(position, person.getImage());
+    }
+
+    void removeImageFromCell(Vector2d position){
+        Engine.getFrame().removeImageAtPosition(position);
     }
 }

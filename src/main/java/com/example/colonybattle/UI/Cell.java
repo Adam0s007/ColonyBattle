@@ -10,6 +10,8 @@ public class Cell extends JPanel {
     private JLabel lifeLabel;
     private JLabel initialLabel;
 
+    private JLabel imageLabel;
+
     public Cell(int x, int y) {
         super();
         this.position = new Vector2d(x, y);
@@ -35,6 +37,14 @@ public class Cell extends JPanel {
 
         Border border = BorderFactory.createLineBorder(new Color(0, 184, 70));
         this.setBorder(border);
+
+        imageLabel = new JLabel();
+        //GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets.bottom = 2;
+        this.add(imageLabel, constraints);
     }
 
     public Vector2d getPosition() {
@@ -57,5 +67,13 @@ public class Cell extends JPanel {
         if (initial == ' ') {
             initialLabel.setText("");
         }
+    }
+
+    public void setImageIcon(ImageIcon icon) {
+        imageLabel.setIcon(icon);
+    }
+
+    public void removeImageIcon() {
+        imageLabel.setIcon(null);
     }
 }

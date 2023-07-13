@@ -48,4 +48,14 @@ public class MyFrame extends JFrame {
         grid[position.getX()][position.getY()].updateInitial(initial);
     }
 
+    // Metoda do ustawiania obrazka na danej pozycji
+    public void setImageAtPosition(Vector2d position, ImageIcon icon) {
+        grid[position.getX()][position.getY()].setImageIcon(icon);
+    }
+
+    // Metoda do usuwania obrazka z danej pozycji
+    public void removeImageAtPosition(Vector2d position) {
+        grid[position.getX()][position.getY()].removeImageIcon();
+    }
+
 }
