@@ -81,18 +81,20 @@ public abstract class Person implements Runnable{
         Direction[] directions = Direction.values();
         Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
         Vector2d directionVector = randomDirection.getVector();
-
         Vector2d newPosition = position.addVector(directionVector);//tworzy nowy Vector
         if(boardRef.isFieldOccupied(newPosition))
             newPosition = boardRef.getVectorFromBoard(newPosition);
         // Sprawdzenie czy nowa pozycja jest w granicach planszy
         if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
             Vector2d oldPosition = this.position;
-            if(!posLock.aquirePositionLock(newPosition))
-               walk();
+            if(!posLock.aquirePositionLock(newPosition)){
+                attackNearby();//zaatakuj jesli sie nie da tam wejsc
+                walk();
+            }
             else{
                 this.move(newPosition);
                 posLock.releasePositionLock(oldPosition);
+
             }
 
         }
@@ -109,7 +111,6 @@ public abstract class Person implements Runnable{
                 die();
             }
             walk();
-            attackNearby();
             //regenerate();
         }
     };
@@ -137,18 +138,17 @@ public abstract class Person implements Runnable{
 
     public void AttackingTime(long timeEnd) {
 
-        int maxIter = ThreadLocalRandom.current().nextInt(1, 2);
+        int maxIter = ThreadLocalRandom.current().nextInt(1, 4);
         int currIter = 0;
         //podziel timeEnd przez 5 , zrzutuj na long
-        long passingTime = (int) (timeEnd / maxIter);
+        long passingTime = (int) (Math.abs(timeEnd-200) / maxIter);
         while (currIter++ < maxIter) {
             try {
-                attackNearby();
+                    attackNearby();
                 Thread.sleep((int)(passingTime));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            attackNearby();
         }
 
 
