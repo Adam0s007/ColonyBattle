@@ -14,7 +14,7 @@ public class ImageLoader {
 
     private ImageLoader() {
         for (PersonType type : PersonType.values()) {
-            imageMap.put(type, new ImageIcon(type.toString() + ".png"));
+            imageMap.put(type, new ImageIcon("heads/"+type.toString() + ".png"));
         }
     }
 

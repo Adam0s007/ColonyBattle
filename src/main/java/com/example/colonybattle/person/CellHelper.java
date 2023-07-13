@@ -26,6 +26,7 @@ public class CellHelper {
         Engine.getFrame().setLifeAtPosition(position, 0);
         Engine.getFrame().setInitial(position, ' ');
         removeImageFromCell(position);
+        //Engine.getFrame().setInitColor(position);
     }
 
     void newCellAt(Vector2d newPosition){
