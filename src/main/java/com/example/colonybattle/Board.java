@@ -117,5 +117,9 @@ public class Board {
         return lockManager;
     }
 
+    public List<Colony> getAllColonies() {
+        return allColonies;
+    }
+
 
 }

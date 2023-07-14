@@ -3,6 +3,8 @@ import com.example.colonybattle.*;
 import com.example.colonybattle.UI.ImageLoader;
 import com.example.colonybattle.UI.ImageLoaderInterface;
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.colony.ColonyType;
+import com.example.colonybattle.person.ConcreteCharacters.Warrior;
 import com.example.colonybattle.person.ConcreteCharacters.Wizard;
 
 import javax.swing.*;
@@ -23,6 +25,8 @@ public abstract class Person implements Runnable{
     protected PosLock posLock;
     protected Attack attackPerformer;
     protected ImageLoaderInterface imageLoader;
+    private int depth = 0;
+    private final int MAX_DEPTH = 1;
 
     @Override
     public int hashCode() {
@@ -80,11 +84,12 @@ public abstract class Person implements Runnable{
     }
 
     public void walk() {
-        Vector2d newPosition = boardRef.generateRandomPosition(position);
+        Vector2d newPosition = newPoint();
         if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
             Vector2d oldPosition = position;
             this.boardRef.addVectorToBoard(newPosition);
             if(!posLock.aquirePositionLock(newPosition)){
+                depth++;
                 walk();
             }
             else{
@@ -98,6 +103,20 @@ public abstract class Person implements Runnable{
             Magic wizard = (Wizard) this;
             wizard.healFriends();
         }
+    }
+    private Vector2d newPoint(){
+        if(depth == MAX_DEPTH){
+            depth = 0;
+            return boardRef.generateRandomPosition(position);
+        }
+        if(this instanceof Warrior && this.getColony().getType() == ColonyType.COLONY1){
+            Warrior warrior = (Warrior) this;
+            Vector2d closestEnemy = warrior.findClosestPerson();
+            Vector2d directionVec = boardRef.calculateDirection(position,closestEnemy);
+            System.out.println("Mypos: "+ position + " closestEnemy: " + closestEnemy + " directionVec: " + directionVec);
+            return boardRef.calculateNewPosition(position,directionVec);
+        }
+        return boardRef.generateRandomPosition(position);
     }
 
     @Override
@@ -189,7 +208,7 @@ public abstract class Person implements Runnable{
     public abstract ImageIcon getImage();
 
     public void attack(Person person) {
-        person.defend(4);
+        person.defend(2);
     }
     public void healMe(int heal){
         int oldHealth = this.status.addHealth(heal);

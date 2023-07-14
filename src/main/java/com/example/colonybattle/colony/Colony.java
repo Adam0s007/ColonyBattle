@@ -105,4 +105,18 @@ public class Colony {
                 "type=" + type +
                 ']';
     }
+    //equal function override
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Colony)) return false;
+        Colony colony = (Colony) o;
+        return type == colony.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return type.hashCode();
+    }
+
 }

@@ -7,6 +7,10 @@ import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.PersonType;
 
 import javax.swing.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Warrior extends Person {
@@ -51,5 +55,22 @@ public class Warrior extends Person {
             status.addHealth(-reducedDamage);
         }
     }
+
+
+    public Vector2d findClosestPerson() {
+        Vector2d closestPersonPosition = null;
+        List<Colony> colonies = this.boardRef.getAllColonies();
+        Optional<Person> closestPerson = colonies.stream()
+                .filter(colony -> !colony.equals(this.getColony())) // filter out this person's colony
+                .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
+                .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
+
+        if (closestPerson.isPresent()) {
+            closestPersonPosition = closestPerson.get().getPosition();
+        }
+        return closestPersonPosition;
+    }
+
+
 
 }

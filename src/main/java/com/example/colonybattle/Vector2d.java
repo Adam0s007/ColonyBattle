@@ -135,6 +135,15 @@ public class Vector2d {
         return this.x >= 0 && this.x < size && this.y >= 0 && this.y < size;
     }
 
+    public double distanceTo(Vector2d other) {
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    }
+
+    public double magnitude() {
+        return Math.sqrt(x * x + y * y);
+    }
+
+
 
 
 
