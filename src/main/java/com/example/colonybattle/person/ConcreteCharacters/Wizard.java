@@ -18,7 +18,7 @@ public class Wizard extends Person implements Magic {
     private  final int MIN_PROTECTION_ENERGY = 4;
     //Random value between 0 and 4:
     private final int INITIAL_DELAY;
-    private final int PERIOD = 6;
+    private final int PERIOD = 3;
     public Wizard(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
@@ -89,8 +89,15 @@ public class Wizard extends Person implements Magic {
     }
 
 
+    @Override
     public void attack(Person person) {
-        person.defend(4);
+        int strength = status.getStrength();
+        int energy = status.getEnergy();
+        if(energy < this.MIN_PROTECTION_ENERGY) {
+            person.defend(1);
+        }
+        int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
+        person.defend(damage);
     }
 
     @Override

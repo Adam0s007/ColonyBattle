@@ -45,5 +45,15 @@ public class Defender extends Person {
             status.addHealth(-reducedDamage);
         }
     }
+    @Override
+    public void attack(Person person) {
+        int strength = status.getStrength();
+        int energy = status.getEnergy();
+        if(energy < this.MIN_PROTECTION_ENERGY) {
+            person.defend(1);
+        }
+        int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
+        person.defend(damage);
+    }
 
 }

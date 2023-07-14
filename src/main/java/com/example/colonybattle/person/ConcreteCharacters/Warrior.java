@@ -40,17 +40,16 @@ public class Warrior extends Person {
         if (status.getEnergy() >= MIN_PROTECTION_ENERGY) { // Minimalna wartość energii wymagana do obrony
             double random = ThreadLocalRandom.current().nextDouble();  // Generowanie losowej liczby z zakresu 0-1
 
-            if (random <= 0.25) {
+            if (random <= 0.45) {
                 // Obrona się powiodła - nie traci życia, ale traci MIN_PROTECTION_ENERGY
                 status.addEnergy(-MIN_PROTECTION_ENERGY);
             } else {
-                // Obrona się nie powiodła - traci 1 serce i 1 punkt energii
-                status.addEnergy(-1);
+                // Obrona się nie powiodła - traci 1 serce
                 status.addHealth(-1);
             }
         } else {
             // Brak wystarczającej ilości energii do obrony
-            double damageReduction = 0.4; // 40% redukcji obrażeń, gdy brak energii
+            double damageReduction = 0.6; // 40% redukcji obrażeń, gdy brak energii
             int reducedDamage = (int) Math.ceil(damage * damageReduction);
             status.addHealth(-reducedDamage);
         }
@@ -69,6 +68,16 @@ public class Warrior extends Person {
             closestPersonPosition = closestPerson.get().getPosition();
         }
         return closestPersonPosition;
+    }
+    @Override
+    public void attack(Person person) {
+        int strength = status.getStrength();
+        int energy = status.getEnergy();
+        if(energy < this.MIN_PROTECTION_ENERGY) {
+            person.defend(1);
+        }
+        int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
+        person.defend(damage);
     }
 
 

@@ -29,7 +29,7 @@ public class Attack {
 
     private void executeAttackInDirection(Vector2d offset) {
         Vector2d position = attacker.getPosition();
-        Vector2d targetPos = boardRef.calculateNewPosition(attacker.getPosition(),offset);
+        Vector2d targetPos = boardRef.calculateNewPosition(position,offset);
         Person person = targetPos.getPerson();
         if(person != null){
             if(person.getColony().getType() != attacker.getColony().getType()){

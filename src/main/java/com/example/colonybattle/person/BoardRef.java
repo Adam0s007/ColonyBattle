@@ -38,6 +38,7 @@ public class BoardRef {
 
     public Vector2d calculateNewPosition(Vector2d position, Vector2d directionVector) {
         Vector2d newPosition = position.addVector(directionVector);
+        while(!newPosition.properCoordinates(Board.SIZE))newPosition = generateRandomPosition(position);
         if (this.isFieldOccupied(newPosition)) {
             newPosition = this.getVectorFromBoard(newPosition);
         }

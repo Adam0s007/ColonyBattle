@@ -105,18 +105,20 @@ public abstract class Person implements Runnable{
         }
     }
     private Vector2d newPoint(){
+        Vector2d randomPos = boardRef.generateRandomPosition(position);
         if(depth == MAX_DEPTH){
             depth = 0;
-            return boardRef.generateRandomPosition(position);
+            return randomPos;
         }
         if(this instanceof Warrior){
             Warrior warrior = (Warrior) this;
             Vector2d closestEnemy = warrior.findClosestPerson();
             Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
-            System.out.println("Mypos: "+ position + " closestEnemy: " + closestEnemy + " directionVec: " + directionVec);
+            if(this.getStatus().getHealth() < 5) directionVec = new Vector2d(-directionVec.getX(),-directionVec.getY());
+            //System.out.println("Mypos: "+ position + " closestEnemy: " + closestEnemy + " directionVec: " + directionVec);
             return boardRef.calculateNewPosition(position,directionVec);
         }
-        return boardRef.generateRandomPosition(position);
+        return randomPos;
     }
 
     @Override
@@ -208,7 +210,8 @@ public abstract class Person implements Runnable{
     public abstract ImageIcon getImage();
 
     public void attack(Person person) {
-        person.defend(2);
+        person.defend(1);
+        this.status.addEnergy(-1);
     }
     public void healMe(int heal){
         int oldHealth = this.status.addHealth(heal);
