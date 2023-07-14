@@ -1,5 +1,6 @@
 package com.example.colonybattle.person;
 
+import com.example.colonybattle.Direction;
 import com.example.colonybattle.person.BoardRef;
 import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.PersonStatus;
@@ -16,7 +17,7 @@ public class Attack {
     public Attack(Person attacker, BoardRef boardRef) {
         this.attacker = attacker;
         this.boardRef = boardRef;
-        offsets = getOffsets();
+        offsets = Direction.getVectors();
     }
 
     public void executeNearbyAttack() {
@@ -25,17 +26,10 @@ public class Attack {
         }
     }
 
-    private Vector2d[] getOffsets() {
-        return new Vector2d[] {
-                new Vector2d(-1, -1), new Vector2d(-1, 0), new Vector2d(-1, 1),
-                new Vector2d(0, -1), new Vector2d(0, 1),
-                new Vector2d(1, -1), new Vector2d(1, 0), new Vector2d(1, 1),
-        };
-    }
 
     private void executeAttackInDirection(Vector2d offset) {
         Vector2d position = attacker.getPosition();
-        Vector2d targetPos = position.calculateNewPosition(attacker.getPosition(),offset,boardRef);
+        Vector2d targetPos = boardRef.calculateNewPosition(attacker.getPosition(),offset);
         Set<Person> people = targetPos.getPeople();
         attackEnemiesInSet(people);
     }

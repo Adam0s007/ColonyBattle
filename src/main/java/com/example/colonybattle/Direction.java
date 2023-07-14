@@ -19,5 +19,13 @@ public enum Direction {
     public Vector2d getVector() {
         return this.vector;
     }
+    //funkcja zwraca tablicę vectorow2d przekonwertowanych z enuma
+    public static Vector2d[] getVectors(){
+        Vector2d[] vectors = new Vector2d[8];
+        for(Direction direction : Direction.values()){
+            vectors[direction.ordinal()] = direction.getVector();
+        }
+        return vectors;
+    }
 }
 

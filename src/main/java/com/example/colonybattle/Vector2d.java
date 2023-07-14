@@ -139,20 +139,7 @@ public class Vector2d {
         return this.x >= 0 && this.x < size && this.y >= 0 && this.y < size;
     }
 
-    public Vector2d calculateNewPosition(Vector2d position, Vector2d directionVector, BoardRef boardRef) {
-        Vector2d newPosition = position.addVector(directionVector);
-        if (boardRef.isFieldOccupied(newPosition)) {
-            newPosition = boardRef.getVectorFromBoard(newPosition);
-        }
-        return newPosition;
-    }
 
-    public Vector2d generateRandomPosition(Vector2d position, BoardRef boardRef) {
-        Direction[] directions = Direction.values();
-        Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        Vector2d directionVector = randomDirection.getVector();
-        return calculateNewPosition(position, directionVector, boardRef);
-    }
 
 
 }

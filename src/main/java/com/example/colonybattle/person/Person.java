@@ -82,7 +82,7 @@ public abstract class Person implements Runnable{
     }
 
     public void walk() {
-        Vector2d newPosition = position.generateRandomPosition(position, boardRef);
+        Vector2d newPosition = boardRef.generateRandomPosition(position);
         if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
             Vector2d oldPosition = position;
             this.boardRef.addVectorToBoard(newPosition);

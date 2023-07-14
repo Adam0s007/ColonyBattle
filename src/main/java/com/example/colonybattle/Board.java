@@ -14,7 +14,7 @@ public class Board {
     public static final int SIZE = 20;
 
     private Map<String,Vector2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
-    private  final LockMapPosition lockManager = new LockMapPosition(Board.SIZE);
+    private  final LockMapPosition lockManager = new LockMapPosition();
     private List<Colony> allColonies;
     private ExecutorService executorService;
     public Board(List<Colony> allColonies) {
@@ -38,10 +38,13 @@ public class Board {
     public void initFields() {
         for (Colony colony : allColonies) {
             for (Person person : colony.getPeople()) {
-                fields.put(person.getPosition().toString(),person.getPosition());
+                Vector2d position = person.getPosition();
+                fields.put(position.toString(), position);
+                lockManager.initializeLock(position);
             }
         }
     }
+
     //funckja sprawdzająca czy dany wektor Vector2d znajduje się w fields
     public boolean isFieldOccupied(String stringPos) {
         return fields.containsKey(stringPos);
