@@ -12,7 +12,7 @@ public class Defender extends Person {
 
     public Defender(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
-        super.type = type;
+        status.setType(type);
 
     }
     @Override
@@ -23,6 +23,6 @@ public class Defender extends Person {
 
     @Override
     public ImageIcon getImage() {
-        return imageLoader.getImageForType(type);
+        return imageLoader.getImageForType(getType());
     }
 }

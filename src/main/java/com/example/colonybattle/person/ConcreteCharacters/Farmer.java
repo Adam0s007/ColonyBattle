@@ -12,7 +12,7 @@ public class Farmer extends Person {
 
     public Farmer(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
-        super.type = type;
+        status.setType(type);
 
     }
 
@@ -24,6 +24,6 @@ public class Farmer extends Person {
     // Implementacja metod...
     @Override
     public ImageIcon getImage() {
-        return imageLoader.getImageForType(type);
+        return imageLoader.getImageForType(getType());
     }
 }

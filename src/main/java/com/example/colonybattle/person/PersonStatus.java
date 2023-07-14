@@ -10,6 +10,7 @@ public class PersonStatus {
      final int strength;
      volatile int id;
      final int landAppropriation;
+     PersonType type;
 
     private final Semaphore healthSemaphore = new Semaphore(1);
     private final Semaphore energySemaphore = new Semaphore(1);
@@ -55,6 +56,14 @@ public class PersonStatus {
 
     public int getLandAppropriation() {
         return landAppropriation;
+    }
+
+    public void setType(PersonType type){
+        this.type = type;
+    }
+
+    public PersonType getType(){
+        return this.type;
     }
 
     public int getId(){
@@ -109,7 +118,7 @@ public class PersonStatus {
             energySemaphore.acquire();
             if(this.energy + energy < 0){
                 this.energy = 0;
-            } else {
+            } else if(this.energy + energy <= type.getEnergy()){
                 this.energy += energy;
             }
             energySemaphore.release();
@@ -125,7 +134,7 @@ public class PersonStatus {
             healthSemaphore.acquire();
             if(this.health + health < 0){
                 this.health = 0;
-            } else {
+            } else if (this.health + health <= type.getHealth()){
                 this.health += health;
             }
             healthSemaphore.release();

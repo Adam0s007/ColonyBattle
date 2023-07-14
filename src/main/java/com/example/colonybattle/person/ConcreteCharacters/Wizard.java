@@ -13,13 +13,13 @@ public class Wizard extends Person implements Magic {
 
     public Wizard(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
-        super.type = type;
+        status.setType(type);
 
     }
 
     @Override
     public Character getInitial() {
-        return 'W'; // Dla Obrońcy
+        return 'W';
     }
     @Override
     public void wand() {
@@ -36,6 +36,6 @@ public class Wizard extends Person implements Magic {
     // Implementacja pozostałych metod...
     @Override
     public ImageIcon getImage() {
-        return imageLoader.getImageForType(type);
+        return imageLoader.getImageForType(getType());
     }
 }

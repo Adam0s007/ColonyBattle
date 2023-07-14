@@ -21,9 +21,6 @@ public abstract class Person implements Runnable{
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
     protected Attack attackPerformer;
-
-    protected PersonType type;
-    protected ImageIcon image;
     protected ImageLoaderInterface imageLoader;
 
     @Override
@@ -170,7 +167,7 @@ public abstract class Person implements Runnable{
     public void regenerate(){
         this.getStatus().addEnergy(2);
         this.getStatus().addHealth(1);
-
+        this.cellHelper.updateLife(this.getStatus().getHealth());
     };
     public  void giveBirth(){};
     public abstract Character getInitial(); // Nowa metoda zwracająca inicjały osoby
@@ -188,8 +185,9 @@ public abstract class Person implements Runnable{
     }
 
     public PersonType getType() {
-        return type;
+        return status.getType();
     }
+
 
     public abstract ImageIcon getImage();
 }
