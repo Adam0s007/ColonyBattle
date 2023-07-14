@@ -17,6 +17,10 @@ public class CellHelper {
         Engine.getFrame().setLifeAtPosition(person.position, person.status.getHealth());
     }
 
+    void updateLifeAndEnergy(int life,int energy){
+        Engine.getFrame().setLifeAtPosition(person.position, person.status.getHealth());
+
+    }
     void deathColor(){
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.PURPLE));
     }

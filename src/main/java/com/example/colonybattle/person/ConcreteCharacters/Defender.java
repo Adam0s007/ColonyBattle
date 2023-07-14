@@ -7,9 +7,11 @@ import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.PersonType;
 
 import javax.swing.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Defender extends Person {
 
+    private final int MIN_PROTECTION_ENERGY = 3;
     public Defender(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
@@ -25,4 +27,23 @@ public class Defender extends Person {
     public ImageIcon getImage() {
         return imageLoader.getImageForType(getType());
     }
+
+    @Override
+    public void defend(int damage) {
+        if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
+            double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
+
+            if (random <= 0.8) {
+                status.addEnergy(-1);//traci tylko 1 punkt energii
+            } else {
+                status.addEnergy(-1);
+                status.addHealth(-1);
+            }
+        } else {
+            double damageReduction = 0.6; // 60% damage reduction when energy < PROTECTION_ENERGY
+            int reducedDamage = (int) Math.ceil(damage * damageReduction);
+            status.addHealth(-reducedDamage);
+        }
+    }
+
 }

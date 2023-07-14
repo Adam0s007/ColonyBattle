@@ -113,15 +113,6 @@ public abstract class Person implements Runnable{
         posLock.releasePositionLock(oldPosition);
         this.stop();
     }
-    public void attack(Person person) {
-        if (this.getStatus().getEnergy() > 0) {
-            person.getStatus().addHealth(-1);
-            person.cellHelper.updateLife(person.getStatus().getHealth());
-
-        }
-    }
-
-
     public void AttackingTime(long timeEnd) {
         int maxIter = ThreadLocalRandom.current().nextInt(1, 3);
         int currIter = 0;
@@ -138,7 +129,6 @@ public abstract class Person implements Runnable{
 
 
     }
-
     public void PersonWaiting(){
         long timeEnd = ThreadLocalRandom.current().nextInt(800, 1500);
         //funckja AttackingTime powinna sie tutaj wykonywac rownolegle w osobnym wątku
@@ -155,15 +145,12 @@ public abstract class Person implements Runnable{
         }
         executor.shutdown();
     }
-
     public void attackNearby() {
         attackPerformer.executeNearbyAttack();
     }
-
     public PersonStatus getStatus(){
         return this.status;
     }
-
     public void regenerate(){
         this.getStatus().addEnergy(2);
         this.getStatus().addHealth(1);
@@ -183,11 +170,16 @@ public abstract class Person implements Runnable{
     public void setColony(Colony colony) {
         this.colony = colony;
     }
-
     public PersonType getType() {
         return status.getType();
     }
 
 
     public abstract ImageIcon getImage();
+
+    public void attack(Person person) {
+        person.defend(4);
+    }
+
+    public abstract void defend(int attackStrength);
 }
