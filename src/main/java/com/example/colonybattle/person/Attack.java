@@ -30,17 +30,14 @@ public class Attack {
     private void executeAttackInDirection(Vector2d offset) {
         Vector2d position = attacker.getPosition();
         Vector2d targetPos = boardRef.calculateNewPosition(attacker.getPosition(),offset);
-        Set<Person> people = targetPos.getPeople();
-        attackEnemiesInSet(people);
-    }
-
-    private void attackEnemiesInSet(Set<Person> people) {
-        for (Person person : people) {
-            if (person.getColony().getType() != attacker.getColony().getType()) {
+        Person person = targetPos.getPerson();
+        if(person != null){
+            if(person.getColony().getType() != attacker.getColony().getType()){
                 attackAndPossiblyKill(person);
             }
         }
     }
+
 
     private void attackAndPossiblyKill(Person person) {
         attacker.attack(person);

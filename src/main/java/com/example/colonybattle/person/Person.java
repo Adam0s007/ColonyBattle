@@ -93,24 +93,24 @@ public abstract class Person implements Runnable{
             }
         }
     }
+    private void checkWizardingQualifications(){
+        if(this instanceof Wizard){
+            Magic wizard = (Wizard) this;
+            wizard.healFriends();
+        }
+    }
 
     @Override
     public void run(){
         initGUI();
         posLock.aquirePositionLock(position);
-        if(this instanceof Wizard){
-            Magic wizard = (Wizard) this;
-            wizard.healFriends();
-        }
+        checkWizardingQualifications();
         while(running){
 
             PersonWaiting();
             if(this.getStatus().getHealth() <= 0)
                 die();
             walk();
-            //regenerate();
-            //how to check if this is class Wizard extends Person
-
         }
     };
 

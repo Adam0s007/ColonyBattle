@@ -13,7 +13,7 @@ public class Vector2d {
     private int y;
     private Colony membership;//okresla przynaleznosc do kolonii
     private int appropriationRate; //okresla stopien przynaleznosci do kolonii
-    private Set<Person> people = new HashSet<>(); //wskazanie na osoby na tym polu
+    private Person person;
 
 
 
@@ -22,21 +22,21 @@ public class Vector2d {
         this.y = y;
         this.membership = membership;
         this.appropriationRate = appropriationRate;
-        this.people = new HashSet<>();
+        this.person = null;
     }
-    public Vector2d(int x, int y, Colony membership, int appropriationRate,Person people) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
+    public Vector2d(int x, int y, Colony membership, int appropriationRate,Person person) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
         this.x = x;
         this.y = y;
         this.membership = membership;
         this.appropriationRate = appropriationRate;
-        this.people.add(people);
+        this.person = person;
     }
     public Vector2d(int x, int y) {
         this.x = x;
         this.y = y;
         this.membership = null;
         this.appropriationRate = 10;
-        this.people = new HashSet<>();
+        this.person = null;
     }
 
     public Vector2d newVector(int x, int y) {
@@ -109,30 +109,26 @@ public class Vector2d {
         this.appropriationRate = appropriationRate;
     }
 
-    public Set<Person> getPeople() {
-        return people;
+    public Person getPerson() {
+        return person;
     }
-    public void setPeople(Set<Person> people) {
-        this.people = people;
+    public void setPerson(Person person) {
+        this.person = person;
     }
     public void addPerson(Person person) {
-        this.people.add(person);
+        this.setPerson(person);
     }
 
     public Person popPerson(Person person) {
-        this.people.remove(person);
-        return person;
+        if(this.person.equals(person)) {
+            Person oldPerson = this.person;
+            this.person = null;
+            return oldPerson;
+        }
+        return null;
     }
     public Boolean containPerson(Person person) {
-        return this.people.contains(person);
-    }
-    //funkcja sprawdzająca, czy osoby na tym polu są z dwóch roznych kolonii
-    public Boolean isConflict() {
-        if (this.people.size() > 1) {
-            Person[] peopleArray = this.people.toArray(new Person[0]);
-            return peopleArray[0].getColony().getType() != peopleArray[1].getColony().getType();
-        }
-        return false;
+        return this.person.equals(person);
     }
 
     public boolean properCoordinates(int size) {
