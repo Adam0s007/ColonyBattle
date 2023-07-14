@@ -109,10 +109,10 @@ public abstract class Person implements Runnable{
             depth = 0;
             return boardRef.generateRandomPosition(position);
         }
-        if(this instanceof Warrior && this.getColony().getType() == ColonyType.COLONY1){
+        if(this instanceof Warrior){
             Warrior warrior = (Warrior) this;
             Vector2d closestEnemy = warrior.findClosestPerson();
-            Vector2d directionVec = boardRef.calculateDirection(position,closestEnemy);
+            Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
             System.out.println("Mypos: "+ position + " closestEnemy: " + closestEnemy + " directionVec: " + directionVec);
             return boardRef.calculateNewPosition(position,directionVec);
         }
