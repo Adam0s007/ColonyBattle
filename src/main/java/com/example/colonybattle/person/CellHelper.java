@@ -13,19 +13,19 @@ public class CellHelper {
         this.person = person;
 
     }
-    void updateLife(int life){
+    public void updateLife(int life){
         Engine.getFrame().setLifeAtPosition(person.position, person.status.getHealth());
     }
 
-    void updateLifeAndEnergy(int life,int energy){
+    public void updateLifeAndEnergy(int life,int energy){
         Engine.getFrame().setLifeAtPosition(person.position, person.status.getHealth());
 
     }
-    void deathColor(){
+    public void deathColor(){
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.PURPLE));
     }
 
-    void resetCell(Vector2d position){
+    public void resetCell(Vector2d position){
         Engine.getFrame().setInitColor(position);
         Engine.getFrame().setLifeAtPosition(position, 0);
         Engine.getFrame().setInitial(position, ' ');
@@ -33,7 +33,7 @@ public class CellHelper {
         //Engine.getFrame().setInitColor(position);
     }
 
-    void newCellAt(Vector2d newPosition){
+    public void newCellAt(Vector2d newPosition){
         ConsoleColor consoleColor = person.colony.getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
         Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(consoleColor));
         Engine.getFrame().setLifeAtPosition(newPosition, person.status.health); // Ustawiamy aktualną ilość życia osoby
@@ -41,11 +41,24 @@ public class CellHelper {
         addImageToCell(newPosition);
     }
 
-    void addImageToCell(Vector2d position){
+    public void addImageToCell(Vector2d position){
         Engine.getFrame().setImageAtPosition(position, person.getImage());
     }
 
-    void removeImageFromCell(Vector2d position){
+    public void removeImageFromCell(Vector2d position){
         Engine.getFrame().removeImageAtPosition(position);
+    }
+
+    public void healingColor(){
+
+        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.BLUE));
+        try{
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(person.colony.getColor().getColor()));
+
+
     }
 }

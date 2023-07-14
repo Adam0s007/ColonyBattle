@@ -10,8 +10,8 @@ public class ColorConverter {
             case BRIGHT_RED:
                 return java.awt.Color.RED;
             case BLUE:
+                return java.awt.Color.BLUE;
             case BRIGHT_BLUE:
-                //return java.awt.Color.BLUE;
                 return new java.awt.Color(126, 194, 252);
             case GREEN:
             case BRIGHT_GREEN:

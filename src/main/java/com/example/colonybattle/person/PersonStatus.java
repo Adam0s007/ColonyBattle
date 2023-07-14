@@ -129,20 +129,21 @@ public class PersonStatus {
 
     }
 
-    public void addHealth(int health){
+    public int addHealth(int health){
+        int oldHealth = this.health;
         try{
             healthSemaphore.acquire();
             if(this.health + health < 0){
                 this.health = 0;
-            } else if (this.health + health <= type.getHealth()){
-                this.health += health;
+            } else {
+                this.health = Math.min(this.type.getHealth(),this.health + health);
             }
             healthSemaphore.release();
         } catch (InterruptedException e){
             System.out.println("Interrupted");
         }
 
-
+        return oldHealth;
     }
 
     public void setId(int id){

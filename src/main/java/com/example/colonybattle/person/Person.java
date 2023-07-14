@@ -3,6 +3,7 @@ import com.example.colonybattle.*;
 import com.example.colonybattle.UI.ImageLoader;
 import com.example.colonybattle.UI.ImageLoaderInterface;
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.person.ConcreteCharacters.Wizard;
 
 import javax.swing.*;
 import java.util.Set;
@@ -14,9 +15,9 @@ public abstract class Person implements Runnable{
     protected Vector2d position;
 
     protected Colony colony;
-    private volatile boolean running = true;
+    protected volatile boolean running = true;
     protected PersonStatus status;
-    protected CellHelper cellHelper;
+    public CellHelper cellHelper;
     protected BoardRef boardRef;
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
@@ -97,14 +98,24 @@ public abstract class Person implements Runnable{
     public void run(){
         initGUI();
         posLock.aquirePositionLock(position);
+        if(this instanceof Wizard){
+            Magic wizard = (Wizard) this;
+            wizard.healFriends();
+        }
         while(running){
+
             PersonWaiting();
             if(this.getStatus().getHealth() <= 0)
                 die();
             walk();
             //regenerate();
+            //how to check if this is class Wizard extends Person
+
         }
     };
+
+
+
     public void die(){
         Vector2d oldPosition = new Vector2d(this.position.getX(),this.position.getY());
         connectionHelper.changePosConnections(this.position,null);
@@ -180,6 +191,14 @@ public abstract class Person implements Runnable{
     public void attack(Person person) {
         person.defend(4);
     }
+    public void healMe(int heal){
+        int oldHealth = this.status.addHealth(heal);
+        this.cellHelper.updateLife(this.getStatus().getHealth());
+        if(oldHealth < this.getType().getHealth())
+            this.cellHelper.healingColor();
+    }
 
     public abstract void defend(int attackStrength);
+
+
 }

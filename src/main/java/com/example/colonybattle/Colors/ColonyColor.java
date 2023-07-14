@@ -2,7 +2,7 @@ package com.example.colonybattle.Colors;
 
 public enum ColonyColor {
     COLONY1(ConsoleColor.RED),
-    COLONY2(ConsoleColor.BLUE),
+    COLONY2(ConsoleColor.BRIGHT_BLUE),
     COLONY3(ConsoleColor.GREEN),
     COLONY4(ConsoleColor.YELLOW);
 

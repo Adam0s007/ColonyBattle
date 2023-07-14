@@ -4,8 +4,9 @@ import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.person.Person;
 import com.example.colonybattle.Board;
-import java.util.HashSet;
+
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Colony {
 
@@ -16,7 +17,6 @@ public class Colony {
     private int points;
 
     private Board board;
-
 
     public ColonyColor getColor() {
         return color;
@@ -30,16 +30,8 @@ public class Colony {
         return people;
     }
 
-    public void setPeople(Set<Person> people) {
-        this.people = people;
-    }
-
     public Set<Vector2d> getFields() {
         return fields;
-    }
-
-    public void setFields(Set<Vector2d> fields) {
-        this.fields = fields;
     }
 
     public int getPoints() {
@@ -50,8 +42,7 @@ public class Colony {
         this.points = points;
     }
 
-
-    public Board getBoard(){
+    public Board getBoard() {
         return this.board;
     }
 
@@ -59,33 +50,33 @@ public class Colony {
         return people.size();
     }
 
-    public synchronized void addPeople(Set<Person> people) {
-
+    public void addPeople(Set<Person> people) {
         this.people.addAll(people);
-        //kazda osoba musi miec wskaznik do tej kolonii
         for (Person person : people) {
             person.setColony(this);
         }
     }
-    public synchronized void addPerson(Person person) {
+
+    public void addPerson(Person person) {
         this.people.add(person);
-        //person.setColony(this); - to jest robione w klasie Person
     }
 
-    public synchronized void removePerson(Person person) {
-        //person.setColony(null); - to jest robione w klasie Person
+    public void removePerson(Person person) {
         this.people.remove(person);
     }
 
     public Colony() {
-        this.people = new HashSet<>();
-        this.fields = new HashSet<>();
+        this.people = ConcurrentHashMap.newKeySet();
+        this.fields = ConcurrentHashMap.newKeySet();
         this.points = 0;
     }
+
     public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color, Board board) {
         this.type = type;
-        this.people = people;
-        this.fields = fields;
+        this.people = ConcurrentHashMap.newKeySet();
+        this.fields = ConcurrentHashMap.newKeySet();
+        this.people.addAll(people);
+        this.fields.addAll(fields);
         this.points = points;
         this.color = color;
         this.board = board;
@@ -103,12 +94,10 @@ public class Colony {
         }
         return null;
     }
-    //getColonyColor
 
     public ColonyColor getColonyColor() {
         return color;
     }
-
 
     @Override
     public String toString() {
