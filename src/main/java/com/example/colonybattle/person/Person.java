@@ -97,40 +97,24 @@ public abstract class Person implements Runnable{
             wizard.performAbsorption();
         }
     }
-    private Vector2d newPoint(){
+    private Vector2d newPoint() {
         Vector2d randomPos = boardRef.generateRandomPosition(position);
-        if(depth == MAX_DEPTH){
+        if (depth == MAX_DEPTH) {
             depth = 0;
             return randomPos;
         }
-        if(this instanceof Warrior){
-            Warrior warrior = (Warrior) this;
-            Vector2d closestEnemy = warrior.findClosestPerson();
-            if(closestEnemy == null) return randomPos;
-            Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
-            return boardRef.calculateNewPosition(position,directionVec);
-        }else if(this instanceof Farmer){
-            if(this.getStatus().getHealth() > 4) return randomPos;
-            Farmer farmer = (Farmer) this;
-            Vector2d closestEnemy = farmer.findClosestPerson();
-            if(closestEnemy == null) return randomPos;
-            Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
-            directionVec = new Vector2d(-directionVec.getX(),-directionVec.getY());//bedzie uciekac od wroga
-
-            return boardRef.calculateNewPosition(position,directionVec);
-        }else if(this instanceof Defender){
-            Defender defender = (Defender) this;
-            Vector2d closestEnemy = defender.findClosestPerson();
-            if(closestEnemy == null) return randomPos;
-            Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
-            return boardRef.calculateNewPosition(position,directionVec);
-
-        }else if(this instanceof Wizard){
-            return randomPos;
+        Vector2d closestEnemy = null;
+        if (this instanceof Warrior || this instanceof Farmer || this instanceof Defender) {
+            closestEnemy = ((Person) this).findClosestPerson();
+            if (closestEnemy == null) return randomPos;
         }
-        return randomPos;
+        if (closestEnemy == null) return randomPos;
+        Vector2d directionVec = Calculator.calculateDirection(position, closestEnemy);
+        if (this instanceof Farmer && this.getStatus().getHealth() > 4) return randomPos;
+        if (this instanceof Farmer)
+            directionVec = new Vector2d(-directionVec.getX(), -directionVec.getY());
+        return boardRef.calculateNewPosition(position, directionVec);
     }
-
     @Override
     public void run(){
         initGUI();
@@ -143,9 +127,6 @@ public abstract class Person implements Runnable{
             walk();
         }
     };
-
-
-
     public void die(){
         Vector2d oldPosition = new Vector2d(this.position.getX(),this.position.getY());
         connectionHelper.changePosConnections(this.position,null);
@@ -167,8 +148,6 @@ public abstract class Person implements Runnable{
                 e.printStackTrace();
             }
         }
-
-
     }
     public void PersonWaiting(){
         long timeEnd = waitingTiming();
@@ -192,12 +171,6 @@ public abstract class Person implements Runnable{
     public PersonStatus getStatus(){
         return this.status;
     }
-    public void regenerate(){
-        this.getStatus().addEnergy(2);
-        this.getStatus().addHealth(1);
-        this.cellHelper.updateLife(this.getStatus().getHealth());
-    };
-    public  void giveBirth(){};
     public abstract Character getInitial(); // Nowa metoda zwracająca inicjały osoby
     public Vector2d getPosition() {
         return position;
@@ -214,8 +187,6 @@ public abstract class Person implements Runnable{
     public PersonType getType() {
         return status.getType();
     }
-
-
     public abstract ImageIcon getImage();
 
     public void attack(Person person) {
@@ -228,10 +199,7 @@ public abstract class Person implements Runnable{
         if(oldHealth < this.getType().getHealth())
             this.cellHelper.healingColor();
     }
-
     public abstract void defend(int attackStrength);
     public abstract Vector2d findClosestPerson();
     public abstract long waitingTiming();
-
-
 }
