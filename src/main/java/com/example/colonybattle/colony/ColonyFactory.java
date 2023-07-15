@@ -66,22 +66,22 @@ public class ColonyFactory {
                 throw new IllegalArgumentException("Invalid colony type");
         }
 
-//        // Dodajemy rolników (farmers)
-//        for (int i = 0; i < 3; i++) {
-//            Vector2d position = getRandomPositionWithin(startPos, endPos);
-//            personFactory.createPerson(PersonType.FARMER, position, colony);
-//        }
-//
-//        // Dodajemy obrońców (defenders)
-//        for (int i = 0; i < 2; i++) {
-//            Vector2d position = getRandomPositionWithin(startPos, endPos);
-//            personFactory.createPerson(PersonType.DEFENDER, position, colony);
-//
-//        }
-//
-//        // Dodajemy maga (wizard)
-//        Vector2d wizardPosition = getRandomPositionWithin(startPos, endPos);
-//        personFactory.createPerson(PersonType.WIZARD, wizardPosition, colony);
+        // Dodajemy rolników (farmers)
+        for (int i = 0; i < 3; i++) {
+            Vector2d position = getRandomPositionWithin(startPos, endPos);
+            personFactory.createPerson(PersonType.FARMER, position, colony);
+        }
+
+        // Dodajemy obrońców (defenders)
+        for (int i = 0; i < 2; i++) {
+            Vector2d position = getRandomPositionWithin(startPos, endPos);
+            personFactory.createPerson(PersonType.DEFENDER, position, colony);
+
+        }
+
+        // Dodajemy maga (wizard)
+        Vector2d wizardPosition = getRandomPositionWithin(startPos, endPos);
+        personFactory.createPerson(PersonType.WIZARD, wizardPosition, colony);
 
         // Dodajemy wojowników (warriors)
         for (int i = 0; i < 4; i++) {

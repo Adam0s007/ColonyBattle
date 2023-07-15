@@ -4,6 +4,8 @@ import com.example.colonybattle.UI.ImageLoader;
 import com.example.colonybattle.UI.ImageLoaderInterface;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.colony.ColonyType;
+import com.example.colonybattle.person.ConcreteCharacters.Defender;
+import com.example.colonybattle.person.ConcreteCharacters.Farmer;
 import com.example.colonybattle.person.ConcreteCharacters.Warrior;
 import com.example.colonybattle.person.ConcreteCharacters.Wizard;
 
@@ -60,17 +62,7 @@ public abstract class Person implements Runnable{
         this.cellHelper = new CellHelper(this);
         cellHelper.newCellAt(this.position);
     }
-    public Person(){
-        this.position = new Vector2d(ThreadLocalRandom.current().nextInt(0, Board.SIZE), ThreadLocalRandom.current().nextInt(0, Board.SIZE));
-        this.status = new PersonStatus(20,20,20,20,-1);
-        this.cellHelper = new CellHelper(this);
-        this.boardRef = new BoardRef(this);
-        this.connectionHelper = new ConnectionHelper(this);
-        connectionHelper.connectColony(null);
-        posLock = new PosLock(boardRef);
-        cellHelper.newCellAt(this.position);
-        attackPerformer = new Attack(this,boardRef);
-    }
+
     public void setPosition(Vector2d position) {
         this.position = position;
     }
@@ -114,9 +106,24 @@ public abstract class Person implements Runnable{
             Warrior warrior = (Warrior) this;
             Vector2d closestEnemy = warrior.findClosestPerson();
             Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
-            if(this.getStatus().getHealth() < 5) directionVec = new Vector2d(-directionVec.getX(),-directionVec.getY());
-            //System.out.println("Mypos: "+ position + " closestEnemy: " + closestEnemy + " directionVec: " + directionVec);
             return boardRef.calculateNewPosition(position,directionVec);
+        }else if(this instanceof Farmer){
+            Farmer farmer = (Farmer) this;
+            Vector2d closestEnemy = farmer.findClosestPerson();
+            Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
+            directionVec = new Vector2d(-directionVec.getX(),-directionVec.getY());//bedzie uciekac od wroga
+            return boardRef.calculateNewPosition(position,directionVec);
+        }else if(this instanceof Defender){
+            Defender defender = (Defender) this;
+            Vector2d closestEnemy = defender.findClosestPerson();
+            Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
+            return boardRef.calculateNewPosition(position,directionVec);
+
+        }else if(this instanceof Wizard){
+            Wizard wizard = (Wizard) this;
+            Vector2d closestEnemy = wizard.findClosestPerson();
+            wizard.wand(closestEnemy);
+            return randomPos;
         }
         return randomPos;
     }
@@ -221,6 +228,7 @@ public abstract class Person implements Runnable{
     }
 
     public abstract void defend(int attackStrength);
+    public abstract Vector2d findClosestPerson();
 
 
 }

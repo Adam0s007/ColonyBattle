@@ -7,6 +7,9 @@ import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.PersonType;
 
 import javax.swing.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Defender extends Person {
@@ -54,6 +57,32 @@ public class Defender extends Person {
         }
         int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
         person.defend(damage);
+    }
+    //szuka najblizszej osoby ze swojej kolonii (do bronienia)
+    @Override
+    public Vector2d findClosestPerson() {
+        Vector2d closestPersonPosition = null;
+        List<Colony> colonies = this.boardRef.getAllColonies();
+        Optional<Person> closestPerson = colonies.stream()
+                .filter(colony -> colony.equals(this.getColony())) // filter out this person's colony
+                .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
+                .filter(person -> person.getType() == PersonType.FARMER || person.getType() == PersonType.WIZARD)             // filter out this person (we don't want to find ourselves and defenders)
+                .min((p1, p2) -> {
+                    // Prioritize by type first
+                    int priorityP1 = TypePriority.getInstance().getTypePriority(p1.getType());
+                    int priorityP2 = TypePriority.getInstance().getTypePriority(p2.getType());
+
+                    if (priorityP1 != priorityP2) {
+                        return priorityP1 - priorityP2; // Lower priority number means higher priority
+                    }
+                    // If the priority is the same, compare by distance
+                    return Double.compare(this.position.distanceTo(p1.getPosition()), this.position.distanceTo(p2.getPosition()));
+                }); // find person with minimum distance
+
+        if (closestPerson.isPresent()) {
+            closestPersonPosition = closestPerson.get().getPosition();
+        }
+        return closestPersonPosition;
     }
 
 }

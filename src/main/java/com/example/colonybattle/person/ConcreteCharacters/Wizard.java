@@ -8,6 +8,9 @@ import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.PersonType;
 
 import javax.swing.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
@@ -30,8 +33,12 @@ public class Wizard extends Person implements Magic {
         return 'W';
     }
     @Override
-    public void wand() {
-        // Implementacja...
+    public void wand(Vector2d vec) {
+        Person person = vec.getPerson();
+        if(person != null){//zabiera mu energie
+            person.getStatus().addEnergy(-1);
+            this.getStatus().addEnergy(1);
+        }
     }
 
     @Override
@@ -78,7 +85,7 @@ public class Wizard extends Person implements Magic {
                     this.colony.getPeople().forEach(person -> {
                         if(person != this){
                             if(this.status.getEnergy() > 0){
-                                person.healMe(100);
+                                person.healMe(2);
                                 this.status.addEnergy(-1);
                             }
                         }
@@ -104,6 +111,24 @@ public class Wizard extends Person implements Magic {
     public void die(){
         System.out.println("Wizard died");
         super.die();
-
     }
+
+    //Wizard szuka wroga i zabiera mu energie
+    @Override
+    public Vector2d findClosestPerson() {
+        Vector2d closestPersonPosition = null;
+        List<Colony> colonies = this.boardRef.getAllColonies();
+        Optional<Person> closestPerson = colonies.stream()
+                .filter(colony -> !colony.equals(this.getColony())) // filter out this person's colony
+                .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
+                .filter(person -> person.getType() != PersonType.FARMER)
+                .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
+
+        if (closestPerson.isPresent()) {
+            closestPersonPosition = closestPerson.get().getPosition();
+        }
+        return closestPersonPosition;
+    }
+
+
 }

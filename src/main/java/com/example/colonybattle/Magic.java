@@ -1,7 +1,7 @@
 package com.example.colonybattle;
 
 public interface Magic {
-    void wand();
+    void wand(Vector2d vec);
     void healMyself();
 
     void healFriends();
