@@ -22,6 +22,9 @@ public class Wizard extends Person implements Magic {
     //Random value between 0 and 4:
     private final int INITIAL_DELAY;
     private final int PERIOD = 3;
+
+    private final int MIN_WAIT = 1000;
+    private final int MAX_WAIT = 2000;
     public Wizard(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
@@ -36,24 +39,23 @@ public class Wizard extends Person implements Magic {
     public void wand(Vector2d vec) {
         Person person = vec.getPerson();
         if(person != null){//zabiera mu energie
-            person.getStatus().addEnergy(-1);
-            this.getStatus().addEnergy(1);
+            double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
+            if (random <= 0.8) {
+                person.getStatus().addEnergy(-1);
+                person.cellHelper.energyEmitionColor();
+                this.getStatus().addEnergy(1);
+            } else {
+                person.getStatus().addHealth(-1);
+                person.cellHelper.energyEmitionColor();
+                this.getStatus().addEnergy(2);
+            }
         }
     }
-
-    @Override
-    public void healMyself() {
-        // Implementacja...
-    }
-
-
-
     // Implementacja pozostałych metod...
     @Override
     public ImageIcon getImage() {
         return imageLoader.getImageForType(getType());
     }
-
     @Override
     public void defend(int damage) {
         if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
@@ -74,7 +76,6 @@ public class Wizard extends Person implements Magic {
             status.addHealth(-reducedDamage);
         }
     }
-    //
     public void healFriends(){
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         System.out.println("ja sie wywoluję!");
@@ -94,8 +95,25 @@ public class Wizard extends Person implements Magic {
         };
         executorService.scheduleAtFixedRate(task, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
     }
-
-
+    //Wizard szuka wroga i szansa ze zabierze mu energie wynosi 80% a ze zycie 20% - uzywa scheduleAtFixedRate
+    @Override
+    public void performAbsorption(){
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        System.out.println("");
+        Runnable task = () -> {
+            if (!super.running) { // if running is false, shut down the executor service
+                executorService.shutdown();
+            } else {
+                Vector2d closestPersonPosition = findClosestPerson();
+                if (closestPersonPosition != null) {
+                    Person person = closestPersonPosition.getPerson();
+                    if (person != null)
+                        this.wand(closestPersonPosition);
+                }
+            }
+        };
+        executorService.scheduleAtFixedRate(task, INITIAL_DELAY, 5, TimeUnit.SECONDS);
+    }
     @Override
     public void attack(Person person) {
         int strength = status.getStrength();
@@ -106,14 +124,11 @@ public class Wizard extends Person implements Magic {
         int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
         person.defend(damage);
     }
-
     @Override
     public void die(){
         System.out.println("Wizard died");
         super.die();
     }
-
-    //Wizard szuka wroga i zabiera mu energie
     @Override
     public Vector2d findClosestPerson() {
         Vector2d closestPersonPosition = null;
@@ -129,6 +144,9 @@ public class Wizard extends Person implements Magic {
         }
         return closestPersonPosition;
     }
-
-
+    @Override
+    public long waitingTiming() {
+        long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
+        return timeEnd;
+    }
 }

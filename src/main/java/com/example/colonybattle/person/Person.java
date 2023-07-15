@@ -28,7 +28,7 @@ public abstract class Person implements Runnable{
     protected Attack attackPerformer;
     protected ImageLoaderInterface imageLoader;
     private int depth = 0;
-    private final int MAX_DEPTH = 1;
+    private final int MAX_DEPTH = 3;
 
     @Override
     public int hashCode() {
@@ -94,6 +94,7 @@ public abstract class Person implements Runnable{
         if(this instanceof Wizard){
             Magic wizard = (Wizard) this;
             wizard.healFriends();
+            wizard.performAbsorption();
         }
     }
     private Vector2d newPoint(){
@@ -108,6 +109,7 @@ public abstract class Person implements Runnable{
             Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
             return boardRef.calculateNewPosition(position,directionVec);
         }else if(this instanceof Farmer){
+            if(this.getStatus().getHealth() > 4) return randomPos;
             Farmer farmer = (Farmer) this;
             Vector2d closestEnemy = farmer.findClosestPerson();
             Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
@@ -120,9 +122,6 @@ public abstract class Person implements Runnable{
             return boardRef.calculateNewPosition(position,directionVec);
 
         }else if(this instanceof Wizard){
-            Wizard wizard = (Wizard) this;
-            Vector2d closestEnemy = wizard.findClosestPerson();
-            wizard.wand(closestEnemy);
             return randomPos;
         }
         return randomPos;
@@ -169,7 +168,7 @@ public abstract class Person implements Runnable{
 
     }
     public void PersonWaiting(){
-        long timeEnd = ThreadLocalRandom.current().nextInt(800, 1500);
+        long timeEnd = waitingTiming();
         //funckja AttackingTime powinna sie tutaj wykonywac rownolegle w osobnym wątku
         ExecutorService executor = Executors.newFixedThreadPool(1);
         Future<?> future = executor.submit(() -> AttackingTime(timeEnd));
@@ -229,6 +228,6 @@ public abstract class Person implements Runnable{
 
     public abstract void defend(int attackStrength);
     public abstract Vector2d findClosestPerson();
-
+    public abstract long waitingTiming();
 
 }

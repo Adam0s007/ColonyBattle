@@ -5,12 +5,12 @@ import com.example.colonybattle.colony.Colony;
 import java.util.concurrent.Semaphore;
 
 public class PersonStatus {
-     volatile int health;
-     volatile int energy;
-     final int strength;
-     volatile int id;
-     final int landAppropriation;
-     PersonType type;
+    volatile int health;
+    volatile int energy;
+    final int strength;
+    volatile int id;
+    final int landAppropriation;
+    PersonType type;
 
     private final Semaphore healthSemaphore = new Semaphore(1);
     private final Semaphore energySemaphore = new Semaphore(1);
@@ -25,29 +25,21 @@ public class PersonStatus {
     }
 
     public int getHealth(){
-        try{
-            healthSemaphore.acquire();
+        if (healthSemaphore.tryAcquire()) {
             int value = this.health;
             healthSemaphore.release();
             return value;
-
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
-        return -1;
+        return this.health; // default to current health
     }
 
     public int getEnergy(){
-        try{
-            energySemaphore.acquire();
+        if (energySemaphore.tryAcquire()) {
             int value = this.energy;
             energySemaphore.release();
             return value;
-
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
-        return -1;
+        return this.energy; // default to current energy
     }
 
     public int getStrength() {
@@ -67,92 +59,48 @@ public class PersonStatus {
     }
 
     public int getId(){
-        try{
-            idSemaphore.acquire();
+        if (idSemaphore.tryAcquire()) {
             int value = this.id;
             idSemaphore.release();
             return value;
-
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
-        return -1;
+        return this.id; // default to current id
     }
 
     public void setHealth(int health){
-        try{
-
-            healthSemaphore.acquire();
-            if(health < 0){
-                this.health = 0;
-            } else {
-                this.health = health;
-            }
+        if (healthSemaphore.tryAcquire()) {
+            this.health = Math.max(0, health);
             healthSemaphore.release();
-
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
-
-
     }
 
     public void setEnergy(int energy){
-        try{
-            energySemaphore.acquire();
-            if(energy < 0){
-                this.energy = 0;
-            } else {
-                this.energy = energy;
-            }
+        if (energySemaphore.tryAcquire()) {
+            this.energy = Math.max(0, energy);
             energySemaphore.release();
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
-
-
     }
 
     public void addEnergy(int energy){
-        try{
-            energySemaphore.acquire();
-            if(this.energy + energy < 0){
-                this.energy = 0;
-            } else if(this.energy + energy <= type.getEnergy()){
-                this.energy += energy;
-            }
+        if (energySemaphore.tryAcquire()) {
+            this.energy = Math.max(0, Math.min(this.energy + energy, type.getEnergy()));
             energySemaphore.release();
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
-
-
     }
 
     public int addHealth(int health){
         int oldHealth = this.health;
-        try{
-            healthSemaphore.acquire();
-            if(this.health + health < 0){
-                this.health = 0;
-            } else {
-                this.health = Math.min(this.type.getHealth(),this.health + health);
-            }
+        if (healthSemaphore.tryAcquire()) {
+            this.health = Math.max(0, Math.min(this.health + health, type.getHealth()));
             healthSemaphore.release();
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
-
         return oldHealth;
     }
 
     public void setId(int id){
-        try{
-            idSemaphore.acquire();
+        if (idSemaphore.tryAcquire()) {
             this.id = id;
             idSemaphore.release();
-        } catch (InterruptedException e){
-            System.out.println("Interrupted");
         }
     }
 }

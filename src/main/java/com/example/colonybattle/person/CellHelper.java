@@ -25,6 +25,7 @@ public class CellHelper {
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.PURPLE));
     }
 
+
     public void resetCell(Vector2d position){
         Engine.getFrame().setInitColor(position);
         Engine.getFrame().setLifeAtPosition(position, 0);
@@ -58,7 +59,14 @@ public class CellHelper {
             e.printStackTrace();
         }
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(person.colony.getColor().getColor()));
-
-
+    }
+    public void energyEmitionColor(){
+        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.BRIGHT_WHITE));
+        try{
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(person.colony.getColor().getColor()));
     }
 }

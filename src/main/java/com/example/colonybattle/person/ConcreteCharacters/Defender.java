@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Defender extends Person {
 
     private final int MIN_PROTECTION_ENERGY = 3;
+    private final int MIN_WAIT = 1200;
+    private final int MAX_WAIT = 2500;
     public Defender(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
@@ -67,22 +69,18 @@ public class Defender extends Person {
                 .filter(colony -> colony.equals(this.getColony())) // filter out this person's colony
                 .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
                 .filter(person -> person.getType() == PersonType.FARMER || person.getType() == PersonType.WIZARD)             // filter out this person (we don't want to find ourselves and defenders)
-                .min((p1, p2) -> {
-                    // Prioritize by type first
-                    int priorityP1 = TypePriority.getInstance().getTypePriority(p1.getType());
-                    int priorityP2 = TypePriority.getInstance().getTypePriority(p2.getType());
-
-                    if (priorityP1 != priorityP2) {
-                        return priorityP1 - priorityP2; // Lower priority number means higher priority
-                    }
-                    // If the priority is the same, compare by distance
-                    return Double.compare(this.position.distanceTo(p1.getPosition()), this.position.distanceTo(p2.getPosition()));
-                }); // find person with minimum distance
+                .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
 
         if (closestPerson.isPresent()) {
             closestPersonPosition = closestPerson.get().getPosition();
         }
+        //System.out.println(this.colony.getType()+"Wywoluje sie!!");
         return closestPersonPosition;
+    }
+    @Override
+    public long waitingTiming() {
+        long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
+        return timeEnd;
     }
 
 }

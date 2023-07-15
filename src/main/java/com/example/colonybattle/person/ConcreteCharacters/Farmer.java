@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Farmer extends Person {
 
     private final int MIN_PROTECTION_ENERGY = 5;
+    private final int MIN_WAIT = 800;
+    private final int MAX_WAIT = 1200;
     public Farmer(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
@@ -67,6 +69,12 @@ public class Farmer extends Person {
             closestPersonPosition = closestPerson.get().getPosition();
         }
         return closestPersonPosition;
+    }
+
+    @Override
+    public long waitingTiming() {
+        long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
+        return timeEnd;
     }
 
 
