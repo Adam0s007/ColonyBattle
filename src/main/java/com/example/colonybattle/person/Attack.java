@@ -39,7 +39,7 @@ public class Attack {
     }
 
 
-    private void attackAndPossiblyKill(Person person) {
+    public void attackAndPossiblyKill(Person person) {
         attacker.attack(person);
         if (person.getStatus().getHealth() <= 0) {
             person.cellHelper.deathColor();

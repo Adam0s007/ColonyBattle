@@ -45,7 +45,7 @@ public abstract class Person implements Runnable{
     }
     @Override
     public String toString() {
-        return "Person[" + "id=" + this.status + ']';
+        return "Person[" + "id=" + this.status.getId() + ']';
     }
     public Person(int health, int energy, int strength, Vector2d position, Colony colony, int landAppropriation,int id) {
         this.imageLoader = ImageLoader.getInstance();
@@ -106,18 +106,22 @@ public abstract class Person implements Runnable{
         if(this instanceof Warrior){
             Warrior warrior = (Warrior) this;
             Vector2d closestEnemy = warrior.findClosestPerson();
+            if(closestEnemy == null) return randomPos;
             Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
             return boardRef.calculateNewPosition(position,directionVec);
         }else if(this instanceof Farmer){
             if(this.getStatus().getHealth() > 4) return randomPos;
             Farmer farmer = (Farmer) this;
             Vector2d closestEnemy = farmer.findClosestPerson();
+            if(closestEnemy == null) return randomPos;
             Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
             directionVec = new Vector2d(-directionVec.getX(),-directionVec.getY());//bedzie uciekac od wroga
+
             return boardRef.calculateNewPosition(position,directionVec);
         }else if(this instanceof Defender){
             Defender defender = (Defender) this;
             Vector2d closestEnemy = defender.findClosestPerson();
+            if(closestEnemy == null) return randomPos;
             Vector2d directionVec = Calculator.calculateDirection(position,closestEnemy);
             return boardRef.calculateNewPosition(position,directionVec);
 
@@ -133,7 +137,6 @@ public abstract class Person implements Runnable{
         posLock.aquirePositionLock(position);
         checkWizardingQualifications();
         while(running){
-
             PersonWaiting();
             if(this.getStatus().getHealth() <= 0)
                 die();
@@ -229,5 +232,6 @@ public abstract class Person implements Runnable{
     public abstract void defend(int attackStrength);
     public abstract Vector2d findClosestPerson();
     public abstract long waitingTiming();
+
 
 }

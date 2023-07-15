@@ -40,13 +40,13 @@ public class Wizard extends Person implements Magic {
         Person person = vec.getPerson();
         if(person != null){//zabiera mu energie
             double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
-            if (random <= 0.8) {
-                person.getStatus().addEnergy(-1);
+            if (random > 0.4) {
                 person.cellHelper.energyEmitionColor();
+                this.attackPerformer.attackAndPossiblyKill(person);
                 this.getStatus().addEnergy(1);
             } else {
-                person.getStatus().addHealth(-1);
                 person.cellHelper.energyEmitionColor();
+                person.getStatus().addEnergy(-2);
                 this.getStatus().addEnergy(2);
             }
         }
@@ -78,7 +78,7 @@ public class Wizard extends Person implements Magic {
     }
     public void healFriends(){
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        System.out.println("ja sie wywoluję!");
+        //System.out.println("ja sie wywoluję!");
         Runnable task = () -> {
             if (!super.running) { // if running is false, shut down the executor service
                 executorService.shutdown();
@@ -105,6 +105,7 @@ public class Wizard extends Person implements Magic {
                 executorService.shutdown();
             } else {
                 Vector2d closestPersonPosition = findClosestPerson();
+                //System.out.println("Wizard closest enemy position: " + closestPersonPosition);
                 if (closestPersonPosition != null) {
                     Person person = closestPersonPosition.getPerson();
                     if (person != null)

@@ -68,9 +68,8 @@ public class Defender extends Person {
         Optional<Person> closestPerson = colonies.stream()
                 .filter(colony -> colony.equals(this.getColony())) // filter out this person's colony
                 .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
-                .filter(person -> person.getType() == PersonType.FARMER || person.getType() == PersonType.WIZARD)             // filter out this person (we don't want to find ourselves and defenders)
+                .filter(person -> !person.equals(this))            // filter out this person
                 .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
-
         if (closestPerson.isPresent()) {
             closestPersonPosition = closestPerson.get().getPosition();
         }
@@ -81,6 +80,13 @@ public class Defender extends Person {
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
         return timeEnd;
+    }
+
+    @Override
+    public void die() {
+        System.out.println("Defender died at position: "+this.getPosition().toString()+ " with id: "+this.getStatus().getId()+" and colony: "+this.getColony().getType()+"\n");
+        super.die();
+
     }
 
 }
