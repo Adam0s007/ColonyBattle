@@ -128,10 +128,14 @@ public abstract class Person implements Runnable{
     public void die(){
         Vector2d oldPosition = new Vector2d(this.position.getX(),this.position.getY());
         connectionHelper.changePosConnections(this.position,null);
-        connectionHelper.disconnectColony();
+        System.out.println(this.boardRef.getBoard() == null);
         cellHelper.resetCell(oldPosition);
         posLock.releasePositionLock(oldPosition);
         this.stop();
+        connectionHelper.disconnectColony();
+    }
+    public void stop() {
+        running = false;
     }
     public void AttackingTime(long timeEnd) {
         int maxIter = ThreadLocalRandom.current().nextInt(1, 3);
@@ -173,9 +177,7 @@ public abstract class Person implements Runnable{
     public Vector2d getPosition() {
         return position;
     }
-    public void stop() {
-        running = false;
-    }
+
     public Colony getColony() {
         return colony;
     }

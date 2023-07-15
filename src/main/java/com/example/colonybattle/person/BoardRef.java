@@ -56,8 +56,9 @@ public class BoardRef {
         return getBoard() != null ? getBoard().getAllColonies() : null;
     }
     // reference to the getLongestSurvivingColony method
-    public Colony getLongestSurvivingColony() {
-        return getBoard() != null ? getBoard().getLongestSurvivingColony() : null;
+    public void getLongestSurvivingColony() {
+        if(getBoard() != null)
+            getBoard().getLongestSurvivingColony();
     }
 
     // reference to the defeatedColony method

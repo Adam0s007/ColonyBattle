@@ -126,7 +126,7 @@ public class Board {
     public List<Colony> getAllColonies() {
         return allColonies;
     }
-    public Colony getLongestSurvivingColony() {
+    public void getLongestSurvivingColony() {
         Colony longestSurvivingColony = allColonies.stream()
                 .max(Comparator.comparing(Colony::getLifetime))
                 .orElse(null);
@@ -136,7 +136,7 @@ public class Board {
         } else {
             System.out.println("No more colonies survived.");
         }
-        return longestSurvivingColony;
+
     }
 
     public void removeDefeatedColony() {

@@ -24,21 +24,29 @@ public class Engine {
 
         Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1,board);
         Colony colony2 = colonyFactory.createColony(ColonyType.COLONY2,board);
-        Colony colony3 = colonyFactory.createColony(ColonyType.COLONY3,board);
-        Colony colony4 = colonyFactory.createColony(ColonyType.COLONY4,board);
+        //Colony colony3 = colonyFactory.createColony(ColonyType.COLONY3,board);
+        //Colony colony4 = colonyFactory.createColony(ColonyType.COLONY4,board);
 
 
         allColonies.add(colony1);
         allColonies.add(colony2);
-        allColonies.add(colony3);
-        allColonies.add(colony4);
+        //allColonies.add(colony3);
+        //allColonies.add(colony4);
 
 
         board.initFields();
         board.start();
 
-        while(!board.isOnlyOneColonyLeft())
-            Thread.sleep(2000);
+        synchronized (EndgameMonitor.monitor) {
+            while (!board.isOnlyOneColonyLeft()) {
+                try {
+                    EndgameMonitor.monitor.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
         // Zatrzymanie wszystkich osób (wątków)
         board.stop();
