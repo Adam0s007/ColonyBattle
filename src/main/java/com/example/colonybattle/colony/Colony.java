@@ -5,6 +5,8 @@ import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.person.Person;
 import com.example.colonybattle.Board;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,58 +19,13 @@ public class Colony {
     private int points;
 
     private Board board;
-
-    public ColonyColor getColor() {
-        return color;
-    }
-
-    public void setColor(ColonyColor color) {
-        this.color = color;
-    }
-
-    public Set<Person> getPeople() {
-        return people;
-    }
-
-    public Set<Vector2d> getFields() {
-        return fields;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public Board getBoard() {
-        return this.board;
-    }
-
-    public int getTotalPeopleCount() {
-        return people.size();
-    }
-
-    public void addPeople(Set<Person> people) {
-        this.people.addAll(people);
-        for (Person person : people) {
-            person.setColony(this);
-        }
-    }
-
-    public void addPerson(Person person) {
-        this.people.add(person);
-    }
-
-    public void removePerson(Person person) {
-        this.people.remove(person);
-    }
+    private final Instant creationTime;
 
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
         this.fields = ConcurrentHashMap.newKeySet();
         this.points = 0;
+        this.creationTime = Instant.now();
     }
 
     public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color, Board board) {
@@ -80,8 +37,45 @@ public class Colony {
         this.points = points;
         this.color = color;
         this.board = board;
+        this.creationTime = Instant.now();
+    }
+    public ColonyColor getColor() {
+        return color;
+    }
+    public void setColor(ColonyColor color) {
+        this.color = color;
+    }
+    public Set<Person> getPeople() {
+        return people;
+    }
+    public Set<Vector2d> getFields() {
+        return fields;
+    }
+    public int getPoints() {
+        return points;
+    }
+    public void setPoints(int points) {
+        this.points = points;
+    }
+    public Board getBoard() {
+        return this.board;
+    }
+    public int getTotalPeopleCount() {
+        return people.size();
+    }
+    public void addPeople(Set<Person> people) {
+        this.people.addAll(people);
+        for (Person person : people) {
+            person.setColony(this);
+        }
+    }
+    public void addPerson(Person person) {
+        this.people.add(person);
     }
 
+    public void removePerson(Person person) {
+        this.people.remove(person);
+    }
     public ColonyType getType() {
         return type;
     }
@@ -94,11 +88,9 @@ public class Colony {
         }
         return null;
     }
-
     public ColonyColor getColonyColor() {
         return color;
     }
-
     @Override
     public String toString() {
         return "Colony[" +
@@ -113,10 +105,15 @@ public class Colony {
         Colony colony = (Colony) o;
         return type == colony.type;
     }
-
     @Override
     public int hashCode() {
         return type.hashCode();
     }
 
+    public int getPeopleCount() {
+        return people.size();
+    }
+    public Duration getLifetime() {
+        return Duration.between(creationTime, Instant.now());
+    }
 }

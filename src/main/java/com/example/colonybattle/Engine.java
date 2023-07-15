@@ -13,6 +13,7 @@ public class Engine {
     public static MyFrame getFrame() {
         return frame;
     }
+
     public static void main(String[] args) throws InterruptedException {
 
         frame = new MyFrame(20);
@@ -36,12 +37,8 @@ public class Engine {
         board.initFields();
         board.start();
 
-        int iter = 0;
-        while(iter <500000) {
-            //board.printBoard();
+        while(!board.isOnlyOneColonyLeft())
             Thread.sleep(2000);
-            iter++;
-        }
 
         // Zatrzymanie wszystkich osób (wątków)
         board.stop();

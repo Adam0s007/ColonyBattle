@@ -3,14 +3,12 @@ import com.example.colonybattle.*;
 import com.example.colonybattle.UI.ImageLoader;
 import com.example.colonybattle.UI.ImageLoaderInterface;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.colony.ColonyType;
 import com.example.colonybattle.person.ConcreteCharacters.Defender;
 import com.example.colonybattle.person.ConcreteCharacters.Farmer;
 import com.example.colonybattle.person.ConcreteCharacters.Warrior;
 import com.example.colonybattle.person.ConcreteCharacters.Wizard;
 
 import javax.swing.*;
-import java.util.Set;
 import java.util.concurrent.*;
 
 
@@ -105,12 +103,12 @@ public abstract class Person implements Runnable{
         }
         Vector2d closestEnemy = null;
         if (this instanceof Warrior || this instanceof Farmer || this instanceof Defender) {
-            closestEnemy = ((Person) this).findClosestPerson();
+            closestEnemy = ((Person) this).findClosestPosition();
             if (closestEnemy == null) return randomPos;
         }
         if (closestEnemy == null) return randomPos;
         Vector2d directionVec = Calculator.calculateDirection(position, closestEnemy);
-        if (this instanceof Farmer && this.getStatus().getHealth() > 4) return randomPos;
+        if (this instanceof Farmer && (this.getStatus().getHealth() > 4 || Calculator.calculateDistance(position,closestEnemy) >= 6)) return randomPos;
         if (this instanceof Farmer)
             directionVec = new Vector2d(-directionVec.getX(), -directionVec.getY());
         return boardRef.calculateNewPosition(position, directionVec);
@@ -200,6 +198,6 @@ public abstract class Person implements Runnable{
             this.cellHelper.healingColor();
     }
     public abstract void defend(int attackStrength);
-    public abstract Vector2d findClosestPerson();
+    public abstract Vector2d findClosestPosition();
     public abstract long waitingTiming();
 }

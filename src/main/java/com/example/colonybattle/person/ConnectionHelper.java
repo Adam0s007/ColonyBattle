@@ -16,8 +16,12 @@ public class ConnectionHelper {
             this.person.colony.addPerson(this.person);
     }
     public void disconnectColony(){
-        if(this.person.colony != null)
+        if(this.person.colony != null){
             this.person.colony.removePerson(this.person);
+            // Check if this person's colony is empty
+            if (this.person.boardRef.isColonyEmpty(this.person.colony))
+                this.person.boardRef.removeDefeatedColony();
+        }
         this.person.colony = null;
     }
 

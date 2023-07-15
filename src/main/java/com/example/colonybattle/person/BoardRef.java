@@ -55,10 +55,23 @@ public class BoardRef {
     public List<Colony> getAllColonies() {
         return getBoard() != null ? getBoard().getAllColonies() : null;
     }
+    // reference to the getLongestSurvivingColony method
+    public Colony getLongestSurvivingColony() {
+        return getBoard() != null ? getBoard().getLongestSurvivingColony() : null;
+    }
 
+    // reference to the defeatedColony method
+    public void removeDefeatedColony() {
+        if (getBoard() != null) {
+            getBoard().removeDefeatedColony();
+        }
+    }
 
-
-
-
-
+    // reference to the isOnlyOneColonyLeft method
+    public boolean isOnlyOneColonyLeft() {
+        return getBoard() != null && getBoard().isOnlyOneColonyLeft();
+    }
+    public boolean isColonyEmpty(Colony colony) {
+        return getBoard() != null ? getBoard().isColonyEmpty(colony) : true;
+    }
 }

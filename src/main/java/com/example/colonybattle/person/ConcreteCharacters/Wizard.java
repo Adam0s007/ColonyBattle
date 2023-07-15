@@ -1,6 +1,5 @@
 package com.example.colonybattle.person.ConcreteCharacters;
 
-import com.example.colonybattle.UI.ImageLoader;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.Magic;
 import com.example.colonybattle.Vector2d;
@@ -83,14 +82,16 @@ public class Wizard extends Person implements Magic {
             if (!super.running) { // if running is false, shut down the executor service
                 executorService.shutdown();
             } else {
-                    this.colony.getPeople().forEach(person -> {
-                        if(person != this){
-                            if(this.status.getEnergy() > 0){
+                this.colony.getPeople().stream()
+                        .filter(person -> person != this && person.getStatus().getHealth() < person.getType().getHealth())
+                        .findFirst()
+                        .ifPresent(person -> {
+                            if (this.status.getEnergy() > 0) {
                                 person.healMe(2);
                                 this.status.addEnergy(-1);
                             }
-                        }
-                    });
+                        });
+
             }
         };
         executorService.scheduleAtFixedRate(task, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
@@ -104,7 +105,7 @@ public class Wizard extends Person implements Magic {
             if (!super.running) { // if running is false, shut down the executor service
                 executorService.shutdown();
             } else {
-                Vector2d closestPersonPosition = findClosestPerson();
+                Vector2d closestPersonPosition = findClosestPosition();
                 //System.out.println("Wizard closest enemy position: " + closestPersonPosition);
                 if (closestPersonPosition != null) {
                     Person person = closestPersonPosition.getPerson();
@@ -127,24 +128,23 @@ public class Wizard extends Person implements Magic {
     }
     @Override
     public void die(){
-        System.out.println("Wizard died");
+        //System.out.println("Wizard died");
         super.die();
     }
     @Override
-    public Vector2d findClosestPerson() {
+    public Vector2d findClosestPosition() {
         Vector2d closestPersonPosition = null;
         List<Colony> colonies = this.boardRef.getAllColonies();
         Optional<Person> closestPerson = colonies.stream()
                 .filter(colony -> !colony.equals(this.getColony())) // filter out this person's colony
                 .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
-                .filter(person -> person.getType() != PersonType.FARMER)
                 .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
-
         if (closestPerson.isPresent()) {
             closestPersonPosition = closestPerson.get().getPosition();
         }
         return closestPersonPosition;
     }
+  
     @Override
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);

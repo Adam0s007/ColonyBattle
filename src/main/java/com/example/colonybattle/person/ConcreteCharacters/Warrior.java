@@ -60,7 +60,7 @@ public class Warrior extends Person {
 
     //szuka najbliższej osoby z pobliskiej kolonii
     @Override
-    public Vector2d findClosestPerson() {
+    public Vector2d findClosestPosition() {
         Vector2d closestPersonPosition = null;
         List<Colony> colonies = this.boardRef.getAllColonies();
         Optional<Person> closestPerson = colonies.stream()

@@ -62,13 +62,13 @@ public class Defender extends Person {
     }
     //szuka najblizszej osoby ze swojej kolonii (do bronienia)
     @Override
-    public Vector2d findClosestPerson() {
+    public Vector2d findClosestPosition() {
         Vector2d closestPersonPosition = null;
         List<Colony> colonies = this.boardRef.getAllColonies();
         Optional<Person> closestPerson = colonies.stream()
                 .filter(colony -> colony.equals(this.getColony())) // filter out this person's colony
                 .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
-                .filter(person -> !person.equals(this))            // filter out this person
+                .filter(person -> person.getType() != PersonType.DEFENDER)            // filter out this person
                 .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
         if (closestPerson.isPresent()) {
             closestPersonPosition = closestPerson.get().getPosition();
@@ -84,7 +84,7 @@ public class Defender extends Person {
 
     @Override
     public void die() {
-        System.out.println("Defender died at position: "+this.getPosition().toString()+ " with id: "+this.getStatus().getId()+" and colony: "+this.getColony().getType()+"\n");
+        //System.out.println("Defender died at position: "+this.getPosition().toString()+ " with id: "+this.getStatus().getId()+" and colony: "+this.getColony().getType()+"\n");
         super.die();
 
     }

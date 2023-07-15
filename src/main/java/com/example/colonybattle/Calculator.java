@@ -26,6 +26,14 @@ public class Calculator {
         }
     }
 
+    public static double calculateDistance(Vector2d fromVec, Vector2d toVec) {
+        int xDirection = toVec.getX() - fromVec.getX();
+        int yDirection = toVec.getY() - fromVec.getY();
+        //System.out.println("xDirection: " + xDirection + " yDirection: " + yDirection);
+        double magnitude = Math.sqrt(xDirection * xDirection + yDirection * yDirection);
+        return magnitude;
+    }
+
 
 
 }
