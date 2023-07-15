@@ -85,7 +85,7 @@ public class Board {
         executorService.shutdown();
         try{
             this.statisticsPrinter.stopPrintingStatistics();
-            executorService.awaitTermination(1, java.util.concurrent.TimeUnit.SECONDS);
+            executorService.awaitTermination(2, java.util.concurrent.TimeUnit.SECONDS);
         }catch (InterruptedException e){
             e.printStackTrace();
         }

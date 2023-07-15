@@ -131,7 +131,7 @@ public abstract class Person implements Runnable{
         System.out.println(this.boardRef.getBoard() == null);
         cellHelper.resetCell(oldPosition);
         posLock.releasePositionLock(oldPosition);
-        this.stop();
+        this.running = false;
         connectionHelper.disconnectColony();
     }
     public void stop() {
