@@ -4,6 +4,7 @@ import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.Vector2d;
 import com.example.colonybattle.person.Person;
 import com.example.colonybattle.Board;
+import com.example.colonybattle.person.PersonFactory;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -19,6 +20,7 @@ public class Colony {
     private Set<Person> people;
     private Map<String,Vector2d> fields;
     private int points;
+    private PersonFactory personFactory;
 
     private Board board;
     private final Instant creationTime;
@@ -30,7 +32,7 @@ public class Colony {
         this.creationTime = Instant.now();
     }
 
-    public Colony(ColonyType type,Set<Person> people, Map<String,Vector2d> fields, int points, ColonyColor color, Board board) {
+    public Colony(ColonyType type,Set<Person> people, Map<String,Vector2d> fields, int points, ColonyColor color, Board board,PersonFactory personFactory) {
         this.type = type;
         this.people = ConcurrentHashMap.newKeySet();
         this.fields = fields;
@@ -38,7 +40,9 @@ public class Colony {
         this.points = points;
         this.color = color;
         this.board = board;
+        this.personFactory = personFactory;
         this.creationTime = Instant.now();
+
     }
     public ColonyColor getColor() {
         return color;
@@ -127,4 +131,37 @@ public class Colony {
     public boolean includesField(String name) {
         return fields.containsKey(name);
     }
+
+
+    public Vector2d getFreeField(){
+        return this.fields.values().stream()
+                .filter(field -> field.getPerson() == null)
+                .findAny().orElse(null);
+    }
+    public void spawnPerson(){
+        new Thread(() -> {
+            while(true) {
+                Vector2d freeField;
+                synchronized(this) { // Obtain lock on this Colony
+                    while((freeField = getFreeField()) == null) {
+                        try {
+                            wait(); // This will wait until notifyAll() is called in Vector2d
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                Person newPerson = personFactory.generateRandom(this,freeField); // Create a new Person using the factory
+                // Set the new person's position to the freeField
+                // ...
+                try {
+                    Thread.sleep(10000); // Wait for 10 seconds
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
 }

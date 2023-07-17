@@ -133,12 +133,12 @@ public abstract class Person implements Runnable{
     public void die(){
         Vector2d oldPosition = new Vector2d(this.position.getX(),this.position.getY());
         connectionHelper.changePosConnections(this.position,null);
-        System.out.println(this.boardRef.getBoard() == null);
         cellHelper.resetCell(oldPosition);
         posLock.releasePositionLock(oldPosition);
         this.running = false;
         dyingSemaphore.release();
         connectionHelper.disconnectColony();
+        //System.out.println(this.boardRef.getBoard() == null);
     }
     public void stop() {
         running = false;

@@ -15,10 +15,9 @@ import com.example.colonybattle.person.PersonType;
 
 
 public class ColonyFactory {
-    private PersonFactory personFactory;
+
     private Set<Vector2d> usedPositions;
     public ColonyFactory() {
-        personFactory = new PersonFactory();
         usedPositions = new HashSet<>();
     }
     //make function creating proper color type of ColonyColor based on enum ColonyType
@@ -40,10 +39,11 @@ public class ColonyFactory {
 
     public Colony createColony(ColonyType type,Board board){
         // Tworzymy puste zbiory ludzi i pól
+        PersonFactory personFactory = new PersonFactory();
         Set<Person> people = ConcurrentHashMap.newKeySet();
         Map<String,Vector2d> fields = new ConcurrentHashMap<>();
         ColonyColor color = getColonyColor(type);
-        Colony colony = new Colony(type, people, fields, 0, color,board);
+        Colony colony = new Colony(type, people, fields, 0, color,board,personFactory);
         Vector2d startPos;
         Vector2d endPos;
 

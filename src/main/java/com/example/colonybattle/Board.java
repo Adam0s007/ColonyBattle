@@ -133,13 +133,8 @@ public class Board {
 
         if (longestSurvivingColony != null) {
             long lifetimeInSeconds = longestSurvivingColony.getLifetime().toSeconds();
-            long lifetimeInMinutes = longestSurvivingColony.getLifetime().toMinutes();
-            long lifetimeInHours = longestSurvivingColony.getLifetime().toHours();
-
             System.out.println("The longest surviving colony is of type " + longestSurvivingColony.getType() +
-                    " with a lifetime of " + lifetimeInSeconds + " seconds, " +
-                    lifetimeInMinutes + " minutes, " +
-                    lifetimeInHours + " hours.");
+                    " with a lifetime of " + lifetimeInSeconds + " seconds, ");
         } else {
             System.out.println("No more colonies survived.");
         }
