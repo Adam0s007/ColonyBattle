@@ -7,6 +7,8 @@ import com.example.colonybattle.Board;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +17,7 @@ public class Colony {
     private ColonyColor color;
     private ColonyType type;
     private Set<Person> people;
-    private Set<Vector2d> fields;
+    private Map<String,Vector2d> fields;
     private int points;
 
     private Board board;
@@ -23,17 +25,16 @@ public class Colony {
 
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
-        this.fields = ConcurrentHashMap.newKeySet();
+        this.fields = new ConcurrentHashMap<>();
         this.points = 0;
         this.creationTime = Instant.now();
     }
 
-    public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color, Board board) {
+    public Colony(ColonyType type,Set<Person> people, Map<String,Vector2d> fields, int points, ColonyColor color, Board board) {
         this.type = type;
         this.people = ConcurrentHashMap.newKeySet();
-        this.fields = ConcurrentHashMap.newKeySet();
+        this.fields = fields;
         this.people.addAll(people);
-        this.fields.addAll(fields);
         this.points = points;
         this.color = color;
         this.board = board;
@@ -48,7 +49,7 @@ public class Colony {
     public Set<Person> getPeople() {
         return people;
     }
-    public Set<Vector2d> getFields() {
+    public Map<String,Vector2d> getFields() {
         return fields;
     }
     public int getPoints() {
@@ -115,5 +116,15 @@ public class Colony {
     }
     public Duration getLifetime() {
         return Duration.between(creationTime, Instant.now());
+    }
+
+    public void addField(String name, Vector2d position) {
+        fields.put(name,position);
+    }
+    public void removeField(String name) {
+        fields.remove(name);
+    }
+    public boolean includesField(String name) {
+        return fields.containsKey(name);
     }
 }

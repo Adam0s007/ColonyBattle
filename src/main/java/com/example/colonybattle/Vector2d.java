@@ -138,13 +138,15 @@ public class Vector2d {
     }
 
     public void changeMembership(Person person) {
-        int newAppropr = this.currentAppropriation - person.getStatus().getLandAppropriation();
-        this.currentAppropriation = Math.max(0,newAppropr);
+        if(this.membership != person.getColony())
+            this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
+
         if(this.currentAppropriation == 0) {
-            this.membership = person.getColony();
+            this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
             this.currentAppropriation = this.INIT_APPROPRIATION;
         }
     }
+
     public void changeMembershipForcefully(Person person){
         this.membership = person.getColony();
         this.currentAppropriation = this.INIT_APPROPRIATION;

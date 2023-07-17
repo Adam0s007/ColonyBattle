@@ -4,7 +4,9 @@ import com.example.colonybattle.Colors.ColonyColor;
 import com.example.colonybattle.person.Person;
 import com.example.colonybattle.person.PersonFactory;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.example.colonybattle.Board;
@@ -38,8 +40,8 @@ public class ColonyFactory {
 
     public Colony createColony(ColonyType type,Board board){
         // Tworzymy puste zbiory ludzi i pól
-        Set<Person> people = new HashSet<>();
-        Set<Vector2d> fields = new HashSet<>();
+        Set<Person> people = ConcurrentHashMap.newKeySet();
+        Map<String,Vector2d> fields = new ConcurrentHashMap<>();
         ColonyColor color = getColonyColor(type);
         Colony colony = new Colony(type, people, fields, 0, color,board);
         Vector2d startPos;
