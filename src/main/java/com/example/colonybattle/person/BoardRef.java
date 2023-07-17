@@ -38,7 +38,7 @@ public class BoardRef {
 
     public Vector2d calculateNewPosition(Vector2d position, Vector2d directionVector) {
         Vector2d newPosition = position.addVector(directionVector);
-        while(!newPosition.properCoordinates(Board.SIZE))newPosition = generateRandomPosition(position);
+        if(!newPosition.properCoordinates(Board.SIZE)) newPosition = generateRandomPosition(position);
         if (this.isFieldOccupied(newPosition))
             newPosition = this.getVectorFromBoard(newPosition);
         return newPosition;
@@ -49,11 +49,20 @@ public class BoardRef {
         Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
         while(!position
                 .addVector(randomDirection.getVector())
-                .properCoordinates(Board.SIZE))
+                .properCoordinates(Board.SIZE)){
             randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
+            try{
+                Thread.sleep(200);
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
+
+        }
         Vector2d directionVector = randomDirection.getVector();
         return calculateNewPosition(position, directionVector);
     }
+
+
     //function returning all Colonies from com.example.colonyBattle/Board
     public List<Colony> getAllColonies() {
         return getBoard() != null ? getBoard().getAllColonies() : null;

@@ -28,7 +28,7 @@ public abstract class Person implements Runnable{
     private int depth = 0;
     //semafor for dying
     private final Semaphore dyingSemaphore;
-    private final int MAX_DEPTH = 3;
+    private final int MAX_DEPTH = 5;
 
     @Override
     public int hashCode() {
@@ -79,16 +79,27 @@ public abstract class Person implements Runnable{
 
     public void walk() {
         Vector2d newPosition = newPoint();
-        if (newPosition != null && newPosition.properCoordinates(Board.SIZE) && this.position.equals(newPosition) == false) {
-            Vector2d oldPosition = position;
-            this.boardRef.addVectorToBoard(newPosition);
-            if(!posLock.aquirePositionLock(newPosition)){
-                depth++;
-                walk();
-            }
-            else{
+        Vector2d oldPosition = this.position;
+        if (isValidMove(newPosition)) {
+            if (!posLock.aquirePositionLock(newPosition)) {
+                attemptAlternateMoves(oldPosition);
+            } else {
                 this.move(newPosition);
                 posLock.releasePositionLock(oldPosition);
+            }
+        }
+    }
+
+    private boolean isValidMove(Vector2d newPosition) {
+        return newPosition != null && newPosition.properCoordinates(Board.SIZE) && !this.position.equals(newPosition);
+    }
+    private void attemptAlternateMoves(Vector2d oldPosition) {
+        for(int i = 0; i < MAX_DEPTH; i++) {
+            Vector2d alternatePosition = boardRef.generateRandomPosition(position);
+            if (isValidMove(alternatePosition) && posLock.aquirePositionLock(alternatePosition)) {
+                this.move(alternatePosition);
+                posLock.releasePositionLock(oldPosition);
+                break;
             }
         }
     }
@@ -125,8 +136,10 @@ public abstract class Person implements Runnable{
         while(running){
             PersonWaiting();
             if(this.getStatus().getHealth() <= 0)
-                if(dyingSemaphore.tryAcquire())
+                if(dyingSemaphore.tryAcquire()) {
                     die();
+
+                }
             walk();
         }
     };
@@ -205,7 +218,7 @@ public abstract class Person implements Runnable{
         if(oldHealth < this.getType().getHealth())
             this.cellHelper.healingColor();
     }
-    public abstract void defend(int attackStrength);
+    public abstract  void defend(int attackStrength);
     public abstract Vector2d findClosestPosition();
     public abstract long waitingTiming();
 }

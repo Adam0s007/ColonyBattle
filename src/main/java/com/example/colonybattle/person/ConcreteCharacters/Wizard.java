@@ -56,7 +56,7 @@ public class Wizard extends Person implements Magic {
         return imageLoader.getImageForType(getType());
     }
     @Override
-    public void defend(int damage) {
+    public synchronized void defend(int damage) {
         if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
             double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
 

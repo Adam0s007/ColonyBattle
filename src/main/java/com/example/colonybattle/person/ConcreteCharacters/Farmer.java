@@ -34,7 +34,7 @@ public class Farmer extends Person {
     }
 
     @Override
-    public void defend(int damage) {
+    public synchronized void defend(int damage) {
         if (status.getEnergy() >= MIN_PROTECTION_ENERGY) { // Minimalna wartość energii wymagana do obrony
             double random = ThreadLocalRandom.current().nextDouble(); // Generowanie losowej liczby z zakresu 0-1
 

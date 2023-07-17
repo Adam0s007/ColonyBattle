@@ -5,6 +5,8 @@ import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.Engine;
 import com.example.colonybattle.Vector2d;
 
+import java.awt.*;
+
 public class CellHelper {
 
 
@@ -23,6 +25,10 @@ public class CellHelper {
     }
     public void deathColor(){
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.PURPLE));
+    }
+
+    public Color getDeathColor(){
+        return ColorConverter.convertColor(ConsoleColor.PURPLE);
     }
 
 

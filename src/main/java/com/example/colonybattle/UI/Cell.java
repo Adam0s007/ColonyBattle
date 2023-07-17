@@ -3,6 +3,8 @@ package com.example.colonybattle.UI;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import com.example.colonybattle.Colors.ColorConverter;
+import com.example.colonybattle.Colors.ConsoleColor;
 import com.example.colonybattle.Vector2d;
 import java.awt.*;
 
@@ -100,5 +102,6 @@ public class Cell extends JLabel {
     public void setPosition(Vector2d position) {
         this.position = position;
     }
+
 }
 
