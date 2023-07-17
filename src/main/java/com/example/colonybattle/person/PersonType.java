@@ -2,9 +2,9 @@ package com.example.colonybattle.person;
 
 public enum PersonType {
     FARMER(8, 8, 5,20),
-    DEFENDER(20, 12, 10,10),
-    WARRIOR(12, 15, 20,10),
-    WIZARD(14, 20, 14,10);
+    DEFENDER(20, 12, 10,0),
+    WARRIOR(12, 15, 20,0),
+    WIZARD(14, 20, 14,0);
 
     private final int health;
     private final int energy;

@@ -26,6 +26,8 @@ public abstract class Person implements Runnable{
     protected Attack attackPerformer;
     protected ImageLoaderInterface imageLoader;
     private int depth = 0;
+    //semafor for dying
+    private final Semaphore dyingSemaphore;
     private final int MAX_DEPTH = 3;
 
     @Override
@@ -55,6 +57,7 @@ public abstract class Person implements Runnable{
         connectionHelper.connectColony(colony);
         posLock = new PosLock(boardRef);
         attackPerformer = new Attack(this,boardRef);
+        dyingSemaphore = new Semaphore(1);
     }
 
     public void initGUI(){
@@ -122,7 +125,8 @@ public abstract class Person implements Runnable{
         while(running){
             PersonWaiting();
             if(this.getStatus().getHealth() <= 0)
-                die();
+                if(dyingSemaphore.tryAcquire())
+                    die();
             walk();
         }
     };
@@ -133,6 +137,7 @@ public abstract class Person implements Runnable{
         cellHelper.resetCell(oldPosition);
         posLock.releasePositionLock(oldPosition);
         this.running = false;
+        dyingSemaphore.release();
         connectionHelper.disconnectColony();
     }
     public void stop() {

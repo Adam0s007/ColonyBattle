@@ -30,6 +30,7 @@ public class CellHelper {
         Engine.getFrame().setInitColor(position);
         Engine.getFrame().setLifeAtPosition(position, 0);
         Engine.getFrame().setInitial(position, ' ');
+        //Engine.getFrame().updateBackgroundAtPosition(position);
         removeImageFromCell(position);
         //Engine.getFrame().setInitColor(position);
     }
@@ -39,6 +40,7 @@ public class CellHelper {
         Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(consoleColor));
         Engine.getFrame().setLifeAtPosition(newPosition, person.status.health); // Ustawiamy aktualną ilość życia osoby
         Engine.getFrame().setInitial(person.position, person.getInitial());
+        //Engine.getFrame().updateBackgroundAtPosition(newPosition);
         addImageToCell(newPosition);
     }
 

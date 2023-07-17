@@ -3,6 +3,7 @@ package com.example.colonybattle;
 import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.person.Person;
+import com.example.colonybattle.person.PersonType;
 
 import java.awt.*;
 
@@ -34,7 +35,7 @@ public class Vector2d {
         this.x = x;
         this.y = y;
         this.membership = null;
-        this.INIT_APPROPRIATION = 10;
+        this.INIT_APPROPRIATION = PersonType.FARMER.getLandAppropriation();
         this.currentAppropriation = INIT_APPROPRIATION;
         this.person = null;
     }
@@ -151,7 +152,7 @@ public class Vector2d {
 
     public Color getColonyColor(){
         if(this.membership == null)
-            return Color.BLACK;
+            return null;
         return ColorConverter.convertColor(this.membership.getColor().getColor());
     }
 

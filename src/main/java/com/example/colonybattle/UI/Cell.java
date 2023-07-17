@@ -14,6 +14,7 @@ public class Cell extends JLabel {
     private Border border;
     private ImageIcon image= null;
 
+    public final Color INITIAL_BACKGROUND = new Color(15, 23, 51);
 
     public Cell(int x, int y) {
         this.position = new Vector2d(x, y);
@@ -38,9 +39,6 @@ public class Cell extends JLabel {
 
 
     }
-
-
-
     public Vector2d getPosition() {
         return position;
     }
@@ -48,7 +46,7 @@ public class Cell extends JLabel {
     public void initColor() {
 
        // this.setBackground(new Color(36, 255, 103));
-        this.setBackground(Color.BLACK);
+        updateBackground(this.position);
         border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
         this.setBorder(border);
     }
@@ -86,10 +84,21 @@ public class Cell extends JLabel {
         this.setIcon(image);
     }
 
-    public void updateBorder(Color color) {
-        border = BorderFactory.createLineBorder(color, 2);
+    public void updateColors(Color color) {
+        border = BorderFactory.createLineBorder(color, 3);
         this.setBorder(border);
         this.setForeground(Color.WHITE);
+        updateBackground(this.position);
+    }
+
+    public void updateBackground(Vector2d position) {
+        Color color = position.getColonyColor();
+        if(color == null) color = INITIAL_BACKGROUND;
+        this.setBackground(color.darker());
+    }
+
+    public void setPosition(Vector2d position) {
+        this.position = position;
     }
 }
 

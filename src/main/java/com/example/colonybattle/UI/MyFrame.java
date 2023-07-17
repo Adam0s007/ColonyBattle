@@ -4,9 +4,11 @@ import com.example.colonybattle.Vector2d;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class MyFrame extends JFrame {
     private Cell[][] grid;
+
 
     public MyFrame(int gridSize) {
         // ... konstruktor ...
@@ -32,8 +34,9 @@ public class MyFrame extends JFrame {
     }
     // Metoda do ustawiania koloru komórki na podstawie pozycji
     public void setColorAtPosition(Vector2d position, Color color) {
-        grid[position.getX()][position.getY()].updateBorder(color);
+        grid[position.getX()][position.getY()].updateColors(color);
     }
+
 
     public void setInitColor(Vector2d position){
         grid[position.getX()][position.getY()].initColor();
@@ -60,4 +63,12 @@ public class MyFrame extends JFrame {
         grid[position.getX()][position.getY()].removeImageIcon();
     }
 
+    //
+    public void setPositionReferences(Map<String,Vector2d> positionReferences){
+        positionReferences.entrySet().stream()
+                .forEach(entry -> {
+                    Vector2d position = entry.getValue();
+                    grid[position.getX()][position.getY()].setPosition(position);
+                });
+    }
 }

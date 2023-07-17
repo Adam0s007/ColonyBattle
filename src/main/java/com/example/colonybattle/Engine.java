@@ -35,6 +35,7 @@ public class Engine {
 
 
         board.initFields();
+        frame.setPositionReferences(board.getFields());
         board.start();
 
         synchronized (EndgameMonitor.monitor) {
