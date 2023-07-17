@@ -145,8 +145,12 @@ public class Vector2d {
             Colony oldColony = this.membership;
             this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
             this.currentAppropriation = this.INIT_APPROPRIATION;
-            if(this.membership != null) this.membership.addField(this);
-            if(oldColony != null) oldColony.removeField(this);
+            if(this.membership != null) {
+                this.membership.addField(this);
+            }
+            if(oldColony != null) {
+                oldColony.removeField(this);
+            }
         }
     }
 
@@ -154,8 +158,12 @@ public class Vector2d {
         Colony oldColony = this.membership;
         this.membership = person.getColony();
         this.currentAppropriation = this.INIT_APPROPRIATION;
-        if(this.membership != null) this.membership.addField(this);
-        if(oldColony != null) oldColony.removeField(this);
+        if(this.membership != null) {
+            this.membership.addField(this);
+        }
+        if(oldColony != null) {
+            oldColony.removeField(this);
+        }
     }
 
 

@@ -74,7 +74,7 @@ public class Warrior extends Person {
         return closestPersonPosition;
     }
     @Override
-    public void attack(Person person) {
+    public synchronized void attack(Person person) {
         int strength = status.getStrength();
         int energy = status.getEnergy();
         if(energy < this.MIN_PROTECTION_ENERGY) {

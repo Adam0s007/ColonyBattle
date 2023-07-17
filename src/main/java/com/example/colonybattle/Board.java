@@ -17,7 +17,7 @@ public class Board {
     private Map<String,Vector2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
     private  final LockMapPosition lockManager = new LockMapPosition();
     private List<Colony> allColonies;
-    private ExecutorService executorService;
+    public ExecutorService executorService;
     private StatisticsPrinter statisticsPrinter;
     public Board(List<Colony> allColonies) {
         this.allColonies = allColonies;
@@ -29,8 +29,7 @@ public class Board {
     }
     public void start() {
         int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
-        this.executorService = Executors.newFixedThreadPool(totalPeopleCount);
-
+        this.executorService = Executors.newFixedThreadPool(100);
         for (Colony colony : allColonies) {
             for (Person person : colony.getPeople()) {
                 executorService.submit(person);
@@ -78,6 +77,7 @@ public class Board {
             for (Person person : colony.getPeople()) {
                 person.stop();
             }
+            colony.shutdown();
         }
     }
     public void stop() {
@@ -111,7 +111,6 @@ public class Board {
     private Person getPersonAtPosition(int i, int j) {
         Vector2d position = new Vector2d(i, j);
 
-        //wiemy że getPeople zwraca hashset,
         for (Colony colony : allColonies) {
             Person person = colony.containsPerson(position);
             if (person != null) {
@@ -120,6 +119,7 @@ public class Board {
         }
         return null;
     }
+
     public LockMapPosition getLockManager() {
         return lockManager;
     }

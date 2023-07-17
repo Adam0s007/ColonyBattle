@@ -208,7 +208,7 @@ public abstract class Person implements Runnable{
     }
     public abstract ImageIcon getImage();
 
-    public void attack(Person person) {
+    public synchronized void attack(Person person) {
         person.defend(1);
         this.status.addEnergy(-1);
     }

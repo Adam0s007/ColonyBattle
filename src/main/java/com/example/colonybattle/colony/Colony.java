@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 public class Colony {
 
@@ -24,12 +24,18 @@ public class Colony {
 
     private Board board;
     private final Instant creationTime;
+    private final ScheduledExecutorService executorService;
+
+    //monitor for notify and wait
+    public final Object spawnMonitor = new Object();
 
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
         this.fields =ConcurrentHashMap.newKeySet();
         this.points = 0;
         this.creationTime = Instant.now();
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+
     }
 
     public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color, Board board,PersonFactory personFactory) {
@@ -43,6 +49,9 @@ public class Colony {
         this.board = board;
         this.personFactory = personFactory;
         this.creationTime = Instant.now();
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+        spawnPerson();
+
 
     }
     public ColonyColor getColor() {
@@ -136,30 +145,36 @@ public class Colony {
                 .filter(field -> field.getPerson() == null)
                 .findAny().orElse(null);
     }
-    public void spawnPerson(){
-        new Thread(() -> {
-            while(true) {
-                Vector2d freeField;
-                synchronized(this) { // Obtain lock on this Colony
-                    while((freeField = getFreeField()) == null) {
-                        try {
-                            wait(); // This will wait until notifyAll() is called in Vector2d
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                Person newPerson = personFactory.generateRandom(this,freeField); // Create a new Person using the factory
-                // Set the new person's position to the freeField
-                // ...
-                try {
-                    Thread.sleep(10000); // Wait for 10 seconds
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+
+    public void spawnPerson() {
+//        Runnable task = () -> {
+//            Vector2d freeField;
+//            synchronized(this) { // Obtain lock on this Colony
+//                freeField = getFreeField();
+//                if(freeField != null) {
+//                    Person newPerson = personFactory.generateRandom(this,freeField); // Create a new Person using the factory
+//
+//                    this.getBoard().executorService.submit(newPerson); // Submit the new Person to the ExecutorService
+//
+//
+//                    System.out.println("New person spawned at " + freeField);
+//                }
+//            }
+//        };
+//        executorService.scheduleAtFixedRate(task, 4, 10, TimeUnit.SECONDS);
     }
+
+    public void shutdown() {
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+                System.err.println("Executor service did not terminate in the allotted time.");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }
