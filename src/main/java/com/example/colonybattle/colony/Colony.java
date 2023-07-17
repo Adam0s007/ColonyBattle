@@ -18,7 +18,7 @@ public class Colony {
     private ColonyColor color;
     private ColonyType type;
     private Set<Person> people;
-    private Map<String,Vector2d> fields;
+    private Set<Vector2d> fields;
     private int points;
     private PersonFactory personFactory;
 
@@ -27,16 +27,17 @@ public class Colony {
 
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
-        this.fields = new ConcurrentHashMap<>();
+        this.fields =ConcurrentHashMap.newKeySet();
         this.points = 0;
         this.creationTime = Instant.now();
     }
 
-    public Colony(ColonyType type,Set<Person> people, Map<String,Vector2d> fields, int points, ColonyColor color, Board board,PersonFactory personFactory) {
+    public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color, Board board,PersonFactory personFactory) {
         this.type = type;
         this.people = ConcurrentHashMap.newKeySet();
-        this.fields = fields;
+        this.fields =  ConcurrentHashMap.newKeySet();;
         this.people.addAll(people);
+        this.fields.addAll(fields);
         this.points = points;
         this.color = color;
         this.board = board;
@@ -53,7 +54,7 @@ public class Colony {
     public Set<Person> getPeople() {
         return people;
     }
-    public Map<String,Vector2d> getFields() {
+    public Set<Vector2d> getFields() {
         return fields;
     }
     public int getPoints() {
@@ -122,19 +123,16 @@ public class Colony {
         return Duration.between(creationTime, Instant.now());
     }
 
-    public void addField(String name, Vector2d position) {
-        fields.put(name,position);
+    public void addField(Vector2d position) {
+        fields.add(position);
     }
-    public void removeField(String name) {
-        fields.remove(name);
-    }
-    public boolean includesField(String name) {
-        return fields.containsKey(name);
+    public void removeField(Vector2d position) {
+        fields.remove(position);
     }
 
 
     public Vector2d getFreeField(){
-        return this.fields.values().stream()
+        return this.fields.stream()
                 .filter(field -> field.getPerson() == null)
                 .findAny().orElse(null);
     }

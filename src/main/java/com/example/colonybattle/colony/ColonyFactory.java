@@ -41,7 +41,7 @@ public class ColonyFactory {
         // Tworzymy puste zbiory ludzi i pól
         PersonFactory personFactory = new PersonFactory();
         Set<Person> people = ConcurrentHashMap.newKeySet();
-        Map<String,Vector2d> fields = new ConcurrentHashMap<>();
+        Set<Vector2d> fields =ConcurrentHashMap.newKeySet();
         ColonyColor color = getColonyColor(type);
         Colony colony = new Colony(type, people, fields, 0, color,board,personFactory);
         Vector2d startPos;
@@ -71,6 +71,7 @@ public class ColonyFactory {
         // Dodajemy rolników (farmers)
         for (int i = 0; i < 3; i++) {
             Vector2d position = getRandomPositionWithin(startPos, endPos);
+            colony.addField(position);
             personFactory.createPerson(PersonType.FARMER, position, colony);
         }
 

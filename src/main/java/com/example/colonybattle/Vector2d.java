@@ -137,20 +137,27 @@ public class Vector2d {
         return Math.sqrt(x * x + y * y);
     }
 
-    public void changeMembership(Person person) {
+    public synchronized void changeMembership(Person person) {
         if(this.membership != person.getColony())
             this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
 
         if(this.currentAppropriation == 0) {
+            Colony oldColony = this.membership;
             this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
             this.currentAppropriation = this.INIT_APPROPRIATION;
+            if(this.membership != null) this.membership.addField(this);
+            if(oldColony != null) oldColony.removeField(this);
         }
     }
 
-    public void changeMembershipForcefully(Person person){
+    public synchronized void changeMembershipForcefully(Person person){
+        Colony oldColony = this.membership;
         this.membership = person.getColony();
         this.currentAppropriation = this.INIT_APPROPRIATION;
+        if(this.membership != null) this.membership.addField(this);
+        if(oldColony != null) oldColony.removeField(this);
     }
+
 
     public Color getColonyColor(){
         if(this.membership == null)
