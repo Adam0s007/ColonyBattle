@@ -3,7 +3,6 @@ package com.example.colonybattle.UI;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.Vector2d;
 import java.awt.*;
 
@@ -87,7 +86,7 @@ public class Cell extends JLabel {
         this.setIcon(image);
     }
 
-    public void updateBackground(Color color) {
+    public void updateBorder(Color color) {
         border = BorderFactory.createLineBorder(color, 2);
         this.setBorder(border);
         this.setForeground(Color.WHITE);

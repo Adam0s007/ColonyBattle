@@ -51,6 +51,7 @@ public abstract class Person implements Runnable{
         this.boardRef = new BoardRef(this);
         this.connectionHelper = new ConnectionHelper(this);
         connectionHelper.changePosConnections(null,position);
+        this.position.changeMembershipForcefully(this);
         connectionHelper.connectColony(colony);
         posLock = new PosLock(boardRef);
         attackPerformer = new Attack(this,boardRef);

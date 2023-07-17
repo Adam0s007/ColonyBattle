@@ -39,7 +39,7 @@ public class Vector2dTest {
         set.add(vector1);
         assertFalse(set.contains(vector2));
         Vector2d vector3 = new Vector2d(2, 1);
-        vector3.setAppropriationRate(2222);
+        vector3.setAPPROPRIATION_RATE(2222);
         assertEquals(vector1,vector3);
     }
 }

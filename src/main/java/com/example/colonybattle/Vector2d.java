@@ -1,58 +1,55 @@
 package com.example.colonybattle;
 
+import com.example.colonybattle.Colors.ColorConverter;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.person.BoardRef;
 import com.example.colonybattle.person.Person;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
+import java.awt.*;
 
 public class Vector2d {
     private int x;
     private int y;
-    private Colony membership;//okresla przynaleznosc do kolonii
-    private int appropriationRate; //okresla stopien przynaleznosci do kolonii
+    private Colony membership = null;//okresla przynaleznosc do kolonii
+    private final int INIT_APPROPRIATION; //okresla stopien przynaleznosci do kolonii
+    private int currentAppropriation = 0;
     private Person person;
 
-
-
-    public Vector2d(int x, int y, Colony membership, int appropriationRate) {
+    public Vector2d(int x, int y, int INIT_APPROPRIATION) {
         this.x = x;
         this.y = y;
-        this.membership = membership;
-        this.appropriationRate = appropriationRate;
+        this.INIT_APPROPRIATION = INIT_APPROPRIATION;
+        this.currentAppropriation = INIT_APPROPRIATION;
         this.person = null;
     }
-    public Vector2d(int x, int y, Colony membership, int appropriationRate,Person person) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
+    public Vector2d(int x, int y, int INIT_APPROPRIATION, Person person) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
         this.x = x;
         this.y = y;
-        this.membership = membership;
-        this.appropriationRate = appropriationRate;
+        this.INIT_APPROPRIATION = INIT_APPROPRIATION;
+        this.currentAppropriation = INIT_APPROPRIATION;
         this.person = person;
+        if(person != null)
+            changeMembership(person);
     }
     public Vector2d(int x, int y) {
         this.x = x;
         this.y = y;
         this.membership = null;
-        this.appropriationRate = 10;
+        this.INIT_APPROPRIATION = 10;
+        this.currentAppropriation = INIT_APPROPRIATION;
         this.person = null;
     }
 
-    public Vector2d newVector(int x, int y) {
-        return new Vector2d(x, y, this.membership, this.appropriationRate);
-    }
 
     public Vector2d addVector(Vector2d vector) {
-        return new Vector2d(this.x + vector.x, this.y + vector.y, this.membership, this.appropriationRate);
+        return new Vector2d(this.x + vector.x, this.y + vector.y, this.INIT_APPROPRIATION);
     }
     // odejmij vector
     public Vector2d subtractVector(Vector2d vector) {
-        return new Vector2d(this.x - vector.x, this.y - vector.y, this.membership, this.appropriationRate);
+        return new Vector2d(this.x - vector.x, this.y - vector.y, this.INIT_APPROPRIATION);
     }
 
     public Vector2d oppositeVector() {
-        return new Vector2d(-this.x, -this.y, this.membership, this.appropriationRate);
+        return new Vector2d(-this.x, -this.y, this.INIT_APPROPRIATION);
     }
 
     // Override hashcode oraz equals
@@ -97,23 +94,19 @@ public class Vector2d {
         return membership;
     }
 
-    public void setMembership(Colony membership) {
-        this.membership = membership;
+
+    public int getINIT_APPROPRIATION() {
+        return INIT_APPROPRIATION;
     }
 
-    public int getAppropriationRate() {
-        return appropriationRate;
-    }
 
-    public void setAppropriationRate(int appropriationRate) {
-        this.appropriationRate = appropriationRate;
-    }
 
     public Person getPerson() {
         return person;
     }
     public void setPerson(Person person) {
         this.person = person;
+        changeMembership(person);
     }
     public void addPerson(Person person) {
         this.setPerson(person);
@@ -143,7 +136,24 @@ public class Vector2d {
         return Math.sqrt(x * x + y * y);
     }
 
+    public void changeMembership(Person person) {
+        int newAppropr = this.currentAppropriation - person.getStatus().getLandAppropriation();
+        this.currentAppropriation = Math.max(0,newAppropr);
+        if(this.currentAppropriation == 0) {
+            this.membership = person.getColony();
+            this.currentAppropriation = this.INIT_APPROPRIATION;
+        }
+    }
+    public void changeMembershipForcefully(Person person){
+        this.membership = person.getColony();
+        this.currentAppropriation = this.INIT_APPROPRIATION;
+    }
 
+    public Color getColonyColor(){
+        if(this.membership == null)
+            return Color.BLACK;
+        return ColorConverter.convertColor(this.membership.getColor().getColor());
+    }
 
 
 
