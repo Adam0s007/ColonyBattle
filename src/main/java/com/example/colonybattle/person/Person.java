@@ -27,7 +27,7 @@ public abstract class Person implements Runnable{
     protected ImageLoaderInterface imageLoader;
     private int depth = 0;
     //semafor for dying
-    private final Semaphore dyingSemaphore;
+    public final Semaphore dyingSemaphore;
     private final int MAX_DEPTH = 5;
 
     @Override
@@ -135,11 +135,12 @@ public abstract class Person implements Runnable{
         checkWizardingQualifications();
         while(running){
             PersonWaiting();
-            if(this.getStatus().getHealth() <= 0)
+            if(this.getStatus().getHealth() <= 0){
                 if(dyingSemaphore.tryAcquire()) {
                     die();
-
                 }
+                return;
+            }
             walk();
         }
     };
@@ -209,7 +210,7 @@ public abstract class Person implements Runnable{
     public abstract ImageIcon getImage();
 
     public synchronized void attack(Person person) {
-        person.defend(1);
+        person.defend(2);
         this.status.addEnergy(-1);
     }
     public void healMe(int heal){

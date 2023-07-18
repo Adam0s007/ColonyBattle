@@ -40,8 +40,10 @@ public class Attack {
 
 
     public void attackAndPossiblyKill(Person person) {
-        attacker.attack(person);
-        if (person.getStatus().getHealth() <= 0) {
+        synchronized(person) {
+            attacker.attack(person);
+        }
+        if(person.getStatus().getHealth() <= 0){
             person.cellHelper.deathColor();
         }
     }

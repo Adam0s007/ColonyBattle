@@ -62,7 +62,7 @@ public class CellHelper {
 
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.BLUE));
         try{
-            Thread.sleep(500);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -71,7 +71,7 @@ public class CellHelper {
     public void energyEmitionColor(){
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(ConsoleColor.BRIGHT_WHITE));
         try{
-            Thread.sleep(500);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

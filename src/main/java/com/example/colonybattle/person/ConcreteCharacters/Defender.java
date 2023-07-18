@@ -34,7 +34,7 @@ public class Defender extends Person {
     }
 
     @Override
-    public synchronized void defend(int damage) {
+    public  synchronized void defend(int damage) {
         if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
             double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
 
@@ -51,11 +51,12 @@ public class Defender extends Person {
         }
     }
     @Override
-    public synchronized void attack(Person person) {
+    public void attack(Person person) {
         int strength = status.getStrength();
         int energy = status.getEnergy();
         if(energy < this.MIN_PROTECTION_ENERGY) {
             person.defend(1);
+            return;
         }
         int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
         person.defend(damage);

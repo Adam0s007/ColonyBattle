@@ -35,7 +35,7 @@ public class Wizard extends Person implements Magic {
         return 'W';
     }
     @Override
-    public synchronized void wand(Vector2d vec) {
+    public void wand(Vector2d vec) {
         Person person = vec.getPerson();
         if(person != null){//zabiera mu energie
             double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
@@ -56,7 +56,7 @@ public class Wizard extends Person implements Magic {
         return imageLoader.getImageForType(getType());
     }
     @Override
-    public synchronized void defend(int damage) {
+    public synchronized  void defend(int damage) {
         if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
             double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
 
@@ -75,7 +75,7 @@ public class Wizard extends Person implements Magic {
             status.addHealth(-reducedDamage);
         }
     }
-    public void healFriends(){
+    public  void healFriends(){
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         //System.out.println("ja sie wywoluję!");
         Runnable task = () -> {
@@ -117,11 +117,12 @@ public class Wizard extends Person implements Magic {
         executorService.scheduleAtFixedRate(task, INITIAL_DELAY, 5, TimeUnit.SECONDS);
     }
     @Override
-    public synchronized void attack(Person person) {
+    public void attack(Person person) {
         int strength = status.getStrength();
         int energy = status.getEnergy();
         if(energy < this.MIN_PROTECTION_ENERGY) {
             person.defend(1);
+            return;
         }
         int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
         person.defend(damage);

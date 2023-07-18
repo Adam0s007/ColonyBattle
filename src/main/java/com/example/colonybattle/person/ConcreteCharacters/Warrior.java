@@ -38,7 +38,7 @@ public class Warrior extends Person {
     }
 
     @Override
-    public synchronized void defend(int damage) {
+    public  synchronized   void defend(int damage) {
         if (status.getEnergy() >= MIN_PROTECTION_ENERGY) { // Minimalna wartość energii wymagana do obrony
             double random = ThreadLocalRandom.current().nextDouble();  // Generowanie losowej liczby z zakresu 0-1
 
@@ -74,14 +74,15 @@ public class Warrior extends Person {
         return closestPersonPosition;
     }
     @Override
-    public synchronized void attack(Person person) {
+    public void attack(Person person) {
         int strength = status.getStrength();
         int energy = status.getEnergy();
         if(energy < this.MIN_PROTECTION_ENERGY) {
-            person.defend(1);
+            person.defend(2);
+            return;
         }
-        int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
-        person.defend(damage);
+            int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
+            person.defend(damage);
     }
 
     @Override
