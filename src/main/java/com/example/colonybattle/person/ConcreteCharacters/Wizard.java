@@ -20,7 +20,7 @@ public class Wizard extends Person implements Magic {
     private  final int MIN_PROTECTION_ENERGY = 4;
     //Random value between 0 and 4:
     private final int INITIAL_DELAY;
-    private final int PERIOD = 3;
+    private final int PERIOD = 6;
 
     private final int MIN_WAIT = 1000;
     private final int MAX_WAIT = 2000;

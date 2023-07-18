@@ -115,19 +115,14 @@ public abstract class Person implements Runnable{
     }
     private Vector2d newPoint() {
         Vector2d randomPos = boardRef.generateRandomPosition(position);
-        if (depth == MAX_DEPTH) {
-            depth = 0;
-            return randomPos;
-        }
         Vector2d closestEnemy = null;
-        if (this instanceof Warrior || this instanceof Farmer || this instanceof Defender) {
-            closestEnemy = ((Person) this).findClosestPosition();
-            if (closestEnemy == null) return randomPos;
-        }
+
+        closestEnemy = this.findClosestPosition();
         if (closestEnemy == null) return randomPos;
+
         Vector2d directionVec = Calculator.calculateDirection(position, closestEnemy);
-        if (this instanceof Farmer && (this.getStatus().getHealth() > 4 || Calculator.calculateDistance(position,closestEnemy) >= 6)) return randomPos;
-        if (this instanceof Farmer)
+        if ((this instanceof Farmer || this instanceof  Wizard) && (this.getStatus().getHealth() > 4 || Calculator.calculateDistance(position,closestEnemy) >= 6)) return randomPos;
+        if (this instanceof Farmer || this instanceof  Wizard)
             directionVec = new Vector2d(-directionVec.getX(), -directionVec.getY());
         return boardRef.calculateNewPosition(position, directionVec);
     }
