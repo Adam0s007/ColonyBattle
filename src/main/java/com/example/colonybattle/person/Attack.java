@@ -42,7 +42,7 @@ public class Attack {
     public void attackAndPossiblyKill(Person person) {
         attacker.attack(person);
         if(person != null && person.running && person.getStatus().getHealth() <= 0){
-            System.out.println(person.getColony());
+            //System.out.println(person.getColony());
             if(person.getColony() != null)
                 person.getColony().removePerson(person);
         }

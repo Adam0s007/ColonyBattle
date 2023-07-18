@@ -31,7 +31,7 @@ public class Cell extends JLabel {
         this.setVerticalTextPosition(JLabel.BOTTOM);
         //font names:
 
-        this.setFont(new Font("Arial", Font.BOLD, 16));
+        this.setFont(new Font("Arial", Font.BOLD, 13));
         this.setHorizontalAlignment(JLabel.CENTER);
         this.setVerticalAlignment(JLabel.CENTER);
         this.setIconTextGap(-20);
@@ -58,6 +58,10 @@ public class Cell extends JLabel {
             this.life = "";
         } else {
             this.life = Integer.toString(life);
+        }
+        if(this.position.getPerson() != null) {
+            String personId = String.valueOf(position.getPerson().getStatus().getId());
+            this.life = this.life + " "+ personId;
         }
         this.setText(this.life);
     }

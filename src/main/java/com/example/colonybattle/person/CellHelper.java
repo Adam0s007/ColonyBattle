@@ -1,11 +1,16 @@
 package com.example.colonybattle.person;
 
+import com.example.colonybattle.Board;
 import com.example.colonybattle.Colors.ConsoleColor;
 import com.example.colonybattle.Colors.ColorConverter;
+import com.example.colonybattle.Direction;
 import com.example.colonybattle.Engine;
 import com.example.colonybattle.Vector2d;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CellHelper {
 
@@ -77,4 +82,13 @@ public class CellHelper {
         }
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(person.colony.getColor().getColor()));
     }
+
+    public void spawningColor(){
+        Color color = new Color(255,140,0);
+        Engine.getFrame().setColorAtPosition(person.position, color);
+
+        Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(person.colony.getColor().getColor()));
+    }
+
+
 }

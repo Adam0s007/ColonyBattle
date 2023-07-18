@@ -28,8 +28,6 @@ public class PersonFactory {
     }
 
     public Person createPerson(PersonType type, Vector2d pos, Colony colony){
-        if (personCountMap.get(type) < PeopleNumber.valueOf(type.toString().toUpperCase() + "_NUMBER").getNumber()) {
-            personCountMap.put(type, personCountMap.get(type) + 1);
             switch (type) {
                 case FARMER:
                     return new Farmer(type, pos, colony, newId());
@@ -43,10 +41,6 @@ public class PersonFactory {
                     System.out.println("Wrong person type");
                     return null;
             }
-        } else {
-            System.out.println("Max number of " + type.toString().toLowerCase() + " reached");
-            return null;
-        }
     }
 
     public boolean isFull(){
@@ -59,6 +53,7 @@ public class PersonFactory {
         return false;
     }
     public Person generateRandom(Colony colony, Vector2d pos) {
+        personCounterExecutor(colony);
         if (isFull()) return null;
         List<PersonType> types = new ArrayList<>(Arrays.asList(PersonType.values()));
         Collections.shuffle(types); // mieszamy typy aby losowość była bardziej naturalna
@@ -70,6 +65,29 @@ public class PersonFactory {
                     return createPerson(type, pos, colony);
                 })
                 .orElse(null);
+    }
+
+    public void personCounterExecutor(Colony colony){
+        // Initialize the count map
+        Map<PersonType, Integer> countMap = new HashMap<>();
+        for (PersonType type : PersonType.values()) {
+            countMap.put(type, 0);
+        }
+
+        // Iterate through the people in the colony and count the number of each type
+        for (Person person : colony.getPeople()) {
+            countMap.computeIfPresent(person.getType(), (type, count) -> count + 1);
+        }
+
+        // Update the overall person count map with the count from this colony
+        for (PersonType type : PersonType.values()) {
+            personCountMap.put(type, countMap.get(type));
+        }
+    }
+
+    public void removePerson(Person person){
+        if(personCountMap.get(person.getType()) > 0)
+        personCountMap.put(person.getType(), personCountMap.get(person.getType()) - 1);
     }
 
 }

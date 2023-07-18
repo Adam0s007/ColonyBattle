@@ -71,4 +71,10 @@ public class MyFrame extends JFrame {
                     grid[position.getX()][position.getY()].setPosition(position);
                 });
     }
+    public void setBackground(Vector2d position, Color color){
+        grid[position.getX()][position.getY()].setBackground(color);
+    }
+    public Color getColorAtPosition(Vector2d position){
+        return grid[position.getX()][position.getY()].getBackground();
+    }
 }

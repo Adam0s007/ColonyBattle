@@ -66,6 +66,7 @@ public abstract class Person implements Runnable{
     public void initGUI(){
         this.cellHelper = new CellHelper(this);
         cellHelper.newCellAt(this.position);
+        cellHelper.spawningColor();
     }
 
     public void setPosition(Vector2d position) {
@@ -148,6 +149,7 @@ public abstract class Person implements Runnable{
         cellHelper.resetCell(oldPosition);
         posLock.releasePositionLock(oldPosition);
         this.running = false;
+        this.colony.personFactory.removePerson(this);
         dyingSemaphore.release();
         connectionHelper.disconnectColony();
         //System.out.println(this.boardRef.getBoard() == null);

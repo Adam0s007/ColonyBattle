@@ -19,22 +19,19 @@ public class Colony {
     private ColonyType type;
     private Set<Person> people;
     private Set<Vector2d> fields;
+    private final int PERIOD_SEC = 60;
     private int points;
-    private PersonFactory personFactory;
-
+    public final PersonFactory personFactory;
     private Board board;
     private final Instant creationTime;
     private final ScheduledExecutorService executorService;
-
-    //monitor for notify and wait
-    public final Object spawnMonitor = new Object();
-
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
         this.fields =ConcurrentHashMap.newKeySet();
         this.points = 0;
         this.creationTime = Instant.now();
         this.executorService = Executors.newSingleThreadScheduledExecutor();
+        this.personFactory = new PersonFactory();
 
     }
 
@@ -147,21 +144,22 @@ public class Colony {
     }
 
     public void spawnPerson() {
-//        Runnable task = () -> {
-//            Vector2d freeField;
-//            synchronized(this) { // Obtain lock on this Colony
-//                freeField = getFreeField();
-//                if(freeField != null) {
-//                    Person newPerson = personFactory.generateRandom(this,freeField); // Create a new Person using the factory
-//
-//                    this.getBoard().executorService.submit(newPerson); // Submit the new Person to the ExecutorService
-//
-//
-//                    System.out.println("New person spawned at " + freeField);
-//                }
-//            }
-//        };
-//        executorService.scheduleAtFixedRate(task, 4, 10, TimeUnit.SECONDS);
+        Runnable task = () -> {
+            Vector2d freeField;
+            synchronized(this) { // Obtain lock on this Colony
+                freeField = getFreeField();
+                if(freeField != null) {
+
+                    Person newPerson = personFactory.generateRandom(this,freeField); // Create a new Person using the factory
+                    System.out.println("new person: " + newPerson);
+
+                    if(newPerson != null)
+                        this.getBoard().executorService.submit(newPerson); // Submit the new Person to the ExecutorService
+
+                }
+            }
+        };
+        executorService.scheduleAtFixedRate(task, 0, PERIOD_SEC, TimeUnit.SECONDS);
     }
 
     public void shutdown() {
