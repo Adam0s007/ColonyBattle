@@ -85,9 +85,11 @@ public class CellHelper {
 
     public void spawningColor(){
         Color color = new Color(255,140,0);
+        Color oldColor = Engine.getFrame().getColorAtPosition(person.position);
         Engine.getFrame().setColorAtPosition(person.position, color);
 
         Engine.getFrame().setColorAtPosition(person.position, ColorConverter.convertColor(person.colony.getColor().getColor()));
+        Engine.getFrame().setBackground(person.position, oldColor);
     }
 
 
