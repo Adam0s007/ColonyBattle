@@ -24,6 +24,7 @@ public abstract class Person implements Runnable{
     protected BoardRef boardRef;
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
+    public boolean isNew = false;
     protected Attack attackPerformer;
     protected final ReentrantLock attackLock = new ReentrantLock();
     protected final ReentrantLock defendLock = new ReentrantLock();
@@ -130,7 +131,7 @@ public abstract class Person implements Runnable{
     @Override
     public void run(){
         initGUI();
-        posLock.aquirePositionLock(position);
+        if(!isNew) posLock.aquirePositionLock(position);
         checkWizardingQualifications();
         while(running){
             PersonWaiting();

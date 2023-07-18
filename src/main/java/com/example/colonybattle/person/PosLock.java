@@ -9,12 +9,8 @@ public class PosLock {
     }
     protected boolean aquirePositionLock(Vector2d position){
         boolean succeeded = false;
-        try {
            if(boardRef.getBoard() != null)
                 succeeded = boardRef.getBoard().getLockManager().tryAcquireLock(position);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return succeeded;
     }
     protected void releasePositionLock(Vector2d position){

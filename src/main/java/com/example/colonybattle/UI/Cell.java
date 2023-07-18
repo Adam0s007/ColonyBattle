@@ -60,8 +60,8 @@ public class Cell extends JLabel {
             this.life = Integer.toString(life);
         }
         if(this.position.getPerson() != null) {
-            String personId = String.valueOf(position.getPerson().getStatus().getId());
-            this.life = this.life + " "+ personId;
+            String energy = String.valueOf(position.getPerson().getStatus().getEnergy());
+            this.life = this.life + " "+ energy;
         }
         this.setText(this.life);
     }

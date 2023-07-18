@@ -148,15 +148,18 @@ public class Colony {
             Vector2d freeField;
             synchronized(this) { // Obtain lock on this Colony
                 freeField = getFreeField();
-                if(freeField != null) {
+                if(freeField != null && getBoard().getLockManager().tryAcquireLock(freeField)){
+                        Person newPerson = personFactory.generateRandom(this,freeField); // Create a new Person using the factory
+                        System.out.println("new person: " + newPerson);
+                        if(newPerson != null){
+                            newPerson.isNew = true;
+                            this.getBoard().executorService.submit(newPerson); // Submit the new Person to the ExecutorService
+                        }else{
+                            getBoard().getLockManager().releaseLock(freeField);
+                        }
 
-                    Person newPerson = personFactory.generateRandom(this,freeField); // Create a new Person using the factory
-                    System.out.println("new person: " + newPerson);
+                } // Try to acquire lock on the free field (if it is not locked by another thread
 
-                    if(newPerson != null)
-                        this.getBoard().executorService.submit(newPerson); // Submit the new Person to the ExecutorService
-
-                }
             }
         };
         executorService.scheduleAtFixedRate(task, 0, PERIOD_SEC, TimeUnit.SECONDS);

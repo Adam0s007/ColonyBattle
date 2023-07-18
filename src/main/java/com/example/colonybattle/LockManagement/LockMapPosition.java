@@ -15,9 +15,13 @@ public class LockMapPosition {
         lockMap.putIfAbsent(position, new Semaphore(1));
     }
 
-    public boolean tryAcquireLock(Vector2d position) throws InterruptedException {
-        Semaphore semaphore = lockMap.get(position);
-        return semaphore != null && semaphore.tryAcquire();
+    public boolean tryAcquireLock(Vector2d position){
+        try{
+            Semaphore semaphore = lockMap.get(position);
+            return semaphore != null && semaphore.tryAcquire();
+        } catch (Exception e){
+            return false;
+        }
     }
 
     public void releaseLock(Vector2d position) {
