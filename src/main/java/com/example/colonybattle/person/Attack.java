@@ -40,11 +40,11 @@ public class Attack {
 
 
     public void attackAndPossiblyKill(Person person) {
-        synchronized(person) {
-            attacker.attack(person);
-        }
-        if(person.getStatus().getHealth() <= 0){
-            person.cellHelper.deathColor();
+        attacker.attack(person);
+        if(person != null && person.running && person.getStatus().getHealth() <= 0){
+            System.out.println(person.getColony());
+            if(person.getColony() != null)
+                person.getColony().removePerson(person);
         }
     }
 }

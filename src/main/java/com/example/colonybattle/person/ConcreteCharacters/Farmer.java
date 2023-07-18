@@ -34,23 +34,30 @@ public class Farmer extends Person {
     }
 
     @Override
-    public  synchronized  void defend(int damage) {
-        if (status.getEnergy() >= MIN_PROTECTION_ENERGY) { // Minimalna wartość energii wymagana do obrony
-            double random = ThreadLocalRandom.current().nextDouble(); // Generowanie losowej liczby z zakresu 0-1
+    public void defend(int damage) {
+        if (defendLock.tryLock()) {
+            try {
+                if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
+                    double random = ThreadLocalRandom.current().nextDouble();
 
-            if (random <= 0.1) {
-                // Obrona się powiodła - nie traci życia, ale traci 5 punkt energii
-                status.addEnergy(-MIN_PROTECTION_ENERGY);
-            } else {
-                // Obrona się nie powiodła - traci 1 serce i 1 punkt energii
-                status.addEnergy(-1);
-                status.addHealth(-1);
+                    if (random <= 0.1) {
+                        status.addEnergy(-MIN_PROTECTION_ENERGY);
+                    } else {
+                        status.addEnergy(-1);
+                        status.addHealth(-1);
+                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                    }
+                } else {
+                    double damageReduction = 0.2;
+                    int reducedDamage = (int) Math.ceil(damage * damageReduction);
+                    status.addHealth(-reducedDamage);
+                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                }
+            } finally {
+                defendLock.unlock();
             }
         } else {
-            // Brak wystarczającej ilości energii do obrony
-            double damageReduction = 0.2; // 20% redukcji obrażeń, gdy brak energii
-            int reducedDamage = (int) Math.ceil(damage * damageReduction);
-            status.addHealth(-reducedDamage);
+            //System.out.println("Unable to lock, skipping defense.");
         }
     }
 

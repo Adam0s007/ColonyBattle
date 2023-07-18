@@ -56,23 +56,33 @@ public class Wizard extends Person implements Magic {
         return imageLoader.getImageForType(getType());
     }
     @Override
-    public synchronized  void defend(int damage) {
-        if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
-            double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
+    public void defend(int damage) {
+        if (defendLock.tryLock()) {
+            try {
+                if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
+                    double random = ThreadLocalRandom.current().nextDouble();
 
-            if (random <= 0.6) {
-                status.addEnergy(-MIN_PROTECTION_ENERGY);//traci tylko 1 punkt energii
-            } else {
-                //wizard potrafi przeksztalcic pewną część damage na energie ale wtedy pozostala czesc damage trafia w jego zdrowie
-                int energy = (int) Math.ceil(damage * 0.4);
-                int health = (int) Math.ceil(damage * 0.6);
-                status.addEnergy(energy);
-                status.addHealth(-health);
+                    if (random <= 0.6) {
+                        status.addEnergy(-MIN_PROTECTION_ENERGY);
+                    } else {
+                        int energy = (int) Math.ceil(damage * 0.4);
+                        int health = (int) Math.ceil(damage * 0.6);
+                        status.addEnergy(energy);
+                        status.addHealth(-health);
+                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                    }
+                } else {
+                    double damageReduction = 0.5;
+                    int reducedDamage = (int) Math.ceil(damage * damageReduction);
+                    status.addHealth(-reducedDamage);
+                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                }
+            } finally {
+                defendLock.unlock();
             }
         } else {
-            double damageReduction = 0.5; // 50% damage reduction when energy < PROTECTION_ENERGY
-            int reducedDamage = (int) Math.ceil(damage * damageReduction);
-            status.addHealth(-reducedDamage);
+            // Unable to lock, so we do nothing. You can decide what to do in this case.
+            //System.out.println("Unable to lock, skipping defense.");
         }
     }
     public  void healFriends(){
@@ -118,14 +128,24 @@ public class Wizard extends Person implements Magic {
     }
     @Override
     public void attack(Person person) {
-        int strength = status.getStrength();
-        int energy = status.getEnergy();
-        if(energy < this.MIN_PROTECTION_ENERGY) {
-            person.defend(1);
-            return;
+        if (attackLock.tryLock()) {
+            try {
+                int strength = status.getStrength();
+                int energy = status.getEnergy();
+                if(energy < this.MIN_PROTECTION_ENERGY) {
+                    person.defend(1);
+                    if(person.getStatus().getHealth() <= 0)  person.cellHelper.deathColor();
+                    return;
+                }
+                int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
+                person.defend(damage);
+            } finally {
+                attackLock.unlock();
+            }
+        } else {
+            // Unable to lock, so we do nothing. You can decide what to do in this case.
+          //  System.out.println("Unable to lock, skipping attack.");
         }
-        int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
-        person.defend(damage);
     }
     @Override
     public void die(){

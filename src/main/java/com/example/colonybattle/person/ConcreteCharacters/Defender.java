@@ -34,32 +34,47 @@ public class Defender extends Person {
     }
 
     @Override
-    public  synchronized void defend(int damage) {
-        if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
-            double random = ThreadLocalRandom.current().nextDouble(); // Generate a random number between 0 and 1
+    public void defend(int damage) {
+        if (defendLock.tryLock()) {
+            try {
+                if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
+                    double random = ThreadLocalRandom.current().nextDouble();
 
-            if (random <= 0.8) {
-                status.addEnergy(-1);//traci tylko 1 punkt energii
-            } else {
-                status.addEnergy(-1);
-                status.addHealth(-1);
+                    if (random <= 0.8) {
+                        status.addEnergy(-1);
+                    } else {
+                        status.addEnergy(-1);
+                        status.addHealth(-1);
+                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                    }
+                } else {
+                    double damageReduction = 0.6;
+                    int reducedDamage = (int) Math.ceil(damage * damageReduction);
+                    status.addHealth(-reducedDamage);
+                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                }
+            } finally {
+                defendLock.unlock();
             }
-        } else {
-            double damageReduction = 0.6; // 60% damage reduction when energy < PROTECTION_ENERGY
-            int reducedDamage = (int) Math.ceil(damage * damageReduction);
-            status.addHealth(-reducedDamage);
         }
     }
+
     @Override
     public void attack(Person person) {
-        int strength = status.getStrength();
-        int energy = status.getEnergy();
-        if(energy < this.MIN_PROTECTION_ENERGY) {
-            person.defend(1);
-            return;
+        if (attackLock.tryLock()) {
+            try {
+                int strength = status.getStrength();
+                int energy = status.getEnergy();
+                if(energy < this.MIN_PROTECTION_ENERGY) {
+                    person.defend(1);
+                    return;
+                }
+                int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
+                person.defend(damage);
+            } finally {
+                attackLock.unlock();
+            }
         }
-        int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
-        person.defend(damage);
     }
     //szuka najblizszej osoby ze swojej kolonii (do bronienia)
     @Override

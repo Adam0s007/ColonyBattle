@@ -10,6 +10,7 @@ import com.example.colonybattle.person.ConcreteCharacters.Wizard;
 
 import javax.swing.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class Person implements Runnable{
@@ -24,6 +25,8 @@ public abstract class Person implements Runnable{
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
     protected Attack attackPerformer;
+    protected final ReentrantLock attackLock = new ReentrantLock();
+    protected final ReentrantLock defendLock = new ReentrantLock();
     protected ImageLoaderInterface imageLoader;
     private int depth = 0;
     //semafor for dying
@@ -209,9 +212,17 @@ public abstract class Person implements Runnable{
     }
     public abstract ImageIcon getImage();
 
-    public synchronized void attack(Person person) {
-        person.defend(2);
-        this.status.addEnergy(-1);
+    public void attack(Person person) {
+        if (attackLock.tryLock()) {
+            try {
+                person.defend(2);
+                this.status.addEnergy(-1);
+            } finally {
+                attackLock.unlock();
+            }
+        } else {
+            System.out.println("Unable to lock, skipping attack.");
+        }
     }
     public void healMe(int heal){
         int oldHealth = this.status.addHealth(heal);

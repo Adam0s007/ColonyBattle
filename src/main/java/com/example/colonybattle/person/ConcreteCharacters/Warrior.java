@@ -18,6 +18,7 @@ public class Warrior extends Person {
     private final int MIN_PROTECTION_ENERGY = 4;
     private final int MIN_WAIT = 800;
     private final int MAX_WAIT = 1400;
+
     public Warrior(PersonType type, Vector2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
@@ -38,22 +39,29 @@ public class Warrior extends Person {
     }
 
     @Override
-    public  synchronized   void defend(int damage) {
-        if (status.getEnergy() >= MIN_PROTECTION_ENERGY) { // Minimalna wartość energii wymagana do obrony
-            double random = ThreadLocalRandom.current().nextDouble();  // Generowanie losowej liczby z zakresu 0-1
+    public void defend(int damage) {
+        if (defendLock.tryLock()) {
+            try {
+                if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
+                    double random = ThreadLocalRandom.current().nextDouble();
 
-            if (random <= 0.45) {
-                // Obrona się powiodła - nie traci życia, ale traci MIN_PROTECTION_ENERGY
-                status.addEnergy(-MIN_PROTECTION_ENERGY);
-            } else {
-                // Obrona się nie powiodła - traci 1 serce
-                status.addHealth(-1);
+                    if (random <= 0.45) {
+                        status.addEnergy(-MIN_PROTECTION_ENERGY);
+                    } else {
+                        status.addHealth(-1);
+                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                    }
+                } else {
+                    double damageReduction = 0.6;
+                    int reducedDamage = (int) Math.ceil(damage * damageReduction);
+                    status.addHealth(-reducedDamage);
+                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                }
+            } finally {
+                defendLock.unlock();
             }
         } else {
-            // Brak wystarczającej ilości energii do obrony
-            double damageReduction = 0.6; // 40% redukcji obrażeń, gdy brak energii
-            int reducedDamage = (int) Math.ceil(damage * damageReduction);
-            status.addHealth(-reducedDamage);
+            //System.out.println("Unable to lock, skipping defense.");
         }
     }
 
@@ -75,14 +83,23 @@ public class Warrior extends Person {
     }
     @Override
     public void attack(Person person) {
-        int strength = status.getStrength();
-        int energy = status.getEnergy();
-        if(energy < this.MIN_PROTECTION_ENERGY) {
-            person.defend(2);
-            return;
+        if (attackLock.tryLock()) {
+            try {
+                int strength = status.getStrength();
+                int energy = status.getEnergy();
+                if(energy < this.MIN_PROTECTION_ENERGY) {
+                    person.defend(2);
+                    if(person.getStatus().getHealth() <= 0)  person.cellHelper.deathColor();
+                    return;
+                }
+                int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
+                person.defend(damage);
+            } finally {
+                attackLock.unlock();
+            }
+        } else {
+            //System.out.println("Unable to lock, skipping attack.");
         }
-            int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
-            person.defend(damage);
     }
 
     @Override
