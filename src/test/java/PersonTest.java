@@ -1,11 +1,10 @@
-import com.example.colonybattle.Board;
+import com.example.colonybattle.board.Board;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.board.position.Vector2d;
 import com.example.colonybattle.colony.ColonyFactory;
 import com.example.colonybattle.colony.ColonyType;
-import com.example.colonybattle.person.ConcreteCharacters.Farmer;
-import com.example.colonybattle.person.Person;
-import com.example.colonybattle.person.PersonType;
+import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.models.person.type.PersonType;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

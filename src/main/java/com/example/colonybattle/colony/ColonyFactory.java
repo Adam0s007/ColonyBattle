@@ -1,17 +1,16 @@
 package com.example.colonybattle.colony;
 
-import com.example.colonybattle.Colors.ColonyColor;
-import com.example.colonybattle.person.Person;
-import com.example.colonybattle.person.PersonFactory;
+import com.example.colonybattle.colors.ColonyColor;
+import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.models.person.PersonFactory;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.example.colonybattle.Board;
-import com.example.colonybattle.Vector2d;
-import com.example.colonybattle.person.PersonType;
+import com.example.colonybattle.board.Board;
+import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.models.person.type.PersonType;
 
 
 public class ColonyFactory {

@@ -1,17 +1,14 @@
-import com.example.colonybattle.Board;
+import com.example.colonybattle.board.Board;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.person.Person;
-import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.board.position.Vector2d;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BoardTest {
 

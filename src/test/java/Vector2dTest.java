@@ -1,4 +1,4 @@
-import com.example.colonybattle.Vector2d;
+import com.example.colonybattle.board.position.Vector2d;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
