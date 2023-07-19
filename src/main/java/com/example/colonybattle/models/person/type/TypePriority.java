@@ -17,7 +17,7 @@ public class TypePriority {
         switch (type) {
             case WIZARD:
                 return 1; // Highest priority
-            case FARMER:
+            case WARRIOR:
                 return 2;
             case DEFENDER:
                 return 3;

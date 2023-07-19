@@ -2,95 +2,91 @@ package com.example.colonybattle.models.person;
 
 import com.example.colonybattle.board.position.Vector2d;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.models.person.characters.Defender;
-import com.example.colonybattle.models.person.characters.Wizard;
-import com.example.colonybattle.models.person.characters.Farmer;
-import com.example.colonybattle.models.person.characters.Warrior;
+import com.example.colonybattle.models.person.characters.*;
 import com.example.colonybattle.models.person.type.PeopleNumber;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PersonFactory {
-    private static int available_id = 0;
-
     private IdAllocator idAllocator;
     private Map<PersonType, Integer> personCountMap;
 
-    private int newId(){
-        return idAllocator.giveId();
-    }
     public PersonFactory() {
         this.idAllocator = IdAllocator.getInstance();
+        initPersonCountMap();
+    }
+
+    private void initPersonCountMap() {
         personCountMap = new ConcurrentHashMap<>();
-        for (PersonType type : PersonType.values()) {
-            personCountMap.put(type, 0);
-        }
+        Arrays.stream(PersonType.values())
+                .forEach(type -> personCountMap.put(type, 0));
     }
 
-    public Person createPerson(PersonType type, Vector2d pos, Colony colony){
-            switch (type) {
-                case FARMER:
-                    return new Farmer(type, pos, colony, newId());
-                case DEFENDER:
-                    return new Defender(type, pos, colony, newId());
-                case WARRIOR:
-                    return new Warrior(type, pos, colony, newId());
-                case WIZARD:
-                    return new Wizard(type, pos, colony, newId());
-                default:
-                    System.out.println("Wrong person type");
-                    return null;
-            }
+    public Person createPerson(PersonType type, Vector2d pos, Colony colony) {
+        Person person;
+        int newId = idAllocator.giveId();
+        switch (type) {
+            case FARMER:
+                person = new Farmer(type, pos, colony, newId);
+                break;
+            case DEFENDER:
+                person = new Defender(type, pos, colony, newId);
+                break;
+            case WARRIOR:
+                person = new Warrior(type, pos, colony, newId);
+                break;
+            case WIZARD:
+                person = new Wizard(type, pos, colony, newId);
+                break;
+            default:
+                throw new IllegalArgumentException("Wrong person type");
+        }
+        incrementPersonCount(type);
+        return person;
     }
 
-    public boolean isFull(){
-        if(personCountMap.get(PersonType.FARMER) == PeopleNumber.FARMER_NUMBER.getNumber() &&
-                personCountMap.get(PersonType.DEFENDER) == PeopleNumber.DEFENDER_NUMBER.getNumber() &&
-                personCountMap.get(PersonType.WARRIOR) == PeopleNumber.WARRIOR_NUMBER.getNumber() &&
-                personCountMap.get(PersonType.WIZARD) == PeopleNumber.WIZARD_NUMBER.getNumber()){
-            return true;
-        }
-        return false;
+    private synchronized void incrementPersonCount(PersonType type) {
+        personCountMap.put(type, personCountMap.get(type) + 1);
     }
+
+    public synchronized boolean isFull() {
+        return Arrays.stream(PersonType.values())
+                .allMatch(type -> personCountMap.get(type) >= PeopleNumber.valueOf(type.toString().toUpperCase() + "_NUMBER").getNumber());
+    }
+
     public Person generateRandom(Colony colony, Vector2d pos) {
         personCounterExecutor(colony);
         if (isFull()) return null;
-        List<PersonType> types = new ArrayList<>(Arrays.asList(PersonType.values()));
-        Collections.shuffle(types); // mieszamy typy aby losowość była bardziej naturalna
+        List<PersonType> types = Arrays.asList(PersonType.values());
+        Collections.shuffle(types);
         return types.stream()
                 .filter(type -> personCountMap.get(type) < PeopleNumber.valueOf(type.toString().toUpperCase() + "_NUMBER").getNumber())
                 .findFirst()
-                .map(type -> {
-                    personCountMap.put(type, personCountMap.get(type) + 1);
-                    return createPerson(type, pos, colony);
-                })
+                .map(type -> createPerson(type, pos, colony))
                 .orElse(null);
     }
 
-    public void personCounterExecutor(Colony colony){
-        // Initialize the count map
-        Map<PersonType, Integer> countMap = new HashMap<>();
-        for (PersonType type : PersonType.values()) {
-            countMap.put(type, 0);
-        }
-
-        // Iterate through the people in the colony and count the number of each type
-        for (Person person : colony.getPeople()) {
-            countMap.computeIfPresent(person.getType(), (type, count) -> count + 1);
-        }
-
-        // Update the overall person count map with the count from this colony
-        for (PersonType type : PersonType.values()) {
-            personCountMap.put(type, countMap.get(type));
-        }
+    public void personCounterExecutor(Colony colony) {
+        Map<PersonType, Integer> countMap = getCountMapFromColony(colony);
+        updatePersonCountMap(countMap);
     }
 
-    public void removePerson(Person person){
-        if(personCountMap.get(person.getType()) > 0)
-        personCountMap.put(person.getType(), personCountMap.get(person.getType()) - 1);
+    private Map<PersonType, Integer> getCountMapFromColony(Colony colony) {
+        return colony.getPeople().stream()
+                .collect(Collectors.groupingBy(Person::getType, Collectors.summingInt(p -> 1)));
     }
 
+    private void updatePersonCountMap(Map<PersonType, Integer> countMap) {
+        countMap.forEach(personCountMap::put);
+    }
+
+    public synchronized void removePerson(Person person) {
+        if (personCountMap.get(person.getType()) > 0) {
+            personCountMap.put(person.getType(), personCountMap.get(person.getType()) - 1);
+        }
+    }
 }
-

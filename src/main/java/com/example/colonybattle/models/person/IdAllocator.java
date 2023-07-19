@@ -1,12 +1,14 @@
 package com.example.colonybattle.models.person;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class IdAllocator {
 
     private static IdAllocator instance = null;
-    private int currentId;
+    private AtomicInteger currentId;
 
     private IdAllocator() {
-        currentId = 0;
+        currentId = new AtomicInteger(0);
     }
 
     public static synchronized IdAllocator getInstance() {
@@ -16,8 +18,7 @@ public class IdAllocator {
         return instance;
     }
 
-    public synchronized int giveId() {
-        return currentId++;
+    public int giveId() {
+        return currentId.getAndIncrement();
     }
 }
-
