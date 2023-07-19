@@ -101,7 +101,7 @@ public class BoardRef {
         if (person.getType() == PersonType.FARMER) {
             fieldsStream = fieldsStream.filter(vector -> vector.getMembership() == null || !vector.getMembership().equals(personColony));
         } else {
-            fieldsStream = fieldsStream.filter(vector -> vector.getMembership() != null);
+            fieldsStream = fieldsStream.filter(vector -> vector.getMembership() != null && !vector.getMembership().equals(personColony));
         }
         Vector2d newPosition = fieldsStream.min(Comparator.comparing(vector -> vector.distanceTo(personPosition)))
                 .orElse(null);

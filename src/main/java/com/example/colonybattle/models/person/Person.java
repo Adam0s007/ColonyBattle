@@ -2,6 +2,8 @@ package com.example.colonybattle.models.person;
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.board.position.Vector2d;
 import com.example.colonybattle.models.person.abilities.Magic;
+import com.example.colonybattle.models.person.characters.Defender;
+import com.example.colonybattle.models.person.characters.Warrior;
 import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
@@ -124,17 +126,23 @@ public abstract class Person implements Runnable{
         }
     }
     private Vector2d newPoint() {
-        Vector2d randomPos = boardRef.closestField(this);
-        Vector2d closestEnemy = null;
+        Vector2d vecField = boardRef.closestField(this);
+        Vector2d directionVecField = null;
+        Vector2d newFieldPos = null;
+        if(vecField != null){;
+             directionVecField = Calculator.calculateDirection(position, vecField);
+            newFieldPos = boardRef.calculateNewPosition(position, directionVecField);
+        }
 
-        closestEnemy = this.findClosestPosition();
-        if (closestEnemy == null) return randomPos;
+        Vector2d closestPersonPos = null;
+        closestPersonPos = this.findClosestPosition();
+        if (closestPersonPos == null) return newFieldPos;
 
-        Vector2d directionVec = Calculator.calculateDirection(position, closestEnemy);
-        if ((this instanceof Farmer || this instanceof  Wizard) && (this.getStatus().getHealth() > 4 || Calculator.calculateDistance(position,closestEnemy) >= 6)) return randomPos;
+        Vector2d directionVecPerson = Calculator.calculateDirection(position, closestPersonPos);
+        if ((this instanceof Farmer || this instanceof  Wizard) && (this.getStatus().getHealth() > 4 || Calculator.calculateDistance(position,closestPersonPos) >= 6)) return newFieldPos;
         if (this instanceof Farmer || this instanceof  Wizard)
-            directionVec = new Vector2d(-directionVec.getX(), -directionVec.getY());
-        return boardRef.calculateNewPosition(position, directionVec);
+            directionVecPerson = new Vector2d(-directionVecPerson.getX(), -directionVecPerson.getY());
+        return boardRef.calculateNewPosition(position, directionVecPerson);
     }
     @Override
     public void run(){
