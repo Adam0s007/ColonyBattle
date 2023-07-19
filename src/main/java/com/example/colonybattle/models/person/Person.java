@@ -65,8 +65,8 @@ public abstract class Person implements Runnable{
         this.boardRef = new BoardRef(this);
         this.connectionHelper = new ConnectionHelper(this);
         connectionHelper.changePosConnections(null,position);
-        this.position.changeMembershipForcefully(this);
         connectionHelper.connectColony(colony);
+        this.position.changeMembershipForcefully(this);
         posLock = new PosLock(boardRef);
         attackPerformer = new Attack(this,boardRef);
         dyingSemaphore = new Semaphore(1);
@@ -124,7 +124,7 @@ public abstract class Person implements Runnable{
         }
     }
     private Vector2d newPoint() {
-        Vector2d randomPos = boardRef.generateRandomPosition(position);
+        Vector2d randomPos = boardRef.closestField(this);
         Vector2d closestEnemy = null;
 
         closestEnemy = this.findClosestPosition();

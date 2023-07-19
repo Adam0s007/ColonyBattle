@@ -1,4 +1,4 @@
-package com.example.colonybattle.models.person;
+package com.example.colonybattle.models.person.id;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

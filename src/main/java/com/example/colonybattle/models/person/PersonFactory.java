@@ -3,13 +3,13 @@ package com.example.colonybattle.models.person;
 import com.example.colonybattle.board.position.Vector2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.characters.*;
+import com.example.colonybattle.models.person.id.IdAllocator;
 import com.example.colonybattle.models.person.type.PeopleNumber;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PersonFactory {
     private IdAllocator idAllocator;

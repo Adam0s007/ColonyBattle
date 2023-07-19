@@ -35,4 +35,6 @@ module com.example.colonybattle {
     opens com.example.colonybattle.board to javafx.fxml;
     exports com.example.colonybattle.launcher;
     opens com.example.colonybattle.launcher to javafx.fxml;
+    exports com.example.colonybattle.models.person.id;
+    opens com.example.colonybattle.models.person.id to javafx.fxml;
 }

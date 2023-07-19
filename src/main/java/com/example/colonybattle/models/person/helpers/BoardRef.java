@@ -5,9 +5,13 @@ import com.example.colonybattle.board.position.Direction;
 import com.example.colonybattle.board.position.Vector2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.models.person.type.PersonType;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
 
 public class BoardRef {
     Person person;
@@ -88,4 +92,21 @@ public class BoardRef {
     public boolean isColonyEmpty(Colony colony) {
         return getBoard() != null ? getBoard().isColonyEmpty(colony) : true;
     }
+    public Vector2d closestField(Person person) {
+        Colony personColony = person.getColony();
+        Vector2d personPosition = person.getPosition();
+        Map<String, Vector2d> fields = getBoard().getFields();
+        Stream<Vector2d> fieldsStream = fields.values().stream()
+                .filter(vector -> !vector.equals(personPosition));
+        if (person.getType() == PersonType.FARMER) {
+            fieldsStream = fieldsStream.filter(vector -> vector.getMembership() == null || !vector.getMembership().equals(personColony));
+        } else {
+            fieldsStream = fieldsStream.filter(vector -> vector.getMembership() != null);
+        }
+        Vector2d newPosition = fieldsStream.min(Comparator.comparing(vector -> vector.distanceTo(personPosition)))
+                .orElse(null);
+        if(newPosition == null) newPosition = this.generateRandomPosition(personPosition);
+        return newPosition;
+    }
+
 }
