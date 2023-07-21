@@ -74,7 +74,7 @@ public class PersonStatus {
     public void setHealth(int health){
         if (healthSemaphore.tryAcquire()) {
             this.health = Math.max(0, health);
-            if(this.cellHelper != null) this.cellHelper.updateLife(this.health);
+            if(this.cellHelper != null) this.cellHelper.updateLife();
             healthSemaphore.release();
         }
     }
@@ -82,7 +82,7 @@ public class PersonStatus {
     public void setEnergy(int energy){
         if (energySemaphore.tryAcquire()) {
             this.energy = Math.max(0, energy);
-            if(this.cellHelper != null) this.cellHelper.updateEnergy(this.energy);
+            if(this.cellHelper != null) this.cellHelper.updateEnergy();
             energySemaphore.release();
         }
     }
@@ -90,7 +90,7 @@ public class PersonStatus {
     public void addEnergy(int energy){
         if (energySemaphore.tryAcquire()) {
             this.energy = Math.max(0, Math.min(this.energy + energy, type.getEnergy()));
-            if(this.cellHelper != null) this.cellHelper.updateEnergy(this.energy);
+            if(this.cellHelper != null) this.cellHelper.updateEnergy();
             energySemaphore.release();
         }
     }
@@ -99,7 +99,7 @@ public class PersonStatus {
         int oldHealth = this.health;
         if (healthSemaphore.tryAcquire()) {
             this.health = Math.max(0, Math.min(this.health + health, type.getHealth()));
-            if(this.cellHelper != null) this.cellHelper.updateLife(this.health);
+            if(this.cellHelper != null) this.cellHelper.updateLife();
             healthSemaphore.release();
         }
         return oldHealth;

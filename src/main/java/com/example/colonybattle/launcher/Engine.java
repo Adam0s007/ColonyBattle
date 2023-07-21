@@ -20,7 +20,7 @@ public class Engine {
         frame = new MyFrame(20);
         List<Colony> allColonies = new ArrayList<>();
         Board board = new Board(allColonies);
-
+        board.initFrame(frame);
         ColonyFactory colonyFactory = new ColonyFactory();
 
         Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1,board);

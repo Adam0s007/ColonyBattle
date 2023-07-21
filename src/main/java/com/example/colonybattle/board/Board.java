@@ -6,6 +6,7 @@ import com.example.colonybattle.board.boardlocks.LockMapPosition;
 import com.example.colonybattle.statistics.StatisticsPrinter;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.ui.MyFrame;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +21,7 @@ public class Board {
     private List<Colony> allColonies;
     public ExecutorService executorService;
     private StatisticsPrinter statisticsPrinter;
+    private  MyFrame frame = null;
     public Board(List<Colony> allColonies) {
         this.allColonies = allColonies;
         this.statisticsPrinter = new StatisticsPrinter();
@@ -50,6 +52,9 @@ public class Board {
                 .flatMap(i -> IntStream.range(0, SIZE).mapToObj(j -> new Point2d(i, j)))
                 .filter(position -> !fields.containsKey(position.toString()))
                 .forEach(this::initFieldAndLock);
+    }
+    public void initFrame(MyFrame frame) {
+        this.frame = frame;
     }
     private void initFieldAndLock(Point2d position) {
         fields.put(position.toString(), position);
@@ -159,5 +164,9 @@ public class Board {
     }
     public boolean isColonyEmpty(Colony colony) {
         return colony.getPeopleCount() == 0;
+    }
+
+    public MyFrame getFrame() {
+        return frame;
     }
 }

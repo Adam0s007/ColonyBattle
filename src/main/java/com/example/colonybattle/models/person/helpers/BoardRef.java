@@ -6,6 +6,7 @@ import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.type.PersonType;
+import com.example.colonybattle.ui.MyFrame;
 
 import java.util.Comparator;
 import java.util.List;
@@ -107,6 +108,10 @@ public class BoardRef {
                 .orElse(null);
         if(newPosition == null) newPosition = this.generateRandomPosition(personPosition);
         return newPosition;
+    }
+
+    public MyFrame getFrame(){
+        return this.getBoard().getFrame();
     }
 
 }

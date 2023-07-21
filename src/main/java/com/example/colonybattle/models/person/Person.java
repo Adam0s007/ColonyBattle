@@ -73,7 +73,7 @@ public abstract class Person implements Runnable{
     }
 
     public void initGUI(){
-        this.cellHelper = new CellHelper(this);
+        this.cellHelper = new CellHelper(this,boardRef);
         cellHelper.newCellAt(this.position);
         cellHelper.spawningColor();
     }
@@ -238,7 +238,6 @@ public abstract class Person implements Runnable{
     }
     public void healMe(int heal){
         int oldHealth = this.status.addHealth(heal);
-        this.cellHelper.updateLife(this.getStatus().getHealth());
         if(oldHealth < this.getType().getHealth())
             this.cellHelper.healingColor();
     }
