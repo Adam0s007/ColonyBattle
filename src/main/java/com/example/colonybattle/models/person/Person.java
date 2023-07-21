@@ -61,7 +61,7 @@ public abstract class Person implements Runnable{
     }
     public Person(int health, int energy, int strength, Point2d position, Colony colony, int landAppropriation, int id) {
         this.imageLoader = ImageLoader.getInstance();
-        this.status = new PersonStatus(health,energy,strength,landAppropriation,id);
+        this.status = new PersonStatus(health,energy,strength,landAppropriation,id,this.cellHelper);
         this.boardRef = new BoardRef(this);
         this.connectionHelper = new ConnectionHelper(this);
         connectionHelper.changePosConnections(null,position);

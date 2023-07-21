@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.example.colonybattle.board.position.Point2d;
+import com.example.colonybattle.utils.InitialConventer;
+
 import java.awt.*;
 
 
@@ -13,17 +15,30 @@ public class Cell extends JLabel {
 
     private Border border;
     private ImageIcon image= null;
-    private int xHealthBar = 0; // Pozycja X prostokąta
-    private int yHealthBar = 0; // Pozycja Y prostokąta
+    private final int xHealthBar = 3; // Pozycja X prostokąta
+    private final int yHealthBar = 3; // Pozycja Y prostokąta
     private int widthHealthBar = 0; // Szerokość prostokąta
     private final int heightHealthBar = 4; // Wysokość prostokąta
 
     private final int MAX_HEALTH = 20; // Maksymalna wartość życia
     private Color colorHealthBar = new Color(255, 194, 189); // Kolor prostokąta
 
+    private final int xEnergyBar = 3; // Pozycja X prostokąta
+    private final int yEnergyBar = 6;
+    // Szerokość prostokąta dla paska energii
+    private int widthEnergyBar = 0;
+    // Maksymalna wartość energii
+    private final int MAX_ENERGY = 20;
+    // Kolor prostokąta dla paska energii
+    private Color colorEnergyBar = new Color(255, 255, 189);
+
+
+
     public final Color INITIAL_BACKGROUND = new Color(15, 23, 51);
 
     public Cell(int x, int y) {
+        this.setLayout(new BorderLayout()); // Wyłącza zarządcę układu
+
         this.position = new Point2d(x, y);
         this.setOpaque(true);
         initColor();
@@ -36,10 +51,11 @@ public class Cell extends JLabel {
         this.setVerticalTextPosition(JLabel.BOTTOM);
         //font names:
 
-        this.setFont(new Font("Arial", Font.BOLD, 13));
+        this.setFont(new Font("Sans Serif", Font.BOLD, 7));
         this.setHorizontalAlignment(JLabel.CENTER);
         this.setVerticalAlignment(JLabel.CENTER);
-        this.setIconTextGap(-20);
+        this.setIconTextGap(-15);
+        //this.setBounds(0, this.getHeight() - 20, this.getWidth(), 20);
         // Tworzenie etykiety z początkową wartością//przezroczysty kolor tla:
         border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
         // Tworzenie etykiety z ikoną
@@ -50,11 +66,12 @@ public class Cell extends JLabel {
         super.paintComponent(g);
         g.setColor(colorHealthBar);
         g.fillRect(xHealthBar, yHealthBar, widthHealthBar, heightHealthBar);
+
+        g.setColor(colorEnergyBar);
+        g.fillRect(xHealthBar, yEnergyBar, widthEnergyBar, heightHealthBar);
     }
     // Metoda do aktualizacji pozycji i rozmiaru prostokąta
-    public void setHealthBar(int x, int y, int width) {
-        this.xHealthBar = x;
-        this.yHealthBar = y;
+    public void setHealthBar(int width) {
         this.widthHealthBar = width;
     }
 
@@ -64,9 +81,9 @@ public class Cell extends JLabel {
             double healthPerPixel = MAX_HEALTH / (double) labelWidth;
             int currentHealth = this.position.getPerson().getStatus().getHealth();
             int healthBarWidth = (int) (currentHealth / healthPerPixel);
-            setHealthBar(3, 3, healthBarWidth);
+            setHealthBar(healthBarWidth);
         }
-        else setHealthBar(0,0, 0);
+        else setHealthBar(0);
     }
 
     // Metoda do aktualizacji koloru prostokąta
@@ -91,11 +108,38 @@ public class Cell extends JLabel {
     public void updateLife(int life) {
         updateHealthBar();
     }
+    public void updateEnergy(int energy){
+        updateEnergyBar();
+    }
+
+    // Metoda do aktualizacji pozycji i rozmiaru paska energii
+    public void setEnergyBar(int width) {
+        this.widthEnergyBar = width;
+    }
+
+    public void updateEnergyBar() {
+        if(this.position.getPerson() != null){
+            int labelWidth = this.getWidth();
+            double energyPerPixel = MAX_ENERGY / (double) labelWidth;
+            int currentEnergy = this.position.getPerson().getStatus().getEnergy();
+            int energyBarWidth = (int) (currentEnergy / energyPerPixel);
+            setEnergyBar(energyBarWidth);
+        }
+        else setEnergyBar(0);
+    }
 
 
     public void updateInitial(Character initial) {
-        //TODO
+        if(this.position.getPerson() == null){
+            this.setText("");
+            return;
+        }
+        String convertedInitial = InitialConventer.getInstance().convertInitial(initial);
+        if(convertedInitial != null) {
+            this.setText(convertedInitial);
+        }
     }
+
 
     public void setImageIcon(ImageIcon icon) {
         if (icon == null) {

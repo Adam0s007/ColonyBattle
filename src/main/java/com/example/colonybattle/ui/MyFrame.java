@@ -46,6 +46,9 @@ public class MyFrame extends JFrame {
     public void setLifeAtPosition(Point2d position, int life) {
         grid[position.getX()][position.getY()].updateLife(life);
     }
+    public void  setEnergyAtPosition(Point2d position, int energy){
+        grid[position.getX()][position.getY()].updateEnergy(energy);
+    }
 
     public void setInitial(Point2d position, Character initial){
         grid[position.getX()][position.getY()].updateInitial(initial);

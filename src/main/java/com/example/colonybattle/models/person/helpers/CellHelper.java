@@ -20,6 +20,10 @@ public class CellHelper {
         Engine.getFrame().setLifeAtPosition(person.getPosition(), person.getStatus().getHealth());
     }
 
+    public void updateEnergy(int energy){
+        Engine.getFrame().setEnergyAtPosition(person.getPosition(), person.getStatus().getEnergy());
+    }
+
     public void updateLifeAndEnergy(int life,int energy){
         Engine.getFrame().setLifeAtPosition(person.getPosition(), person.getStatus().getHealth());
 
@@ -36,7 +40,8 @@ public class CellHelper {
     public void resetCell(Point2d position){
         Engine.getFrame().setInitColor(position);
         Engine.getFrame().setLifeAtPosition(position, 0);
-        Engine.getFrame().setInitial(position, ' ');
+        Engine.getFrame().setEnergyAtPosition(position, 0);
+        Engine.getFrame().setInitial(position, null);
         //Engine.getFrame().updateBackgroundAtPosition(position);
         removeImageFromCell(position);
         //Engine.getFrame().setInitColor(position);
@@ -46,7 +51,8 @@ public class CellHelper {
         ConsoleColor consoleColor = person.getColony().getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
         Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(consoleColor));
         Engine.getFrame().setLifeAtPosition(newPosition, person.getStatus().getHealth()); // Ustawiamy aktualną ilość życia osoby
-        Engine.getFrame().setInitial(person.getPosition(), person.getInitial());
+        Engine.getFrame().setEnergyAtPosition( newPosition, person.getStatus().getEnergy());
+        Engine.getFrame().setInitial(newPosition, person.getInitial());
         //Engine.getFrame().updateBackgroundAtPosition(newPosition);
         addImageToCell(newPosition);
     }

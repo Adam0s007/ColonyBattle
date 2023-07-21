@@ -1,5 +1,6 @@
 package com.example.colonybattle.models.person.status;
 
+import com.example.colonybattle.models.person.helpers.CellHelper;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import java.util.concurrent.Semaphore;
@@ -12,16 +13,19 @@ public class PersonStatus {
     final int landAppropriation;
     PersonType type;
 
+    private  CellHelper cellHelper= null;
+
     private final Semaphore healthSemaphore = new Semaphore(1);
     private final Semaphore energySemaphore = new Semaphore(1);
     private final Semaphore idSemaphore = new Semaphore(1);
 
-    public PersonStatus(int health, int energy, int strength, int landAppropriation,int id) {
+    public PersonStatus(int health, int energy, int strength, int landAppropriation, int id, CellHelper cellHelper) {
         this.health = health;
         this.energy = energy;
         this.strength = strength;
         this.landAppropriation = landAppropriation;
         this.id = id;
+        this.cellHelper = cellHelper;
     }
 
     public int getHealth(){
@@ -70,6 +74,7 @@ public class PersonStatus {
     public void setHealth(int health){
         if (healthSemaphore.tryAcquire()) {
             this.health = Math.max(0, health);
+            if(this.cellHelper != null) this.cellHelper.updateLife(this.health);
             healthSemaphore.release();
         }
     }
@@ -77,6 +82,7 @@ public class PersonStatus {
     public void setEnergy(int energy){
         if (energySemaphore.tryAcquire()) {
             this.energy = Math.max(0, energy);
+            if(this.cellHelper != null) this.cellHelper.updateEnergy(this.energy);
             energySemaphore.release();
         }
     }
@@ -84,6 +90,7 @@ public class PersonStatus {
     public void addEnergy(int energy){
         if (energySemaphore.tryAcquire()) {
             this.energy = Math.max(0, Math.min(this.energy + energy, type.getEnergy()));
+            if(this.cellHelper != null) this.cellHelper.updateEnergy(this.energy);
             energySemaphore.release();
         }
     }
@@ -92,6 +99,7 @@ public class PersonStatus {
         int oldHealth = this.health;
         if (healthSemaphore.tryAcquire()) {
             this.health = Math.max(0, Math.min(this.health + health, type.getHealth()));
+            if(this.cellHelper != null) this.cellHelper.updateLife(this.health);
             healthSemaphore.release();
         }
         return oldHealth;
