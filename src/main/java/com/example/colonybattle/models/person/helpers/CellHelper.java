@@ -4,6 +4,7 @@ import com.example.colonybattle.colors.ConsoleColor;
 import com.example.colonybattle.colors.ColorConverter;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.utils.ThreadUtils;
 
 import java.awt.*;
 
@@ -74,7 +75,7 @@ public class CellHelper {
         Color color = new Color(255, 140, 0);
         Color oldColor = getCellColor(person.getPosition());
         setColor(color, person.getPosition());
-        pause(500);
+        ThreadUtils.getInstance().pause(400);
         setColor(person.getColony().getColor().getColor(), person.getPosition());
         boardRef.getFrame().setBackground(person.getPosition(), oldColor);
     }
@@ -106,17 +107,10 @@ public class CellHelper {
     private void changeColorTemporarily(ConsoleColor color) {
         ConsoleColor currentColor = person.getColony().getColor().getColor();
         setColor(color, person.getPosition());
-        pause(200);
+        ThreadUtils.getInstance().pause(200);
         setColor(currentColor, person.getPosition());
     }
 
-    private void pause(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     private Color getCellColor(Point2d position) {
         return boardRef.getFrame().getColorAtPosition(position);

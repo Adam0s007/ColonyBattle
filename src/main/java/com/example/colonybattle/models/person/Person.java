@@ -15,6 +15,7 @@ import com.example.colonybattle.models.person.helpers.ConnectionHelper;
 import com.example.colonybattle.models.person.status.PersonStatus;
 import com.example.colonybattle.models.person.type.PersonType;
 import com.example.colonybattle.utils.Calculator;
+import com.example.colonybattle.utils.ThreadUtils;
 
 import javax.swing.*;
 import java.util.concurrent.*;
@@ -178,12 +179,8 @@ public abstract class Person implements Runnable{
         //podziel timeEnd przez 5 , zrzutuj na long
         long passingTime = (int) (Math.abs(timeEnd) / maxIter);
         while (currIter++ < maxIter) {
-            try {
-                    attackNearby();
-                Thread.sleep((int)(passingTime));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            attackNearby();
+            ThreadUtils.getInstance().pause((int)(passingTime));
         }
     }
     public void PersonWaiting(){
@@ -192,11 +189,8 @@ public abstract class Person implements Runnable{
         ExecutorService executor = Executors.newFixedThreadPool(1);
         Future<?> future = executor.submit(() -> AttackingTime(timeEnd));
         try {
-
-            Thread.sleep(timeEnd);
+            ThreadUtils.getInstance().pause(timeEnd);
             future.get();
-            // Czekaj, aż wątek z AttackingTime się skończy
-
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
