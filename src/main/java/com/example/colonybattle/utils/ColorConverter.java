@@ -1,5 +1,7 @@
-package com.example.colonybattle.colors;
+package com.example.colonybattle.utils;
 
+
+import com.example.colonybattle.colors.ConsoleColor;
 
 import java.awt.*;
 

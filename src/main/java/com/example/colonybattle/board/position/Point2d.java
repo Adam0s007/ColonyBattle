@@ -1,6 +1,6 @@
 package com.example.colonybattle.board.position;
 
-import com.example.colonybattle.colors.ColorConverter;
+import com.example.colonybattle.utils.ColorConverter;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.type.PersonType;

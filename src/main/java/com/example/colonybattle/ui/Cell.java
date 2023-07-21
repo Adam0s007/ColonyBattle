@@ -11,98 +11,48 @@ import java.awt.*;
 
 public class Cell extends JLabel {
     private Point2d position;
-    private String life = "";
-
-    private Border border;
+    private final Color INITIAL_BACKGROUND = new Color(15, 23, 51);
+    private final Bar healthBar = new Bar(new Color(255, 194, 189), 20,3);
+    private final Bar energyBar = new Bar(new Color(255, 255, 189), 20, 6);
     private ImageIcon image= null;
-    private final int xHealthBar = 3; // Pozycja X prostokąta
-    private final int yHealthBar = 3; // Pozycja Y prostokąta
-    private int widthHealthBar = 0; // Szerokość prostokąta
-    private final int heightHealthBar = 4; // Wysokość prostokąta
-
-    private final int MAX_HEALTH = 20; // Maksymalna wartość życia
-    private Color colorHealthBar = new Color(255, 194, 189); // Kolor prostokąta
-
-    private final int xEnergyBar = 3; // Pozycja X prostokąta
-    private final int yEnergyBar = 6;
-    // Szerokość prostokąta dla paska energii
-    private int widthEnergyBar = 0;
-    // Maksymalna wartość energii
-    private final int MAX_ENERGY = 20;
-    // Kolor prostokąta dla paska energii
-    private Color colorEnergyBar = new Color(255, 255, 189);
-
-
-
-    public final Color INITIAL_BACKGROUND = new Color(15, 23, 51);
+    private Border border;
 
     public Cell(int x, int y) {
-        this.setLayout(new BorderLayout()); // Wyłącza zarządcę układu
-
+        this.setLayout(new BorderLayout());
         this.position = new Point2d(x, y);
         this.setOpaque(true);
+        initializeCell();
+    }
+
+    private void initializeCell() {
+        setInitialCellProperties();
         initColor();
-        this.setText(life);
-        // Tworzenie etykiety z napisem
-        //lifeLabel = new JLabel(life);
-
-
-        this.setHorizontalTextPosition(JLabel.CENTER);
-        this.setVerticalTextPosition(JLabel.BOTTOM);
-        //font names:
-
-        this.setFont(new Font("Sans Serif", Font.BOLD, 7));
+        setFont(new Font("Sans Serif", Font.BOLD, 7));
         this.setHorizontalAlignment(JLabel.CENTER);
         this.setVerticalAlignment(JLabel.CENTER);
         this.setIconTextGap(-15);
-        //this.setBounds(0, this.getHeight() - 20, this.getWidth(), 20);
-        // Tworzenie etykiety z początkową wartością//przezroczysty kolor tla:
+    }
+
+    private void setInitialCellProperties() {
+        this.setHorizontalTextPosition(JLabel.CENTER);
+        this.setVerticalTextPosition(JLabel.BOTTOM);
         border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
-        // Tworzenie etykiety z ikoną
+        this.setBorder(border);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(colorHealthBar);
-        g.fillRect(xHealthBar, yHealthBar, widthHealthBar, heightHealthBar);
-
-        g.setColor(colorEnergyBar);
-        g.fillRect(xHealthBar, yEnergyBar, widthEnergyBar, heightHealthBar);
-    }
-    // Metoda do aktualizacji pozycji i rozmiaru prostokąta
-    public void setHealthBar(int width) {
-        this.widthHealthBar = width;
+        healthBar.paint(g, this);
+        energyBar.paint(g, this);
     }
 
     public void updateHealthBar() {
-        if(this.position.getPerson() != null){
-            int labelWidth = this.getWidth();
-            double healthPerPixel = MAX_HEALTH / (double) labelWidth;
-            int currentHealth = this.position.getPerson().getStatus().getHealth();
-            int healthBarWidth = (int) (currentHealth / healthPerPixel);
-            setHealthBar(healthBarWidth);
-        }
-        else setHealthBar(0);
+        healthBar.update(this);
     }
 
-    // Metoda do aktualizacji koloru prostokąta
-    public void setRectangleColor(Color color) {
-        this.colorHealthBar = color;
-    }
-
-
-
-    public Point2d getPosition() {
-        return position;
-    }
-
-    public void initColor() {
-
-       // this.setBackground(new Color(36, 255, 103));
-        updateBackground(this.position);
-        border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
-        this.setBorder(border);
+    public void updateEnergyBar() {
+        energyBar.update(this);
     }
 
     public void updateLife(int life) {
@@ -112,46 +62,20 @@ public class Cell extends JLabel {
         updateEnergyBar();
     }
 
-    // Metoda do aktualizacji pozycji i rozmiaru paska energii
-    public void setEnergyBar(int width) {
-        this.widthEnergyBar = width;
-    }
-
-    public void updateEnergyBar() {
-        if(this.position.getPerson() != null){
-            int labelWidth = this.getWidth();
-            double energyPerPixel = MAX_ENERGY / (double) labelWidth;
-            int currentEnergy = this.position.getPerson().getStatus().getEnergy();
-            int energyBarWidth = (int) (currentEnergy / energyPerPixel);
-            setEnergyBar(energyBarWidth);
-        }
-        else setEnergyBar(0);
-    }
-
-
     public void updateInitial(Character initial) {
-        if(this.position.getPerson() == null){
-            this.setText("");
-            return;
-        }
         String convertedInitial = InitialConventer.getInstance().convertInitial(initial);
-        if(convertedInitial != null)
-            this.setText(convertedInitial);
-
+        this.setText(convertedInitial != null ? convertedInitial : "");
     }
-
 
     public void setImageIcon(ImageIcon icon) {
         if (icon == null) {
             System.out.println("null image");
-            this.image = null;
-            this.setIcon(image);
+            removeImageIcon();
             return;
         }
         Image originalImage = icon.getImage();
         Image scaledImage = originalImage.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        this.image = scaledIcon;
+        this.image = new ImageIcon(scaledImage);
         this.setIcon(image);
     }
 
@@ -169,13 +93,21 @@ public class Cell extends JLabel {
 
     public void updateBackground(Point2d position) {
         Color color = position.getColonyColor();
-        if(color == null) color = INITIAL_BACKGROUND;
-        this.setBackground(color.darker());
+        this.setBackground((color != null ? color : INITIAL_BACKGROUND).darker());
+    }
+
+    public Point2d getPosition() {
+        return position;
     }
 
     public void setPosition(Point2d position) {
         this.position = position;
     }
 
+    public void initColor() {
+        updateBackground(this.position);
+        border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
+        this.setBorder(border);
+    }
 }
 
