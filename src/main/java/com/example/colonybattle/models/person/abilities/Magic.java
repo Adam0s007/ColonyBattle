@@ -1,9 +1,9 @@
 package com.example.colonybattle.models.person.abilities;
 
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 
 public interface Magic {
-    void wand(Vector2d vec);
+    void wand(Point2d vec);
 
     void performAbsorption();
     void healFriends();

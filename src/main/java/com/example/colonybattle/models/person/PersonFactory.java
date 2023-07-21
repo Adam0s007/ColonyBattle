@@ -1,6 +1,6 @@
 package com.example.colonybattle.models.person;
 
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.characters.*;
 import com.example.colonybattle.models.person.id.IdAllocator;
@@ -26,7 +26,7 @@ public class PersonFactory {
                 .forEach(type -> personCountMap.put(type, 0));
     }
 
-    public Person createPerson(PersonType type, Vector2d pos, Colony colony) {
+    public Person createPerson(PersonType type, Point2d pos, Colony colony) {
         Person person;
         int newId = idAllocator.giveId();
         switch (type) {
@@ -58,7 +58,7 @@ public class PersonFactory {
                 .allMatch(type -> personCountMap.get(type) >= PeopleNumber.valueOf(type.toString().toUpperCase() + "_NUMBER").getNumber());
     }
 
-    public Person generateRandom(Colony colony, Vector2d pos) {
+    public Person generateRandom(Colony colony, Point2d pos) {
         personCounterExecutor(colony);
         if (isFull()) return null;
         List<PersonType> types = Arrays.asList(PersonType.values());

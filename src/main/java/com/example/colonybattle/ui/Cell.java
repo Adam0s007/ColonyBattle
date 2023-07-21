@@ -3,12 +3,12 @@ package com.example.colonybattle.ui;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import java.awt.*;
 
 
 public class Cell extends JLabel {
-    private Vector2d position;
+    private Point2d position;
     private String life = "";
 
     private Border border;
@@ -17,7 +17,7 @@ public class Cell extends JLabel {
     public final Color INITIAL_BACKGROUND = new Color(15, 23, 51);
 
     public Cell(int x, int y) {
-        this.position = new Vector2d(x, y);
+        this.position = new Point2d(x, y);
         this.setOpaque(true);
         initColor();
         this.setText(life);
@@ -39,7 +39,7 @@ public class Cell extends JLabel {
 
 
     }
-    public Vector2d getPosition() {
+    public Point2d getPosition() {
         return position;
     }
 
@@ -95,13 +95,13 @@ public class Cell extends JLabel {
         updateBackground(this.position);
     }
 
-    public void updateBackground(Vector2d position) {
+    public void updateBackground(Point2d position) {
         Color color = position.getColonyColor();
         if(color == null) color = INITIAL_BACKGROUND;
         this.setBackground(color.darker());
     }
 
-    public void setPosition(Vector2d position) {
+    public void setPosition(Point2d position) {
         this.position = position;
     }
 

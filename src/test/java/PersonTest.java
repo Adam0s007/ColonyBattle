@@ -1,6 +1,6 @@
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.ColonyFactory;
 import com.example.colonybattle.colony.ColonyType;
 import com.example.colonybattle.models.person.Person;
@@ -28,7 +28,7 @@ public class PersonTest {
         for (int i = 0; i < 100; i++) {  // Wykonujemy 100 kroków
             person.walk();
 
-            Vector2d position = person.getPosition();
+            Point2d position = person.getPosition();
 
             assertTrue(position.getX() >= 0);
             assertTrue(position.getX() < 20);

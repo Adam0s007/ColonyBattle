@@ -1,6 +1,6 @@
 package com.example.colonybattle.utils;
 
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 
 public class Calculator {
 
@@ -11,7 +11,7 @@ public class Calculator {
         else return 0;
     }
 
-    public static Vector2d calculateDirection(Vector2d fromVec, Vector2d toVec) {
+    public static Point2d calculateDirection(Point2d fromVec, Point2d toVec) {
         int xDirection = toVec.getX() - fromVec.getX();
         int yDirection = toVec.getY() - fromVec.getY();
         //System.out.println("xDirection: " + xDirection + " yDirection: " + yDirection);
@@ -22,13 +22,13 @@ public class Calculator {
             double unitVectorY = yDirection / magnitude;
 
             //System.out.println("unitVectorX: " + unitVectorX + " unitVectorY: " + unitVectorY);
-            return new Vector2d(sgn(unitVectorX), sgn(unitVectorY));
+            return new Point2d(sgn(unitVectorX), sgn(unitVectorY));
         } else {
-            return new Vector2d(0, 0);
+            return new Point2d(0, 0);
         }
     }
 
-    public static double calculateDistance(Vector2d fromVec, Vector2d toVec) {
+    public static double calculateDistance(Point2d fromVec, Point2d toVec) {
         int xDirection = toVec.getX() - fromVec.getX();
         int yDirection = toVec.getY() - fromVec.getY();
         //System.out.println("xDirection: " + xDirection + " yDirection: " + yDirection);

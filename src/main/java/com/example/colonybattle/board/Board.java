@@ -1,6 +1,6 @@
 package com.example.colonybattle.board;
 
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colors.ConsoleColor;
 import com.example.colonybattle.board.boardlocks.LockMapPosition;
 import com.example.colonybattle.statistics.StatisticsPrinter;
@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 
 public class Board {
     public static final int SIZE = 20;
-    private Map<String, Vector2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
+    private Map<String, Point2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
     private  final LockMapPosition lockManager = new LockMapPosition();
     private List<Colony> allColonies;
     public ExecutorService executorService;
@@ -25,7 +25,7 @@ public class Board {
         this.statisticsPrinter = new StatisticsPrinter();
     }
 
-    public Map<String, Vector2d> getFields() {
+    public Map<String, Point2d> getFields() {
         return fields;
     }
     public void start() {
@@ -47,11 +47,11 @@ public class Board {
 
         IntStream.range(0, SIZE)
                 .boxed()
-                .flatMap(i -> IntStream.range(0, SIZE).mapToObj(j -> new Vector2d(i, j)))
+                .flatMap(i -> IntStream.range(0, SIZE).mapToObj(j -> new Point2d(i, j)))
                 .filter(position -> !fields.containsKey(position.toString()))
                 .forEach(this::initFieldAndLock);
     }
-    private void initFieldAndLock(Vector2d position) {
+    private void initFieldAndLock(Point2d position) {
         fields.put(position.toString(), position);
         lockManager.initializeLock(position);
     }
@@ -61,7 +61,7 @@ public class Board {
     public boolean isFieldOccupied(String stringPos) {
         return fields.containsKey(stringPos);
     }
-    public Vector2d getVector2d(String stringPos) {
+    public Point2d getVector2d(String stringPos) {
         return fields.get(stringPos);
     }
 
@@ -110,7 +110,7 @@ public class Board {
         System.out.println();
     }
     private Person getPersonAtPosition(int i, int j) {
-        Vector2d position = new Vector2d(i, j);
+        Point2d position = new Point2d(i, j);
 
         for (Colony colony : allColonies) {
             Person person = colony.containsPerson(position);

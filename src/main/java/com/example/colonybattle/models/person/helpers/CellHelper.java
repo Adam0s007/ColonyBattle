@@ -3,7 +3,7 @@ package com.example.colonybattle.models.person.helpers;
 import com.example.colonybattle.colors.ConsoleColor;
 import com.example.colonybattle.colors.ColorConverter;
 import com.example.colonybattle.launcher.Engine;
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 
 import java.awt.*;
@@ -33,7 +33,7 @@ public class CellHelper {
     }
 
 
-    public void resetCell(Vector2d position){
+    public void resetCell(Point2d position){
         Engine.getFrame().setInitColor(position);
         Engine.getFrame().setLifeAtPosition(position, 0);
         Engine.getFrame().setInitial(position, ' ');
@@ -42,7 +42,7 @@ public class CellHelper {
         //Engine.getFrame().setInitColor(position);
     }
 
-    public void newCellAt(Vector2d newPosition){
+    public void newCellAt(Point2d newPosition){
         ConsoleColor consoleColor = person.getColony().getColor().getColor(); // Zakładamy, że Colony ma metodę getColor() zwracającą kolor kolonii
         Engine.getFrame().setColorAtPosition(newPosition, ColorConverter.convertColor(consoleColor));
         Engine.getFrame().setLifeAtPosition(newPosition, person.getStatus().getHealth()); // Ustawiamy aktualną ilość życia osoby
@@ -51,11 +51,11 @@ public class CellHelper {
         addImageToCell(newPosition);
     }
 
-    public void addImageToCell(Vector2d position){
+    public void addImageToCell(Point2d position){
         Engine.getFrame().setImageAtPosition(position, person.getImage());
     }
 
-    public void removeImageFromCell(Vector2d position){
+    public void removeImageFromCell(Point2d position){
         Engine.getFrame().removeImageAtPosition(position);
     }
 

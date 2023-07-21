@@ -2,7 +2,7 @@ package com.example.colonybattle.models.person.helpers;
 
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.board.position.Direction;
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.type.PersonType;
@@ -25,14 +25,14 @@ public class BoardRef {
     }
 
     //funkcja sprawdzająca, czy w Bardzie w field znajduje się dany Vector2d
-    public boolean isFieldOccupied(Vector2d field){
+    public boolean isFieldOccupied(Point2d field){
         return getBoard() != null ? getBoard().isFieldOccupied(field.toString()) : false;
     }
-    public Vector2d getVectorFromBoard(Vector2d field){
+    public Point2d getVectorFromBoard(Point2d field){
         return getBoard() != null ? getBoard().getVector2d(field.toString()) : null;
     }
 
-    void addVectorToBoard(Vector2d vector){
+    void addVectorToBoard(Point2d vector){
         if(getBoard() != null){
             if(getBoard().getFields().containsKey(vector.toString()))
                 return;
@@ -41,15 +41,15 @@ public class BoardRef {
         }
     }
 
-    public Vector2d calculateNewPosition(Vector2d position, Vector2d directionVector) {
-        Vector2d newPosition = position.addVector(directionVector);
+    public Point2d calculateNewPosition(Point2d position, Point2d directionVector) {
+        Point2d newPosition = position.addVector(directionVector);
         if(!newPosition.properCoordinates(Board.SIZE)) newPosition = generateRandomPosition(position);
         if (this.isFieldOccupied(newPosition))
             newPosition = this.getVectorFromBoard(newPosition);
         return newPosition;
     }
 
-    public Vector2d generateRandomPosition(Vector2d position) {
+    public Point2d generateRandomPosition(Point2d position) {
         Direction[] directions = Direction.values();
         Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
         while(!position
@@ -63,7 +63,7 @@ public class BoardRef {
             }
 
         }
-        Vector2d directionVector = randomDirection.getVector();
+        Point2d directionVector = randomDirection.getVector();
         return calculateNewPosition(position, directionVector);
     }
 
@@ -92,18 +92,18 @@ public class BoardRef {
     public boolean isColonyEmpty(Colony colony) {
         return getBoard() != null ? getBoard().isColonyEmpty(colony) : true;
     }
-    public Vector2d closestField(Person person) {
+    public Point2d closestField(Person person) {
         Colony personColony = person.getColony();
-        Vector2d personPosition = person.getPosition();
-        Map<String, Vector2d> fields = getBoard().getFields();
-        Stream<Vector2d> fieldsStream = fields.values().stream()
+        Point2d personPosition = person.getPosition();
+        Map<String, Point2d> fields = getBoard().getFields();
+        Stream<Point2d> fieldsStream = fields.values().stream()
                 .filter(vector -> !vector.equals(personPosition));
         if (person.getType() == PersonType.FARMER) {
             fieldsStream = fieldsStream.filter(vector -> vector.getMembership() == null || !vector.getMembership().equals(personColony));
         } else {
             fieldsStream = fieldsStream.filter(vector -> vector.getMembership() != null && !vector.getMembership().equals(personColony));
         }
-        Vector2d newPosition = fieldsStream.min(Comparator.comparing(vector -> vector.distanceTo(personPosition)))
+        Point2d newPosition = fieldsStream.min(Comparator.comparing(vector -> vector.distanceTo(personPosition)))
                 .orElse(null);
         if(newPosition == null) newPosition = this.generateRandomPosition(personPosition);
         return newPosition;

@@ -7,7 +7,7 @@ import com.example.colonybattle.models.person.type.PersonType;
 
 import java.awt.*;
 
-public class Vector2d {
+public class Point2d {
     private int x;
     private int y;
     private Colony membership = null;//okresla przynaleznosc do kolonii
@@ -15,14 +15,14 @@ public class Vector2d {
     private int currentAppropriation = 0;
     private Person person;
 
-    public Vector2d(int x, int y, int INIT_APPROPRIATION) {
+    public Point2d(int x, int y, int INIT_APPROPRIATION) {
         this.x = x;
         this.y = y;
         this.INIT_APPROPRIATION = INIT_APPROPRIATION;
         this.currentAppropriation = INIT_APPROPRIATION;
         this.person = null;
     }
-    public Vector2d(int x, int y, int INIT_APPROPRIATION, Person person) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
+    public Point2d(int x, int y, int INIT_APPROPRIATION, Person person) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
         this.x = x;
         this.y = y;
         this.INIT_APPROPRIATION = INIT_APPROPRIATION;
@@ -31,7 +31,7 @@ public class Vector2d {
         if(person != null)
             changeMembership(person);
     }
-    public Vector2d(int x, int y) {
+    public Point2d(int x, int y) {
         this.x = x;
         this.y = y;
         this.membership = null;
@@ -41,16 +41,16 @@ public class Vector2d {
     }
 
 
-    public Vector2d addVector(Vector2d vector) {
-        return new Vector2d(this.x + vector.x, this.y + vector.y, this.INIT_APPROPRIATION);
+    public Point2d addVector(Point2d vector) {
+        return new Point2d(this.x + vector.x, this.y + vector.y, this.INIT_APPROPRIATION);
     }
     // odejmij vector
-    public Vector2d subtractVector(Vector2d vector) {
-        return new Vector2d(this.x - vector.x, this.y - vector.y, this.INIT_APPROPRIATION);
+    public Point2d subtractVector(Point2d vector) {
+        return new Point2d(this.x - vector.x, this.y - vector.y, this.INIT_APPROPRIATION);
     }
 
-    public Vector2d oppositeVector() {
-        return new Vector2d(-this.x, -this.y, this.INIT_APPROPRIATION);
+    public Point2d oppositeVector() {
+        return new Point2d(-this.x, -this.y, this.INIT_APPROPRIATION);
     }
 
     // Override hashcode oraz equals
@@ -63,9 +63,9 @@ public class Vector2d {
     public boolean equals(Object other) {
         if (this == other)
             return true;
-        if (!(other instanceof Vector2d))
+        if (!(other instanceof Point2d))
             return false;
-        Vector2d that = (Vector2d) other;
+        Point2d that = (Point2d) other;
         return this.x == that.x && this.y == that.y;
     }
 
@@ -129,7 +129,7 @@ public class Vector2d {
         return this.x >= 0 && this.x < size && this.y >= 0 && this.y < size;
     }
 
-    public double distanceTo(Vector2d other) {
+    public double distanceTo(Point2d other) {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
 

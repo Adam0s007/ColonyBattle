@@ -1,7 +1,7 @@
 package com.example.colonybattle.models.person.characters;
 
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.type.PersonType;
 
@@ -16,7 +16,7 @@ public class Farmer extends Person {
     private final int MIN_PROTECTION_ENERGY = 5;
     private final int MIN_WAIT = 800;
     private final int MAX_WAIT = 1200;
-    public Farmer(PersonType type, Vector2d position, Colony colony, int id) {
+    public Farmer(PersonType type, Point2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
 
@@ -62,8 +62,8 @@ public class Farmer extends Person {
 
     //szuka najbliższej osoby z pobliskiej kolonii, ktora nie jest Farmerem (przed innymi ucieka)
     @Override
-    public Vector2d findClosestPosition() {
-        Vector2d closestPersonPosition = null;
+    public Point2d findClosestPosition() {
+        Point2d closestPersonPosition = null;
         List<Colony> colonies = this.boardRef.getAllColonies();
         Optional<Person> closestPerson = colonies.stream()
                 .filter(colony -> !colony.equals(this.getColony())) // filter out this person's colony

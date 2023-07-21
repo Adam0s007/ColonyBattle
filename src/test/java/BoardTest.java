@@ -1,6 +1,6 @@
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class BoardTest {
 
     @Test
     void testGetFields() {
-        Map<String, Vector2d> fields = board.getFields();
+        Map<String, Point2d> fields = board.getFields();
         assertNotNull(fields);
         assertTrue(fields.isEmpty());
     }

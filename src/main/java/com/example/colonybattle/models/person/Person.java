@@ -1,9 +1,7 @@
 package com.example.colonybattle.models.person;
 import com.example.colonybattle.board.Board;
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.abilities.Magic;
-import com.example.colonybattle.models.person.characters.Defender;
-import com.example.colonybattle.models.person.characters.Warrior;
 import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
@@ -25,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class Person implements Runnable{
 
-    protected Vector2d position;
+    protected Point2d position;
 
     protected Colony colony;
     protected volatile boolean running = true;
@@ -61,7 +59,7 @@ public abstract class Person implements Runnable{
     public String toString() {
         return "Person[" + "id=" + this.status.getId() + ']';
     }
-    public Person(int health, int energy, int strength, Vector2d position, Colony colony, int landAppropriation,int id) {
+    public Person(int health, int energy, int strength, Point2d position, Colony colony, int landAppropriation, int id) {
         this.imageLoader = ImageLoader.getInstance();
         this.status = new PersonStatus(health,energy,strength,landAppropriation,id);
         this.boardRef = new BoardRef(this);
@@ -80,12 +78,12 @@ public abstract class Person implements Runnable{
         cellHelper.spawningColor();
     }
 
-    public void setPosition(Vector2d position) {
+    public void setPosition(Point2d position) {
         this.position = position;
     }
 
-    private void move(Vector2d newPosition) {
-        Vector2d oldPosition = this.position;
+    private void move(Point2d newPosition) {
+        Point2d oldPosition = this.position;
         connectionHelper.changePosConnections(oldPosition,newPosition);
         if(cellHelper == null) return;
         cellHelper.resetCell(oldPosition);
@@ -93,8 +91,8 @@ public abstract class Person implements Runnable{
     }
 
     public void walk() {
-        Vector2d newPosition = newPoint();
-        Vector2d oldPosition = this.position;
+        Point2d newPosition = newPoint();
+        Point2d oldPosition = this.position;
         if (isValidMove(newPosition)) {
             if (!posLock.aquirePositionLock(newPosition)) {
                 attemptAlternateMoves(oldPosition);
@@ -105,12 +103,12 @@ public abstract class Person implements Runnable{
         }
     }
 
-    private boolean isValidMove(Vector2d newPosition) {
+    private boolean isValidMove(Point2d newPosition) {
         return newPosition != null && newPosition.properCoordinates(Board.SIZE) && !this.position.equals(newPosition);
     }
-    private void attemptAlternateMoves(Vector2d oldPosition) {
+    private void attemptAlternateMoves(Point2d oldPosition) {
         for(int i = 0; i < MAX_DEPTH; i++) {
-            Vector2d alternatePosition = boardRef.generateRandomPosition(position);
+            Point2d alternatePosition = boardRef.generateRandomPosition(position);
             if (isValidMove(alternatePosition) && posLock.aquirePositionLock(alternatePosition)) {
                 this.move(alternatePosition);
                 posLock.releasePositionLock(oldPosition);
@@ -125,23 +123,23 @@ public abstract class Person implements Runnable{
             wizard.performAbsorption();
         }
     }
-    private Vector2d newPoint() {
-        Vector2d vecField = boardRef.closestField(this);
-        Vector2d directionVecField = null;
-        Vector2d newFieldPos = null;
+    private Point2d newPoint() {
+        Point2d vecField = boardRef.closestField(this);
+        Point2d directionVecField = null;
+        Point2d newFieldPos = null;
         if(vecField != null){;
              directionVecField = Calculator.calculateDirection(position, vecField);
             newFieldPos = boardRef.calculateNewPosition(position, directionVecField);
         }
 
-        Vector2d closestPersonPos = null;
+        Point2d closestPersonPos = null;
         closestPersonPos = this.findClosestPosition();
         if (closestPersonPos == null) return newFieldPos;
 
-        Vector2d directionVecPerson = Calculator.calculateDirection(position, closestPersonPos);
+        Point2d directionVecPerson = Calculator.calculateDirection(position, closestPersonPos);
         if ((this instanceof Farmer || this instanceof  Wizard) && (this.getStatus().getHealth() > 4 || Calculator.calculateDistance(position,closestPersonPos) >= 6)) return newFieldPos;
         if (this instanceof Farmer || this instanceof  Wizard)
-            directionVecPerson = new Vector2d(-directionVecPerson.getX(), -directionVecPerson.getY());
+            directionVecPerson = new Point2d(-directionVecPerson.getX(), -directionVecPerson.getY());
         return boardRef.calculateNewPosition(position, directionVecPerson);
     }
     @Override
@@ -161,7 +159,7 @@ public abstract class Person implements Runnable{
         }
     };
     public void die(){
-        Vector2d oldPosition = new Vector2d(this.position.getX(),this.position.getY());
+        Point2d oldPosition = new Point2d(this.position.getX(),this.position.getY());
         connectionHelper.changePosConnections(this.position,null);
         cellHelper.resetCell(oldPosition);
         posLock.releasePositionLock(oldPosition);
@@ -211,7 +209,7 @@ public abstract class Person implements Runnable{
         return this.status;
     }
     public abstract Character getInitial(); // Nowa metoda zwracająca inicjały osoby
-    public Vector2d getPosition() {
+    public Point2d getPosition() {
         return position;
     }
 
@@ -245,7 +243,7 @@ public abstract class Person implements Runnable{
             this.cellHelper.healingColor();
     }
     public abstract  void defend(int attackStrength);
-    public abstract Vector2d findClosestPosition();
+    public abstract Point2d findClosestPosition();
     public abstract long waitingTiming();
 
     public BoardRef getBoardRef() {

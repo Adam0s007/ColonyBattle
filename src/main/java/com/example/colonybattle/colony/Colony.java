@@ -1,7 +1,7 @@
 package com.example.colonybattle.colony;
 
 import com.example.colonybattle.colors.ColonyColor;
-import com.example.colonybattle.board.position.Vector2d;
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.models.person.PersonFactory;
@@ -16,7 +16,7 @@ public class Colony {
     private ColonyColor color;
     private ColonyType type;
     private Set<Person> people;
-    private Set<Vector2d> fields;
+    private Set<Point2d> fields;
     private final int PERIOD_SEC = 60;
     private int points;
     public final PersonFactory personFactory;
@@ -33,7 +33,7 @@ public class Colony {
 
     }
 
-    public Colony(ColonyType type,Set<Person> people, Set<Vector2d> fields, int points, ColonyColor color, Board board,PersonFactory personFactory) {
+    public Colony(ColonyType type, Set<Person> people, Set<Point2d> fields, int points, ColonyColor color, Board board, PersonFactory personFactory) {
         this.type = type;
         this.people = ConcurrentHashMap.newKeySet();
         this.fields =  ConcurrentHashMap.newKeySet();;
@@ -58,7 +58,7 @@ public class Colony {
     public Set<Person> getPeople() {
         return people;
     }
-    public Set<Vector2d> getFields() {
+    public Set<Point2d> getFields() {
         return fields;
     }
     public int getPoints() {
@@ -90,7 +90,7 @@ public class Colony {
         return type;
     }
 
-    public Person containsPerson(Vector2d position) {
+    public Person containsPerson(Point2d position) {
         for (Person person : people) {
             if (person.getPosition().equals(position)) {
                 return person;
@@ -127,15 +127,15 @@ public class Colony {
         return Duration.between(creationTime, Instant.now());
     }
 
-    public void addField(Vector2d position) {
+    public void addField(Point2d position) {
         fields.add(position);
     }
-    public void removeField(Vector2d position) {
+    public void removeField(Point2d position) {
         fields.remove(position);
     }
 
 
-    public Vector2d getFreeField(){
+    public Point2d getFreeField(){
         return this.fields.stream()
                 .filter(field -> field.getPerson() == null)
                 .findAny().orElse(null);
@@ -143,7 +143,7 @@ public class Colony {
 
     public void spawnPerson() {
         Runnable task = () -> {
-            Vector2d freeField;
+            Point2d freeField;
             synchronized(this) { // Obtain lock on this Colony
                 freeField = getFreeField();
                 if(freeField != null && getBoard().getLockManager().tryAcquireLock(freeField)){
