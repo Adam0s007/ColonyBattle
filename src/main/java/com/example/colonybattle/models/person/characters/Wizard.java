@@ -16,14 +16,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class Wizard extends Person implements Magic {
-
     private  final int MIN_PROTECTION_ENERGY = 4;
     //Random value between 0 and 4:
     private final int INITIAL_DELAY;
-    private final int PERIOD = 20;
-
-    private final int MIN_WAIT = 1000;
-    private final int MAX_WAIT = 2000;
+    private final int HEALING_PERIOD = 10;
+    private final int WAND_PERIOD = 4;
+    private final int MIN_WAIT = 800;
+    private final int MAX_WAIT = 1000;
     public Wizard(PersonType type, Point2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         status.setType(type);
@@ -104,7 +103,7 @@ public class Wizard extends Person implements Magic {
 
             }
         };
-        executorService.scheduleAtFixedRate(task, INITIAL_DELAY, PERIOD, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(task, INITIAL_DELAY, HEALING_PERIOD, TimeUnit.SECONDS);
     }
     //Wizard szuka wroga i szansa ze zabierze mu energie wynosi 80% a ze zycie 20% - uzywa scheduleAtFixedRate
     @Override
@@ -124,7 +123,7 @@ public class Wizard extends Person implements Magic {
                 }
             }
         };
-        executorService.scheduleAtFixedRate(task, INITIAL_DELAY, 5, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(task, INITIAL_DELAY, WAND_PERIOD, TimeUnit.SECONDS);
     }
     @Override
     public void attack(Person person) {
