@@ -13,6 +13,13 @@ public class Cell extends JLabel {
 
     private Border border;
     private ImageIcon image= null;
+    private int xHealthBar = 0; // Pozycja X prostokąta
+    private int yHealthBar = 0; // Pozycja Y prostokąta
+    private int widthHealthBar = 0; // Szerokość prostokąta
+    private final int heightHealthBar = 4; // Wysokość prostokąta
+
+    private final int MAX_HEALTH = 20; // Maksymalna wartość życia
+    private Color colorHealthBar = new Color(255, 194, 189); // Kolor prostokąta
 
     public final Color INITIAL_BACKGROUND = new Color(15, 23, 51);
 
@@ -36,9 +43,39 @@ public class Cell extends JLabel {
         // Tworzenie etykiety z początkową wartością//przezroczysty kolor tla:
         border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
         // Tworzenie etykiety z ikoną
-
-
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(colorHealthBar);
+        g.fillRect(xHealthBar, yHealthBar, widthHealthBar, heightHealthBar);
+    }
+    // Metoda do aktualizacji pozycji i rozmiaru prostokąta
+    public void setHealthBar(int x, int y, int width) {
+        this.xHealthBar = x;
+        this.yHealthBar = y;
+        this.widthHealthBar = width;
+    }
+
+    public void updateHealthBar() {
+        if(this.position.getPerson() != null){
+            int labelWidth = this.getWidth();
+            double healthPerPixel = MAX_HEALTH / (double) labelWidth;
+            int currentHealth = this.position.getPerson().getStatus().getHealth();
+            int healthBarWidth = (int) (currentHealth / healthPerPixel);
+            setHealthBar(3, 3, healthBarWidth);
+        }
+        else setHealthBar(0,0, 0);
+    }
+
+    // Metoda do aktualizacji koloru prostokąta
+    public void setRectangleColor(Color color) {
+        this.colorHealthBar = color;
+    }
+
+
+
     public Point2d getPosition() {
         return position;
     }
@@ -52,16 +89,7 @@ public class Cell extends JLabel {
     }
 
     public void updateLife(int life) {
-        if (life == 0) {
-            this.life = "";
-        } else {
-            this.life = Integer.toString(life);
-        }
-        if(this.position.getPerson() != null) {
-            String energy = String.valueOf(position.getPerson().getStatus().getEnergy());
-            this.life = this.life + " "+ energy;
-        }
-        this.setText(this.life);
+        updateHealthBar();
     }
 
 
