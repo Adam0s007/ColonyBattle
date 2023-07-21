@@ -135,15 +135,15 @@ public class Cell extends JLabel {
             return;
         }
         String convertedInitial = InitialConventer.getInstance().convertInitial(initial);
-        if(convertedInitial != null) {
+        if(convertedInitial != null)
             this.setText(convertedInitial);
-        }
+
     }
 
 
     public void setImageIcon(ImageIcon icon) {
         if (icon == null) {
-            System.out.println("Image is null");
+            System.out.println("null image");
             this.image = null;
             this.setIcon(image);
             return;
