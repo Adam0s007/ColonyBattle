@@ -4,6 +4,9 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.abilities.Magic;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.models.person.actions.Attack;
+import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
+import com.example.colonybattle.models.person.actions.movement.WizardMovementStrategy;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import javax.swing.*;
@@ -25,6 +28,8 @@ public class Wizard extends Person implements Magic {
     private final int MAX_WAIT = 1000;
     public Wizard(PersonType type, Point2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
+        super.movement = new WizardMovementStrategy(this);
+        attackPerformer = new Attack(this,movement);
         status.setType(type);
         INITIAL_DELAY = ThreadLocalRandom.current().nextInt(0, 4);
     }

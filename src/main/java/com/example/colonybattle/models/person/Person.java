@@ -2,6 +2,8 @@ package com.example.colonybattle.models.person;
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.abilities.Magic;
+import com.example.colonybattle.models.person.actions.movement.Movement;
+import com.example.colonybattle.models.person.actions.movement.MovementStrategy;
 import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
@@ -41,7 +43,9 @@ public abstract class Person implements Runnable{
     private int depth = 0;
     //semafor for dying
     public final Semaphore dyingSemaphore;
-    private final int MAX_DEPTH = 5;
+    public final int MAX_DEPTH = 5;
+
+    protected Movement movement;
 
     @Override
     public int hashCode() {
@@ -69,8 +73,8 @@ public abstract class Person implements Runnable{
         connectionHelper.connectColony(colony);
         this.position.changeMembershipForcefully(this);
         posLock = new PosLock(boardRef);
-        attackPerformer = new Attack(this,boardRef);
-        dyingSemaphore = new Semaphore(1);
+        dyingSemaphore = new Semaphore(1);;
+
     }
 
     public void initGUI(){
@@ -83,65 +87,13 @@ public abstract class Person implements Runnable{
         this.position = position;
     }
 
-    private void move(Point2d newPosition) {
-        Point2d oldPosition = this.position;
-        connectionHelper.changePosConnections(oldPosition,newPosition);
-        if(cellHelper == null) return;
-        cellHelper.resetCell(oldPosition);
-        cellHelper.newCellAt(newPosition);
-    }
 
-    public void walk() {
-        Point2d newPosition = newPoint();
-        Point2d oldPosition = this.position;
-        if (isValidMove(newPosition)) {
-            if (!posLock.aquirePositionLock(newPosition)) {
-                attemptAlternateMoves(oldPosition);
-            } else {
-                this.move(newPosition);
-                posLock.releasePositionLock(oldPosition);
-            }
-        }
-    }
-
-    private boolean isValidMove(Point2d newPosition) {
-        return newPosition != null && newPosition.properCoordinates(Board.SIZE) && !this.position.equals(newPosition);
-    }
-    private void attemptAlternateMoves(Point2d oldPosition) {
-        for(int i = 0; i < MAX_DEPTH; i++) {
-            Point2d alternatePosition = boardRef.generateRandomPosition(position);
-            if (isValidMove(alternatePosition) && posLock.aquirePositionLock(alternatePosition)) {
-                this.move(alternatePosition);
-                posLock.releasePositionLock(oldPosition);
-                break;
-            }
-        }
-    }
     private void checkWizardingQualifications(){
         if(this instanceof Wizard){
             Magic wizard = (Wizard) this;
             wizard.healFriends();
             wizard.performAbsorption();
         }
-    }
-    private Point2d newPoint() {
-        Point2d vecField = boardRef.closestField(this);
-        Point2d directionVecField = null;
-        Point2d newFieldPos = null;
-        if(vecField != null){;
-             directionVecField = Calculator.calculateDirection(position, vecField);
-            newFieldPos = boardRef.calculateNewPosition(position, directionVecField);
-        }
-
-        Point2d closestPersonPos = null;
-        closestPersonPos = this.findClosestPosition();
-        if (closestPersonPos == null) return newFieldPos;
-
-        Point2d directionVecPerson = Calculator.calculateDirection(position, closestPersonPos);
-        if ((this instanceof Farmer || this instanceof  Wizard) && (this.getStatus().getHealth() > 4 || Calculator.calculateDistance(position,closestPersonPos) >= 6)) return newFieldPos;
-        if (this instanceof Farmer || this instanceof  Wizard)
-            directionVecPerson = new Point2d(-directionVecPerson.getX(), -directionVecPerson.getY());
-        return boardRef.calculateNewPosition(position, directionVecPerson);
     }
     @Override
     public void run(){
@@ -244,5 +196,19 @@ public abstract class Person implements Runnable{
     }
     public boolean isRunning() {
         return running;
+    }
+    public CellHelper getCellHelper() {
+        return cellHelper;
+    }
+    public ConnectionHelper getConnectionHelper() {
+        return connectionHelper;
+    }
+
+    public PosLock getPosLock() {
+        return posLock;
+    }
+
+    public void walk(){
+        this.movement.walk();
     }
 }

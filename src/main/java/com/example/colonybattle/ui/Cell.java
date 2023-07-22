@@ -85,7 +85,7 @@ public class Cell extends JLabel {
     }
 
     public void updateColors(Color color) {
-        border = BorderFactory.createLineBorder(color, 3);
+        border = BorderFactory.createLineBorder(color, 2);
         this.setBorder(border);
         this.setForeground(Color.WHITE);
         updateBackground(this.position);

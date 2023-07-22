@@ -3,6 +3,9 @@ package com.example.colonybattle.models.person.characters;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.models.person.actions.Attack;
+import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
+import com.example.colonybattle.models.person.actions.movement.FarmerMovementStrategy;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import javax.swing.*;
@@ -18,7 +21,9 @@ public class Farmer extends Person {
     private final int MAX_WAIT = 900;
     public Farmer(PersonType type, Point2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
+        super.movement = new FarmerMovementStrategy(this);
         status.setType(type);
+        attackPerformer = new Attack(this,movement);
 
     }
     @Override
