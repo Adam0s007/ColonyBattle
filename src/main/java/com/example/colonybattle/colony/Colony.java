@@ -23,6 +23,7 @@ public class Colony {
     private Board board;
     private final Instant creationTime;
     private final ScheduledExecutorService executorService;
+    public final Semaphore pointSemaphore;
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
         this.fields =ConcurrentHashMap.newKeySet();
@@ -30,6 +31,7 @@ public class Colony {
         this.creationTime = Instant.now();
         this.executorService = Executors.newSingleThreadScheduledExecutor();
         this.personFactory = new PersonFactory();
+        this.pointSemaphore = new Semaphore(1);
 
     }
 
@@ -45,6 +47,7 @@ public class Colony {
         this.personFactory = personFactory;
         this.creationTime = Instant.now();
         this.executorService = Executors.newSingleThreadScheduledExecutor();
+        this.pointSemaphore = new Semaphore(1);
         spawnPerson();
 
 
@@ -65,8 +68,27 @@ public class Colony {
         return points;
     }
     public void setPoints(int points) {
-        this.points = points;
+        try {
+            this.pointSemaphore.acquire();
+            this.points = Math.max(points,0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally{
+            this.pointSemaphore.release();
+        }
+
     }
+    public void addPoints(int points) {
+        try {
+            this.pointSemaphore.acquire();
+            this.points = Math.max(points+this.points,0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally{
+            this.pointSemaphore.release();
+        }
+    }
+
     public Board getBoard() {
         return this.board;
     }

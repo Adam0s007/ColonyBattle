@@ -234,8 +234,14 @@ public abstract class Person implements Runnable{
             Message message = queue.poll();
             if (!kills.hasKilled(message.getPerson())) {
                 kills.addKill(message.getPerson());
+                addPoints(30);
                 System.out.println(message.getPerson() + " was killed by " + this);
             }
         }
     }
+    public void  addPoints(int points){
+        if(this.colony != null)
+            this.colony.addPoints(points);
+    }
+
 }

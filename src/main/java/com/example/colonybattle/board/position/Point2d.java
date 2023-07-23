@@ -147,9 +147,11 @@ public class Point2d {
             this.currentAppropriation = this.INIT_APPROPRIATION;
             if(this.membership != null) {
                 this.membership.addField(this);
+                person.addPoints(1);
             }
             if(oldColony != null) {
                 oldColony.removeField(this);
+                person.addPoints(1);
             }
         }
     }

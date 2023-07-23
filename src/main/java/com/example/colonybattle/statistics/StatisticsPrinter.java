@@ -20,6 +20,7 @@ public class StatisticsPrinter {
         final Runnable statsPrinter = () -> {
             allColonies.stream().forEach(colony -> {
                 System.out.println(colony.getType() + ": " + colony.getPeopleCount());
+                System.out.println("Punkty: " + colony.getPoints()); // Dodana linijka
                 colony.getPeople().stream()
                         .forEach(person -> System.out.println(person.getColony().getColor().getColor() + " " + person.getPosition() + ConsoleColor.RESET));
             });
@@ -27,6 +28,7 @@ public class StatisticsPrinter {
 
         scheduler.scheduleAtFixedRate(statsPrinter, 2, 5, TimeUnit.SECONDS);
     }
+
 
     // Method to stop the scheduler when you no longer need the statistics
     public void stopPrintingStatistics() {
