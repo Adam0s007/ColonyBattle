@@ -25,8 +25,6 @@ public class StatisticsPrinter {
             });
         };
 
-        // Here we schedule the task to run every 5 seconds.
-        // This will start 2 second after the method is called, and then repeat every 5 seconds.
         scheduler.scheduleAtFixedRate(statsPrinter, 2, 5, TimeUnit.SECONDS);
     }
 

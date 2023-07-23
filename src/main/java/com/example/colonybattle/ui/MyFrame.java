@@ -30,27 +30,33 @@ public class MyFrame extends JFrame {
 
     // Metoda do pobierania komórki na danej pozycji
     public Cell getCellAtPosition(Point2d position) {
+        if(position == null) return null;
         return grid[position.getX()][position.getY()];
     }
     // Metoda do ustawiania koloru komórki na podstawie pozycji
     public void setColorAtPosition(Point2d position, Color color) {
+        if(position == null) return;
         grid[position.getX()][position.getY()].updateColors(color);
     }
 
 
     public void setInitColor(Point2d position){
+       if(position == null) return;
         grid[position.getX()][position.getY()].initColor();
     }
 
     // Metoda do ustawiania liczby żyć na danej pozycji
     public void setLifeAtPosition(Point2d position, int life) {
+        if(position == null) return;
         grid[position.getX()][position.getY()].updateLife(life);
     }
     public void  setEnergyAtPosition(Point2d position, int energy){
+        if(position == null) return;
         grid[position.getX()][position.getY()].updateEnergy(energy);
     }
 
     public void setInitial(Point2d position, Character initial){
+        if(position == null) return;
         grid[position.getX()][position.getY()].updateInitial(initial);
     }
 
@@ -58,11 +64,13 @@ public class MyFrame extends JFrame {
     // Metoda do ustawiania obrazka na danej pozycji
     public void setImageAtPosition(Point2d position, ImageIcon icon) {
         //System.out.println(icon == null);
-       grid[position.getX()][position.getY()].setImageIcon(icon);
+        if(position == null) return;
+        grid[position.getX()][position.getY()].setImageIcon(icon);
     }
 
     // Metoda do usuwania obrazka z danej pozycji
     public void removeImageAtPosition(Point2d position) {
+        if(position == null) return;
         grid[position.getX()][position.getY()].removeImageIcon();
     }
 
@@ -71,13 +79,16 @@ public class MyFrame extends JFrame {
         positionReferences.entrySet().stream()
                 .forEach(entry -> {
                     Point2d position = entry.getValue();
-                    grid[position.getX()][position.getY()].setPosition(position);
+                    if(position != null)
+                        grid[position.getX()][position.getY()].setPosition(position);
                 });
     }
     public void setBackground(Point2d position, Color color){
+       if(position == null) return;
         grid[position.getX()][position.getY()].setBackground(color);
     }
     public Color getColorAtPosition(Point2d position){
+        if(position == null) return null;
         return grid[position.getX()][position.getY()].getBackground();
     }
 }

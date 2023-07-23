@@ -6,6 +6,7 @@ import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.actions.Attack;
 import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
 import com.example.colonybattle.models.person.actions.movement.FarmerMovementStrategy;
+import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class Farmer extends Person {
     }
 
     @Override
-    public void defend(int damage) {
+    public void defend(Person person,int damage) {
         if (defendLock.tryLock()) {
             try {
                 if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
@@ -49,14 +50,15 @@ public class Farmer extends Person {
                     } else {
                         status.addEnergy(-1);
                         status.addHealth(-1);
-                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                       // if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                     }
                 } else {
                     double damageReduction = 0.2;
                     int reducedDamage = (int) Math.ceil(damage * damageReduction);
                     status.addHealth(-reducedDamage);
-                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                   // if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                 }
+                if(this.CheckingKill()) sendingMessage(person,new Message("killed",this));
             } finally {
                 defendLock.unlock();
             }
@@ -86,6 +88,11 @@ public class Farmer extends Person {
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
         return timeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return this.getType().toString() + "[" + this.getStatus().getId()+"]";
     }
 
 

@@ -7,6 +7,7 @@ import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.actions.Attack;
 import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
 import com.example.colonybattle.models.person.actions.movement.WizardMovementStrategy;
+import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import javax.swing.*;
@@ -60,7 +61,7 @@ public class Wizard extends Person implements Magic {
         return imageLoader.getImageForType(getType());
     }
     @Override
-    public void defend(int damage) {
+    public void defend(Person person,int damage) {
         if (defendLock.tryLock()) {
             try {
                 if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
@@ -73,14 +74,15 @@ public class Wizard extends Person implements Magic {
                         int health = (int) Math.ceil(damage * 0.6);
                         status.addEnergy(energy);
                         status.addHealth(-health);
-                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                       // if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                     }
                 } else {
                     double damageReduction = 0.5;
                     int reducedDamage = (int) Math.ceil(damage * damageReduction);
                     status.addHealth(-reducedDamage);
-                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                    //if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                 }
+                if(this.CheckingKill()) sendingMessage(person,new Message("killed",this));
             } finally {
                 defendLock.unlock();
             }
@@ -137,12 +139,12 @@ public class Wizard extends Person implements Magic {
                 int strength = status.getStrength();
                 int energy = status.getEnergy();
                 if(energy < this.MIN_PROTECTION_ENERGY) {
-                    person.defend(1);
+                    person.defend(this,1);
                     if(person.getStatus().getHealth() <= 0)  person.cellHelper.deathColor();
-                    return;
+                }else{
+                    int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
+                    person.defend(this,damage);
                 }
-                int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
-                person.defend(damage);
             } finally {
                 attackLock.unlock();
             }
@@ -174,5 +176,10 @@ public class Wizard extends Person implements Magic {
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
         return timeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return this.getType().toString() + "[" + this.getStatus().getId()+"]";
     }
 }

@@ -2,8 +2,10 @@ package com.example.colonybattle.models.person;
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.abilities.Magic;
+import com.example.colonybattle.models.person.achievements.Kills;
 import com.example.colonybattle.models.person.actions.movement.Movement;
 import com.example.colonybattle.models.person.actions.movement.MovementStrategy;
+import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
@@ -20,14 +22,14 @@ import com.example.colonybattle.utils.Calculator;
 import com.example.colonybattle.utils.ThreadUtils;
 
 import javax.swing.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class Person implements Runnable{
-
     protected Point2d position;
-
     protected Colony colony;
     protected volatile boolean running = true;
     protected PersonStatus status;
@@ -40,12 +42,11 @@ public abstract class Person implements Runnable{
     protected final ReentrantLock attackLock = new ReentrantLock();
     protected final ReentrantLock defendLock = new ReentrantLock();
     protected ImageLoaderInterface imageLoader;
-    private int depth = 0;
-    //semafor for dying
     public final Semaphore dyingSemaphore;
     public final int MAX_DEPTH = 5;
-
     protected Movement movement;
+    public final BlockingQueue<Message> queue;
+    protected Kills kills;
 
     @Override
     public int hashCode() {
@@ -74,6 +75,8 @@ public abstract class Person implements Runnable{
         this.position.changeMembershipForcefully(this);
         posLock = new PosLock(boardRef);
         dyingSemaphore = new Semaphore(1);;
+        queue = new LinkedBlockingQueue<>();
+        this.kills = new Kills();
 
     }
 
@@ -102,6 +105,7 @@ public abstract class Person implements Runnable{
         checkWizardingQualifications();
         while(running){
             PersonWaiting();
+            receivingMessage();
             if(this.getStatus().getHealth() <= 0){
                 if(dyingSemaphore.tryAcquire()) {
                     die();
@@ -148,6 +152,7 @@ public abstract class Person implements Runnable{
         }
         executor.shutdown();
     }
+
     public void attackNearby() {
         attackPerformer.executeNearbyAttack();
     }
@@ -173,7 +178,7 @@ public abstract class Person implements Runnable{
     public void attack(Person person) {
         if (attackLock.tryLock()) {
             try {
-                person.defend(2);
+                person.defend(this,2);
                 this.status.addEnergy(-1);
             } finally {
                 attackLock.unlock();
@@ -187,7 +192,7 @@ public abstract class Person implements Runnable{
         if(oldHealth < this.getType().getHealth())
             this.cellHelper.healingColor();
     }
-    public abstract  void defend(int attackStrength);
+    public abstract  void defend(Person person,int attackStrength);
     public abstract Point2d findClosestPosition();
     public abstract long waitingTiming();
 
@@ -210,5 +215,27 @@ public abstract class Person implements Runnable{
 
     public void walk(){
         this.movement.walk();
+    }
+
+    public boolean CheckingKill(){
+        if(this.getStatus().getHealth() <= 0){
+            this.cellHelper.deathColor();
+            return true;
+        }
+        return false;
+    }
+
+    public void sendingMessage(Person person, Message message){
+        person.queue.add(message);
+    }
+    //method receivingMessgae() will be take all messages from BlockingQueue
+    public void receivingMessage() {
+        while (!queue.isEmpty()) {
+            Message message = queue.poll();
+            if (!kills.hasKilled(message.getPerson())) {
+                kills.addKill(message.getPerson());
+                System.out.println(message.getPerson() + " was killed by " + this);
+            }
+        }
     }
 }

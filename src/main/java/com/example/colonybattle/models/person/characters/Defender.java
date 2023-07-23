@@ -5,6 +5,7 @@ import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.actions.Attack;
 import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
+import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class Defender extends Person {
     }
 
     @Override
-    public void defend(int damage) {
+    public void defend(Person person,int damage) {
         if (defendLock.tryLock()) {
             try {
                 if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
@@ -49,14 +50,15 @@ public class Defender extends Person {
                     } else {
                         status.addEnergy(-1);
                         status.addHealth(-1);
-                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                       // if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                     }
                 } else {
                     double damageReduction = 0.6;
                     int reducedDamage = (int) Math.ceil(damage * damageReduction);
                     status.addHealth(-reducedDamage);
-                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                   // if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                 }
+                if(this.CheckingKill()) sendingMessage(person,new Message("killed",this));
             } finally {
                 defendLock.unlock();
             }
@@ -70,11 +72,11 @@ public class Defender extends Person {
                 int strength = status.getStrength();
                 int energy = status.getEnergy();
                 if(energy < this.MIN_PROTECTION_ENERGY) {
-                    person.defend(1);
-                    return;
+                    person.defend(this,1);
+                }else{
+                    int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
+                    person.defend(this,damage);
                 }
-                int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
-                person.defend(damage);
             } finally {
                 attackLock.unlock();
             }
@@ -108,5 +110,11 @@ public class Defender extends Person {
         super.die();
 
     }
+    //override to string (PersonType + id)
+    @Override
+    public String toString() {
+        return this.getType().toString() + "[" + this.getStatus().getId()+"]";
+    }
+
 
 }

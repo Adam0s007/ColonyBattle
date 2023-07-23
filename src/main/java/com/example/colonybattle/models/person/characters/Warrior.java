@@ -6,6 +6,7 @@ import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.actions.Attack;
 import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
 import com.example.colonybattle.models.person.actions.movement.WarriorMovementStrategy;
+import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import javax.swing.*;
@@ -42,7 +43,7 @@ public class Warrior extends Person {
     }
 
     @Override
-    public void defend(int damage) {
+    public void defend(Person person,int damage) {
         if (defendLock.tryLock()) {
             try {
                 if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
@@ -52,14 +53,15 @@ public class Warrior extends Person {
                         status.addEnergy(-MIN_PROTECTION_ENERGY);
                     } else {
                         status.addHealth(-1);
-                        if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                        //if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                     }
                 } else {
                     double damageReduction = 0.6;
                     int reducedDamage = (int) Math.ceil(damage * damageReduction);
                     status.addHealth(-reducedDamage);
-                    if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
+                    //if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                 }
+                if(this.CheckingKill()) sendingMessage(person,new Message("killed",this));
             } finally {
                 defendLock.unlock();
             }
@@ -91,12 +93,13 @@ public class Warrior extends Person {
                 int strength = status.getStrength();
                 int energy = status.getEnergy();
                 if(energy < this.MIN_PROTECTION_ENERGY) {
-                    person.defend(2);
+                    person.defend(this,2);
                     if(person.getStatus().getHealth() <= 0)  person.cellHelper.deathColor();
-                    return;
+                }else{
+                    int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
+                    person.defend(this,damage);
                 }
-                int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
-                person.defend(damage);
+
             } finally {
                 attackLock.unlock();
             }
@@ -109,6 +112,11 @@ public class Warrior extends Person {
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
         return timeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return this.getType().toString() + "[" + this.getStatus().getId()+"]";
     }
 
 
