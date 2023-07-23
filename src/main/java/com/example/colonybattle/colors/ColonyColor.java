@@ -1,10 +1,10 @@
 package com.example.colonybattle.colors;
 
 public enum ColonyColor {
-    COLONY1(ConsoleColor.RED),
-    COLONY2(ConsoleColor.BRIGHT_BLUE),
-    COLONY3(ConsoleColor.GREEN),
-    COLONY4(ConsoleColor.YELLOW);
+    VOLCANIC_NATION(ConsoleColor.RED),
+    ICE_NATION(ConsoleColor.BRIGHT_BLUE),
+    JUNGLE_NATION(ConsoleColor.GREEN),
+    DESERT_NATION(ConsoleColor.YELLOW);
 
     private final ConsoleColor consoleColor;
 

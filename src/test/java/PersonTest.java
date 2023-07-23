@@ -20,7 +20,7 @@ public class PersonTest {
         List<Colony> allColonies = new ArrayList<>();
         Board board = new Board(allColonies);
         ColonyFactory colonyFactory = new ColonyFactory();
-        Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1,board);
+        Colony colony1 = colonyFactory.createColony(ColonyType.VOLCANIC_NATION,board);
         allColonies.add(colony1);
         board.initFields();
         Person person = colony1.getPeople().stream().filter(p -> p.getType() == PersonType.FARMER).findFirst().get();

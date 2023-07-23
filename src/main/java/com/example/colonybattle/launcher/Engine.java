@@ -23,17 +23,15 @@ public class Engine {
         board.initFrame(frame);
         ColonyFactory colonyFactory = new ColonyFactory();
 
-        Colony colony1 = colonyFactory.createColony(ColonyType.COLONY1,board);
-        Colony colony2 = colonyFactory.createColony(ColonyType.COLONY2,board);
-        Colony colony3 = colonyFactory.createColony(ColonyType.COLONY3,board);
-        Colony colony4 = colonyFactory.createColony(ColonyType.COLONY4,board);
-
+        Colony colony1 = colonyFactory.createColony(ColonyType.VOLCANIC_NATION,board);
+        Colony colony2 = colonyFactory.createColony(ColonyType.ICE_NATION,board);
+        Colony colony3 = colonyFactory.createColony(ColonyType.JUNGLE_NATION,board);
+        Colony colony4 = colonyFactory.createColony(ColonyType.DESERT_NATION,board);
 
         allColonies.add(colony1);
         allColonies.add(colony2);
         allColonies.add(colony3);
         allColonies.add(colony4);
-
 
         board.initFields();
         frame.setPositionReferences(board.getFields());

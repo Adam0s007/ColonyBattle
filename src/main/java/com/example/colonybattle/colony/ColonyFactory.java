@@ -22,14 +22,14 @@ public class ColonyFactory {
     //make function creating proper color type of ColonyColor based on enum ColonyType
     public ColonyColor getColonyColor(ColonyType type){
         switch (type) {
-            case COLONY1:
-                return ColonyColor.COLONY1;
-            case COLONY2:
-                return ColonyColor.COLONY2;
-            case COLONY3:
-                return ColonyColor.COLONY3;
-            case COLONY4:
-                return ColonyColor.COLONY4;
+            case VOLCANIC_NATION:
+                return ColonyColor.VOLCANIC_NATION;
+            case ICE_NATION:
+                return ColonyColor.ICE_NATION;
+            case JUNGLE_NATION:
+                return ColonyColor.JUNGLE_NATION;
+            case DESERT_NATION:
+                return ColonyColor.DESERT_NATION;
             default:
                 throw new IllegalArgumentException("Invalid colony type");
         }
@@ -47,19 +47,19 @@ public class ColonyFactory {
         Point2d endPos;
 
         switch (type) {
-            case COLONY1:
+            case VOLCANIC_NATION:
                 startPos = new Point2d(0, 0);
                 endPos = new Point2d(Board.SIZE / 2, Board.SIZE / 2);
                 break;
-            case COLONY2:
+            case ICE_NATION:
                 startPos = new Point2d(Board.SIZE / 2, 0);
                 endPos = new Point2d(Board.SIZE, Board.SIZE / 2);
                 break;
-            case COLONY3:
+            case JUNGLE_NATION:
                 startPos = new Point2d(0, Board.SIZE / 2);
                 endPos = new Point2d(Board.SIZE / 2, Board.SIZE);
                 break;
-            case COLONY4:
+            case DESERT_NATION:
                 startPos = new Point2d(Board.SIZE / 2, Board.SIZE / 2);
                 endPos = new Point2d(Board.SIZE, Board.SIZE);
                 break;

@@ -46,6 +46,7 @@ public class Warrior extends Person {
     public void defend(Person person,int damage) {
         if (defendLock.tryLock()) {
             try {
+                int oldHealth = status.getHealth();
                 if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
                     double random = ThreadLocalRandom.current().nextDouble();
 
@@ -61,7 +62,7 @@ public class Warrior extends Person {
                     status.addHealth(-reducedDamage);
                     //if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
                 }
-                if(this.CheckingKill()) sendingMessage(person,new Message("killed",this));
+                if(this.CheckingKill() && oldHealth > status.getHealth()) sendingMessage(person,new Message("killed",this));
             } finally {
                 defendLock.unlock();
             }
