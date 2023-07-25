@@ -4,10 +4,9 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.abilities.Magic;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.models.person.actions.Attack;
-import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
+import com.example.colonybattle.models.person.actions.attack.Attack;
+import com.example.colonybattle.models.person.actions.defense.WizardDefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.WizardMovementStrategy;
-import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import javax.swing.*;
@@ -33,6 +32,7 @@ public class Wizard extends Person implements Magic {
         attackPerformer = new Attack(this,movement);
         status.setType(type);
         INITIAL_DELAY = ThreadLocalRandom.current().nextInt(0, 4);
+        this.defendStrategy = new WizardDefendStrategy(this);
     }
 
     @Override
@@ -62,35 +62,7 @@ public class Wizard extends Person implements Magic {
     }
     @Override
     public void defend(Person person,int damage) {
-        if (defendLock.tryLock()) {
-            try {
-                int oldHealth = status.getHealth();
-                if (status.getEnergy() >= MIN_PROTECTION_ENERGY) {
-                    double random = ThreadLocalRandom.current().nextDouble();
-
-                    if (random <= 0.6) {
-                        status.addEnergy(-MIN_PROTECTION_ENERGY);
-                    } else {
-                        int energy = (int) Math.ceil(damage * 0.4);
-                        int health = (int) Math.ceil(damage * 0.6);
-                        status.addEnergy(energy);
-                        status.addHealth(-health);
-                       // if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
-                    }
-                } else {
-                    double damageReduction = 0.5;
-                    int reducedDamage = (int) Math.ceil(damage * damageReduction);
-                    status.addHealth(-reducedDamage);
-                    //if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();
-                }
-                if(this.CheckingKill() && oldHealth > status.getHealth()) sendingMessage(person,new Message("killed",this));
-            } finally {
-                defendLock.unlock();
-            }
-        } else {
-            // Unable to lock, so we do nothing. You can decide what to do in this case.
-            //System.out.println("Unable to lock, skipping defense.");
-        }
+        this.defendStrategy.defend(person,damage);
     }
     public  void healFriends(){
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();

@@ -1,4 +1,4 @@
-package com.example.colonybattle.models.person.actions;
+package com.example.colonybattle.models.person.actions.attack;
 
 import com.example.colonybattle.board.position.Direction;
 import com.example.colonybattle.board.position.Point2d;

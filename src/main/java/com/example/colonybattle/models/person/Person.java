@@ -1,29 +1,24 @@
 package com.example.colonybattle.models.person;
-import com.example.colonybattle.board.Board;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.abilities.Magic;
 import com.example.colonybattle.models.person.achievements.Kills;
+import com.example.colonybattle.models.person.actions.defense.DefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.Movement;
-import com.example.colonybattle.models.person.actions.movement.MovementStrategy;
 import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.models.person.actions.Attack;
-import com.example.colonybattle.models.person.characters.Farmer;
+import com.example.colonybattle.models.person.actions.attack.Attack;
 import com.example.colonybattle.models.person.characters.Wizard;
 import com.example.colonybattle.models.person.helpers.BoardRef;
 import com.example.colonybattle.models.person.helpers.CellHelper;
 import com.example.colonybattle.models.person.helpers.ConnectionHelper;
 import com.example.colonybattle.models.person.status.PersonStatus;
 import com.example.colonybattle.models.person.type.PersonType;
-import com.example.colonybattle.utils.Calculator;
 import com.example.colonybattle.utils.ThreadUtils;
 
 import javax.swing.*;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -40,13 +35,13 @@ public abstract class Person implements Runnable{
     public boolean isNew = false;
     protected Attack attackPerformer;
     protected final ReentrantLock attackLock = new ReentrantLock();
-    protected final ReentrantLock defendLock = new ReentrantLock();
     protected ImageLoaderInterface imageLoader;
     public final Semaphore dyingSemaphore;
     public final int MAX_DEPTH = 5;
     protected Movement movement;
     public final BlockingQueue<Message> queue;
     protected Kills kills;
+    protected DefendStrategy defendStrategy;
 
     @Override
     public int hashCode() {
