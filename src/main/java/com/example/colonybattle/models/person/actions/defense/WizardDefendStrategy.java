@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class WizardDefendStrategy extends  PersonDefendStrategy {
 
-    private final int MIN_PROTECTION_ENERGY = 4;
+
 
     public WizardDefendStrategy(Person person) {
         super(person);
@@ -17,11 +17,11 @@ public class WizardDefendStrategy extends  PersonDefendStrategy {
         if (defendLock.tryLock()) {
             try {
                 int oldHealth = person.getStatus().getHealth();
-                if (person.getStatus().getEnergy() >= MIN_PROTECTION_ENERGY) {
+                if (person.getStatus().getEnergy() >= person.getType().getProtection_energy()) {
                     double random = ThreadLocalRandom.current().nextDouble();
 
                     if (random <= 0.6) {
-                        person.getStatus().addEnergy(-MIN_PROTECTION_ENERGY);
+                        person.getStatus().addEnergy(-person.getType().getProtection_energy());
                     } else {
                         int energy = (int) Math.ceil(damage * 0.4);
                         int health = (int) Math.ceil(damage * 0.6);

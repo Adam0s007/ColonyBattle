@@ -3,7 +3,8 @@ package com.example.colonybattle.models.person.characters;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.models.person.actions.attack.Attack;
+import com.example.colonybattle.models.person.actions.attack.DefenderAttackStrategy;
+import com.example.colonybattle.models.person.actions.attack.PersonAttackStrategy;
 import com.example.colonybattle.models.person.actions.defense.DefenderDefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.DefenderMovementStrategy;
 import com.example.colonybattle.models.person.type.PersonType;
@@ -23,7 +24,7 @@ public class Defender extends Person {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         super.movement = new DefenderMovementStrategy(this);
         status.setType(type);
-        attackPerformer = new Attack(this,movement);
+        this.attackPerformer = new DefenderAttackStrategy(this,movement);
         this.defendStrategy = new DefenderDefendStrategy(this);
 
     }
@@ -42,23 +43,9 @@ public class Defender extends Person {
     public void defend(Person person,int damage) {
         this.defendStrategy.defend(person,damage);
     }
-
     @Override
     public void attack(Person person) {
-        if (attackLock.tryLock()) {
-            try {
-                int strength = status.getStrength();
-                int energy = status.getEnergy();
-                if(energy < this.MIN_PROTECTION_ENERGY) {
-                    person.defend(this,1);
-                }else{
-                    int damage = (int) Math.ceil((0.1*strength) * ((energy / 10.0)));
-                    person.defend(this,damage);
-                }
-            } finally {
-                attackLock.unlock();
-            }
-        }
+        this.attackPerformer.attack(person);
     }
     //szuka najblizszej osoby ze swojej kolonii (do bronienia)
     @Override

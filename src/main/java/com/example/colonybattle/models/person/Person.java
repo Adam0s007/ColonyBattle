@@ -9,7 +9,7 @@ import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
 import com.example.colonybattle.colony.Colony;
-import com.example.colonybattle.models.person.actions.attack.Attack;
+import com.example.colonybattle.models.person.actions.attack.PersonAttackStrategy;
 import com.example.colonybattle.models.person.characters.Wizard;
 import com.example.colonybattle.models.person.helpers.BoardRef;
 import com.example.colonybattle.models.person.helpers.CellHelper;
@@ -33,7 +33,7 @@ public abstract class Person implements Runnable{
     protected ConnectionHelper connectionHelper;
     protected PosLock posLock;
     public boolean isNew = false;
-    protected Attack attackPerformer;
+    protected PersonAttackStrategy attackPerformer;
     protected final ReentrantLock attackLock = new ReentrantLock();
     protected ImageLoaderInterface imageLoader;
     public final Semaphore dyingSemaphore;
@@ -171,16 +171,7 @@ public abstract class Person implements Runnable{
     public abstract ImageIcon getImage();
 
     public void attack(Person person) {
-        if (attackLock.tryLock()) {
-            try {
-                person.defend(this,2);
-                this.status.addEnergy(-1);
-            } finally {
-                attackLock.unlock();
-            }
-        } else {
-            System.out.println("Unable to lock, skipping attack.");
-        }
+        this.attackPerformer.attack(person);
     }
     public void healMe(int heal){
         int oldHealth = this.status.addHealth(heal);

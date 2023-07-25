@@ -3,7 +3,8 @@ package com.example.colonybattle.models.person.characters;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.models.person.actions.attack.Attack;
+import com.example.colonybattle.models.person.actions.attack.PersonAttackStrategy;
+import com.example.colonybattle.models.person.actions.attack.WizardAttackStrategy;
 import com.example.colonybattle.models.person.actions.defense.WarriorDefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.WarriorMovementStrategy;
 import com.example.colonybattle.models.person.type.PersonType;
@@ -24,7 +25,7 @@ public class Warrior extends Person {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         super.movement = new WarriorMovementStrategy(this);
         status.setType(type);
-        attackPerformer = new Attack(this,movement);
+        this.attackPerformer = new WizardAttackStrategy(this,movement);
         this.defendStrategy = new WarriorDefendStrategy(this);
 
     }
@@ -47,6 +48,10 @@ public class Warrior extends Person {
         this.defendStrategy.defend(person,damage);
     }
 
+    @Override
+    public void attack(Person person) {
+        this.attackPerformer.attack(person);
+    }
 
     //szuka najbliższej osoby z pobliskiej kolonii
     @Override
@@ -63,27 +68,7 @@ public class Warrior extends Person {
         }
         return closestPersonPosition;
     }
-    @Override
-    public void attack(Person person) {
-        if (attackLock.tryLock()) {
-            try {
-                int strength = status.getStrength();
-                int energy = status.getEnergy();
-                if(energy < this.MIN_PROTECTION_ENERGY) {
-                    person.defend(this,2);
-                    if(person.getStatus().getHealth() <= 0)  person.cellHelper.deathColor();
-                }else{
-                    int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
-                    person.defend(this,damage);
-                }
 
-            } finally {
-                attackLock.unlock();
-            }
-        } else {
-            //System.out.println("Unable to lock, skipping attack.");
-        }
-    }
 
     @Override
     public long waitingTiming() {

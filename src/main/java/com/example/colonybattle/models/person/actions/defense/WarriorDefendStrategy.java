@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class WarriorDefendStrategy extends PersonDefendStrategy{
-    private final int MIN_PROTECTION_ENERGY = 4;
+
 
     public WarriorDefendStrategy(Person person) {
         super(person);
@@ -17,11 +17,11 @@ public class WarriorDefendStrategy extends PersonDefendStrategy{
         if (defendLock.tryLock()) {
             try {
                 int oldHealth = person.getStatus().getHealth();
-                if (person.getStatus().getEnergy() >= MIN_PROTECTION_ENERGY) {
+                if (person.getStatus().getEnergy() >= person.getType().getProtection_energy()) {
                     double random = ThreadLocalRandom.current().nextDouble();
 
                     if (random <= 0.45) {
-                        person.getStatus().addEnergy(-MIN_PROTECTION_ENERGY);
+                        person.getStatus().addEnergy(-person.getType().getProtection_energy());
                     } else {
                         person.getStatus().addHealth(-1);
                         //if(this.getStatus().getHealth() <= 0)  this.cellHelper.deathColor();

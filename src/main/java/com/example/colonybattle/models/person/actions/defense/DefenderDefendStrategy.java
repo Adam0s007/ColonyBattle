@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class DefenderDefendStrategy extends PersonDefendStrategy{
 
-    private final int MIN_PROTECTION_ENERGY = 3;
+
 
     public DefenderDefendStrategy(Person person) {
         super(person);
@@ -18,7 +18,7 @@ public class DefenderDefendStrategy extends PersonDefendStrategy{
         if (defendLock.tryLock()) {
             try {
                 int oldHealth = person.getStatus().getHealth();
-                if (person.getStatus().getEnergy() >= MIN_PROTECTION_ENERGY) {
+                if (person.getStatus().getEnergy() >= person.getType().getProtection_energy()) {
                     double random = ThreadLocalRandom.current().nextDouble();
 
                     if (random <= 0.8) {

@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerDefendStrategy extends PersonDefendStrategy{
 
-    private final int MIN_PROTECTION_ENERGY = 5;
+
 
     public FarmerDefendStrategy(Person person) {
         super(person);
@@ -17,11 +17,11 @@ public class FarmerDefendStrategy extends PersonDefendStrategy{
         if (defendLock.tryLock()) {
             try {
                 int oldHealth = person.getStatus().getHealth();
-                if (person.getStatus().getEnergy() >= MIN_PROTECTION_ENERGY) {
+                if (person.getStatus().getEnergy() >= person.getType().getProtection_energy()) {
                     double random = ThreadLocalRandom.current().nextDouble();
 
                     if (random <= 0.1) {
-                        person.getStatus().addEnergy(-MIN_PROTECTION_ENERGY);
+                        person.getStatus().addEnergy(-person.getType().getProtection_energy());
                     } else {
                         person.getStatus().addEnergy(-1);
                         person.getStatus().addHealth(-1);

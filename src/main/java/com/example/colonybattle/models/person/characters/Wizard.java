@@ -4,7 +4,8 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.abilities.Magic;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.models.person.actions.attack.Attack;
+import com.example.colonybattle.models.person.actions.attack.PersonAttackStrategy;
+import com.example.colonybattle.models.person.actions.attack.WizardAttackStrategy;
 import com.example.colonybattle.models.person.actions.defense.WizardDefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.WizardMovementStrategy;
 import com.example.colonybattle.models.person.type.PersonType;
@@ -29,7 +30,7 @@ public class Wizard extends Person implements Magic {
     public Wizard(PersonType type, Point2d position, Colony colony, int id) {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         super.movement = new WizardMovementStrategy(this);
-        attackPerformer = new Attack(this,movement);
+        this.attackPerformer = new WizardAttackStrategy(this,movement);
         status.setType(type);
         INITIAL_DELAY = ThreadLocalRandom.current().nextInt(0, 4);
         this.defendStrategy = new WizardDefendStrategy(this);
@@ -63,6 +64,10 @@ public class Wizard extends Person implements Magic {
     @Override
     public void defend(Person person,int damage) {
         this.defendStrategy.defend(person,damage);
+    }
+    @Override
+    public void attack(Person person) {
+        this.attackPerformer.attack(person);
     }
     public  void healFriends(){
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -105,27 +110,7 @@ public class Wizard extends Person implements Magic {
         };
         executorService.scheduleAtFixedRate(task, INITIAL_DELAY, WAND_PERIOD, TimeUnit.SECONDS);
     }
-    @Override
-    public void attack(Person person) {
-        if (attackLock.tryLock()) {
-            try {
-                int strength = status.getStrength();
-                int energy = status.getEnergy();
-                if(energy < this.MIN_PROTECTION_ENERGY) {
-                    person.defend(this,1);
-                    if(person.getStatus().getHealth() <= 0)  person.cellHelper.deathColor();
-                }else{
-                    int damage = (int) Math.ceil((0.2*strength) * ((energy / 10.0)));
-                    person.defend(this,damage);
-                }
-            } finally {
-                attackLock.unlock();
-            }
-        } else {
-            // Unable to lock, so we do nothing. You can decide what to do in this case.
-          //  System.out.println("Unable to lock, skipping attack.");
-        }
-    }
+
     @Override
     public void die(){
         //System.out.println("Wizard died");
