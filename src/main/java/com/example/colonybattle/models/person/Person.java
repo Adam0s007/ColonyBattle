@@ -244,4 +244,7 @@ public abstract class Person implements Runnable{
         isBeingFocused = beingFocused;
     }
 
+    public Kills getKills() {
+        return kills;
+    }
 }

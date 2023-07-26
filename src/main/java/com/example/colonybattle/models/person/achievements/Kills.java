@@ -23,4 +23,8 @@ public class Kills {
     public Set<Person> getKilledPersons() {
         return this.killedPersons;
     }
+
+    public int getKills() {
+        return this.killedPersons.size();
+    }
 }

@@ -15,7 +15,7 @@ public class InfoPanel extends JPanel {
 
         // Stworzenie pierwszego panelu
         this.personPanel = personPanel;
-        personPanel.setBackground(Color.BLUE);
+
         gbc.weightx = 1.0; // Panel zajmuje całą przestrzeń w poziomie
         gbc.weighty = 1.0 / 3; // Panel zajmuje 1/3 przestrzeni
         gbc.fill = GridBagConstraints.BOTH; // Panel rozciąga się w obu kierunkach (wertykalnie i horyzontalnie)

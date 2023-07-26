@@ -125,9 +125,7 @@ public class Colony {
     }
     @Override
     public String toString() {
-        return "Colony[" +
-                "type=" + type +
-                ']';
+        return  ""+type;
     }
     //equal function override
     @Override
