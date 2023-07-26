@@ -4,13 +4,17 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.example.colonybattle.board.position.Point2d;
+import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.utils.InitialConventer;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class Cell extends JLabel {
     private Point2d position;
+    private PersonPanel personPanel;
     private final Color INITIAL_BACKGROUND = new Color(15, 23, 51);
     private final Bar healthBar = new Bar(new Color(255, 194, 189), 20,3);
     private final Bar energyBar = new Bar(new Color(255, 255, 189), 20, 6);
@@ -22,6 +26,7 @@ public class Cell extends JLabel {
         this.position = new Point2d(x, y);
         this.setOpaque(true);
         initializeCell();
+        addClickListener();
     }
 
     private void initializeCell() {
@@ -45,6 +50,19 @@ public class Cell extends JLabel {
         super.paintComponent(g);
         healthBar.paint(g, this);
         energyBar.paint(g, this);
+    }
+
+    private void addClickListener() {
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Person personRef = position.getPerson();
+                if(personRef == null || (personPanel.getPerson() != null && personPanel.getPerson().equals(personRef))) return;
+                if(personPanel.getPerson() != null) personPanel.getPerson().setBeingFocused(false);
+                personRef.setBeingFocused(true);
+                personPanel.setPerson(personRef);
+            }
+        });
     }
 
     public void updateHealthBar() {
@@ -86,6 +104,9 @@ public class Cell extends JLabel {
 
     public void updateColors(Color color) {
         border = BorderFactory.createLineBorder(color, 2);
+        if(position.getPerson() != null && position.getPerson().isBeingFocused()){
+            this.border = BorderFactory.createLineBorder(position.getPerson().getFocusColor(), 2);
+        }
         this.setBorder(border);
         this.setForeground(Color.WHITE);
         updateBackground(this.position);
@@ -94,6 +115,7 @@ public class Cell extends JLabel {
     public void updateBackground(Point2d position) {
         Color color = position.getColonyColor();
         this.setBackground((color != null ? color : INITIAL_BACKGROUND).darker());
+        cursorChanger();
     }
 
     public Point2d getPosition() {
@@ -103,11 +125,23 @@ public class Cell extends JLabel {
     public void setPosition(Point2d position) {
         this.position = position;
     }
-
+    public void setPersonPanel(PersonPanel personPanel) {
+        this.personPanel = personPanel;
+    }
     public void initColor() {
         updateBackground(this.position);
         border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
         this.setBorder(border);
+    }
+
+
+
+    public void cursorChanger(){
+        if (position.getPerson() != null) {
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        } else {
+            this.setCursor(Cursor.getDefaultCursor());
+        }
     }
 }
 

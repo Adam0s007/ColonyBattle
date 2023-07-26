@@ -1,6 +1,9 @@
 package com.example.colonybattle.models.person.helpers;
 
 import com.example.colonybattle.colors.ConsoleColor;
+import com.example.colonybattle.ui.InfoPanel;
+import com.example.colonybattle.ui.MyFrame;
+import com.example.colonybattle.ui.PersonPanel;
 import com.example.colonybattle.utils.ColorConverter;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
@@ -12,9 +15,12 @@ public class CellHelper {
     private Person person;
     private BoardRef boardRef;
 
+    private final PersonPanel personPanel;
     public CellHelper(Person person, BoardRef boardRef) {
         this.person = person;
         this.boardRef = boardRef;
+        personPanel = this.boardRef.getBoard().getFrame().getInfoPanel().getPersonPanel();
+
     }
 
     public void updateLife() {
@@ -32,6 +38,8 @@ public class CellHelper {
 
     public void deathColor() {
         setColor(ConsoleColor.PURPLE, person.getPosition());
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 
     public Color getDeathColor() {
@@ -53,6 +61,8 @@ public class CellHelper {
         setEnergy(person.getStatus().getEnergy(), newPosition);
         setInitial(person.getInitial(), newPosition);
         addImageToCell(newPosition);
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 
     public void addImageToCell(Point2d position) {
@@ -65,10 +75,14 @@ public class CellHelper {
 
     public void healingColor() {
         changeColorTemporarily(ConsoleColor.BLUE);
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 
     public void energyEmitionColor() {
         changeColorTemporarily(ConsoleColor.BRIGHT_WHITE);
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 
     public void spawningColor() {
@@ -82,10 +96,14 @@ public class CellHelper {
 
     private void setLife(int life, Point2d position) {
         boardRef.getFrame().getGridPanel().setLifeAtPosition(position, life);
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 
     private void setEnergy(int energy, Point2d position) {
         boardRef.getFrame().getGridPanel().setEnergyAtPosition(position, energy);
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 
     private void setInitial(Character initial, Point2d position) {
@@ -118,9 +136,13 @@ public class CellHelper {
 
     private void setLife(int life) {
         setLife(life, person.getPosition());
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 
     private void setEnergy(int energy) {
         setEnergy(energy, person.getPosition());
+        if(person.isBeingFocused())
+            personPanel.updatePersonData();
     }
 }

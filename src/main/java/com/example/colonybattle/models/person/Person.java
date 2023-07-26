@@ -5,6 +5,7 @@ import com.example.colonybattle.models.person.achievements.Kills;
 import com.example.colonybattle.models.person.actions.defense.DefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.Movement;
 import com.example.colonybattle.models.person.messages.Message;
+import com.example.colonybattle.ui.PersonPanel;
 import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
@@ -19,6 +20,7 @@ import com.example.colonybattle.models.person.type.PersonType;
 import com.example.colonybattle.utils.ThreadUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,7 +36,6 @@ public abstract class Person implements Runnable{
     protected PosLock posLock;
     public boolean isNew = false;
     protected PersonAttackStrategy attackPerformer;
-    protected final ReentrantLock attackLock = new ReentrantLock();
     protected ImageLoaderInterface imageLoader;
     public final Semaphore dyingSemaphore;
     public final int MAX_DEPTH = 5;
@@ -42,6 +43,8 @@ public abstract class Person implements Runnable{
     public final BlockingQueue<Message> queue;
     protected Kills kills;
     protected DefendStrategy defendStrategy;
+    private boolean isBeingFocused = false;
+    private Color focusColor = new Color(0, 255, 175, 255);
 
     @Override
     public int hashCode() {
@@ -111,6 +114,7 @@ public abstract class Person implements Runnable{
         }
     };
     public void die(){
+        setBeingFocused(false); // nie wazne czy byl czy nie byl, focus sie skonczyl
         Point2d oldPosition = new Point2d(this.position.getX(),this.position.getY());
         connectionHelper.changePosConnections(this.position,null);
         cellHelper.resetCell(oldPosition);
@@ -135,6 +139,7 @@ public abstract class Person implements Runnable{
         }
     }
     public void PersonWaiting(){
+
         long timeEnd = waitingTiming();
         //funckja AttackingTime powinna sie tutaj wykonywac rownolegle w osobnym wątku
         ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -228,6 +233,15 @@ public abstract class Person implements Runnable{
     public void  addPoints(int points){
         if(this.colony != null)
             this.colony.addPoints(points);
+    }
+    public Color getFocusColor() {
+        return focusColor;
+    }
+    public boolean isBeingFocused() {
+        return isBeingFocused;
+    }
+    public void setBeingFocused(boolean beingFocused) {
+        isBeingFocused = beingFocused;
     }
 
 }

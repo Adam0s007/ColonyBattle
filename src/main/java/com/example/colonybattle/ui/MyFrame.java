@@ -7,19 +7,25 @@ import java.awt.*;
 import java.util.Map;
 
 public class MyFrame extends JFrame {
-    private Cell[][] grid;
+
     public final GridPanel gridPanel;
+    public final InfoPanel infoPanel;
 
     public MyFrame(int gridSize) {
         // ... konstruktor ...
         this.setTitle("Colony Battle");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
-        this.setSize(800, 800);
+        this.setSize(1200, 800);
 
         this.setLayout(new BorderLayout());
-        gridPanel = new GridPanel(gridSize);
+
+        PersonPanel personPanel = new PersonPanel();
+        gridPanel = new GridPanel(gridSize,personPanel);
         this.add(gridPanel, BorderLayout.CENTER);
+        this.infoPanel = new InfoPanel(personPanel);
+        infoPanel.setPreferredSize(new Dimension(400, 800));
+        this.add(infoPanel, BorderLayout.EAST);
         this.setVisible(true);
     }
 
@@ -27,4 +33,8 @@ public class MyFrame extends JFrame {
    public GridPanel getGridPanel(){
         return this.gridPanel;
    }
+
+    public InfoPanel getInfoPanel(){
+          return this.infoPanel;
+    }
 }

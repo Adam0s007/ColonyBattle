@@ -8,13 +8,16 @@ import java.util.Map;
 
 public class GridPanel extends JPanel {
     private Cell[][] grid;
-    public GridPanel(int gridSize){
+    private final PersonPanel personPanel;
+    public GridPanel(int gridSize, PersonPanel personPanel) {
         setPreferredSize(new Dimension(800, 800));
         this.setLayout(new GridLayout(gridSize, gridSize,0,0));
+        this.personPanel = personPanel;
         grid = new Cell[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 grid[i][j] = new Cell(i, j);
+                grid[i][j].setPersonPanel(personPanel);
                 this.add(grid[i][j]);
             }
         }
