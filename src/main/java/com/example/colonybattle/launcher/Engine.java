@@ -17,7 +17,7 @@ public class Engine {
 
     public static void main(String[] args) throws InterruptedException {
 
-        frame = new MyFrame(20);
+        frame = new MyFrame(Board.SIZE);
         List<Colony> allColonies = new ArrayList<>();
         Board board = new Board(allColonies);
         board.initFrame(frame);
@@ -34,7 +34,7 @@ public class Engine {
         allColonies.add(colony4);
 
         board.initFields();
-        frame.setPositionReferences(board.getFields());
+        frame.getGridPanel().setPositionReferences(board.getFields());
         board.start();
 
         synchronized (EndgameMonitor.monitor) {

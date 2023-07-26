@@ -56,11 +56,11 @@ public class CellHelper {
     }
 
     public void addImageToCell(Point2d position) {
-        boardRef.getFrame().setImageAtPosition(position, person.getImage());
+        boardRef.getFrame().getGridPanel().setImageAtPosition(position, person.getImage());
     }
 
     public void removeImageFromCell(Point2d position) {
-        boardRef.getFrame().removeImageAtPosition(position);
+        boardRef.getFrame().getGridPanel().removeImageAtPosition(position);
     }
 
     public void healingColor() {
@@ -72,36 +72,36 @@ public class CellHelper {
     }
 
     public void spawningColor() {
-        Color color = new Color(255, 140, 0);
-        Color oldColor = getCellColor(person.getPosition());
-        setColor(color, person.getPosition());
-        ThreadUtils.getInstance().pause(400);
-        setColor(person.getColony().getColor().getColor(), person.getPosition());
-        boardRef.getFrame().setBackground(person.getPosition(), oldColor);
+//        Color color = new Color(255, 140, 0);
+//        Color oldColor = getCellColor(person.getPosition());
+//        setColor(color, person.getPosition());
+//        ThreadUtils.getInstance().pause(400);
+//        setColor(person.getColony().getColor().getColor(), person.getPosition());
+//        boardRef.getFrame().setBackground(person.getPosition(), oldColor);
     }
 
     private void setLife(int life, Point2d position) {
-        boardRef.getFrame().setLifeAtPosition(position, life);
+        boardRef.getFrame().getGridPanel().setLifeAtPosition(position, life);
     }
 
     private void setEnergy(int energy, Point2d position) {
-        boardRef.getFrame().setEnergyAtPosition(position, energy);
+        boardRef.getFrame().getGridPanel().setEnergyAtPosition(position, energy);
     }
 
     private void setInitial(Character initial, Point2d position) {
-        boardRef.getFrame().setInitial(position, initial);
+        boardRef.getFrame().getGridPanel().setInitial(position, initial);
     }
 
     private void setColor(ConsoleColor color, Point2d position) {
-        boardRef.getFrame().setColorAtPosition(position, ColorConverter.convertColor(color));
+        boardRef.getFrame().getGridPanel().setColorAtPosition(position, ColorConverter.convertColor(color));
     }
 
     private void setColor(Color color, Point2d position) {
-        boardRef.getFrame().setColorAtPosition(position, color);
+        boardRef.getFrame().getGridPanel().setColorAtPosition(position, color);
     }
 
     private void setInitColor(Point2d position) {
-        boardRef.getFrame().setInitColor(position);
+        boardRef.getFrame().getGridPanel().setInitColor(position);
     }
 
     private void changeColorTemporarily(ConsoleColor color) {
@@ -113,7 +113,7 @@ public class CellHelper {
 
 
     private Color getCellColor(Point2d position) {
-        return boardRef.getFrame().getColorAtPosition(position);
+        return boardRef.getFrame().getGridPanel().getColorAtPosition(position);
     }
 
     private void setLife(int life) {
