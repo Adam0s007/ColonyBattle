@@ -7,7 +7,7 @@ public class HelloApplication{
     public static void main(String[] args) {
         //launch();
         //System.out.println("Hello World!");
-        MyFrame frame = new MyFrame(20);
+        //MyFrame frame = new MyFrame(20);
 
     }
 }

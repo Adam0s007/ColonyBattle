@@ -16,9 +16,9 @@ public class Engine {
     }
 
     public static void main(String[] args) throws InterruptedException {
-
-        frame = new MyFrame(Board.SIZE);
         List<Colony> allColonies = new ArrayList<>();
+        frame = new MyFrame(Board.SIZE,allColonies);
+
         Board board = new Board(allColonies);
         board.initFrame(frame);
         ColonyFactory colonyFactory = new ColonyFactory();

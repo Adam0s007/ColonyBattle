@@ -101,6 +101,7 @@ public abstract class Person implements Runnable{
         initGUI();
         if(!isNew) posLock.aquirePositionLock(position);
         checkWizardingQualifications();
+        updateColonyFrame();
         while(running){
             PersonWaiting();
             receivingMessage();
@@ -124,6 +125,7 @@ public abstract class Person implements Runnable{
         dyingSemaphore.release();
         connectionHelper.disconnectColony();
         //System.out.println(this.boardRef.getBoard() == null);
+        updateColonyFrame();
     }
     public void stop() {
         running = false;
@@ -206,6 +208,7 @@ public abstract class Person implements Runnable{
 
     public void walk(){
         this.movement.walk();
+        updateColonyFrame();
     }
 
     public boolean CheckingKill(){
@@ -233,6 +236,7 @@ public abstract class Person implements Runnable{
     public void  addPoints(int points){
         if(this.colony != null)
             this.colony.addPoints(points);
+        this.updateColonyFrame();
     }
     public Color getFocusColor() {
         return focusColor;
@@ -247,4 +251,13 @@ public abstract class Person implements Runnable{
     public Kills getKills() {
         return kills;
     }
+    public void updateColonyFrame(){
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                boardRef.updateColonyFrame();
+            }
+        });
+    }
+
 }

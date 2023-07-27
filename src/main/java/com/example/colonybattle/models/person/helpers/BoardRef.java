@@ -74,4 +74,8 @@ public class BoardRef {
         return this.getBoard().getFrame();
     }
 
+    public void updateColonyFrame(){
+        getFrame().getInfoPanel().getColonyPanel().updateColonies();
+    }
+
 }

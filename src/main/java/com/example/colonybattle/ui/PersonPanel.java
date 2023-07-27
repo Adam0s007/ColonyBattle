@@ -48,7 +48,7 @@ public class PersonPanel extends JPanel {
 
     private JLabel addLabel() {
         JLabel label = new JLabel();
-        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        label.setFont(new Font("Arial", Font.PLAIN, 17));
         label.setForeground(Color.BLACK);
         this.add(label);
         return label;
