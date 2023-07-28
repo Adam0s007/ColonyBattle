@@ -38,7 +38,7 @@ public class Board {
                 executorService.submit(person);
             }
         }
-        statisticsPrinter.startPrintingStatistics(allColonies);
+        //statisticsPrinter.startPrintingStatistics(allColonies); - for testing only
     }
     //dodajmy wszystkie pola osob z wszystkich kolonii do hashSetu fields
     public void initFields() {
@@ -90,7 +90,7 @@ public class Board {
         this.stopPeople();
         executorService.shutdown();
         try{
-            this.statisticsPrinter.stopPrintingStatistics();
+            //this.statisticsPrinter.stopPrintingStatistics(); - for testing only
             executorService.awaitTermination(2, java.util.concurrent.TimeUnit.SECONDS);
         }catch (InterruptedException e){
             e.printStackTrace();

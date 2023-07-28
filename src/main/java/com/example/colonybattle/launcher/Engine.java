@@ -34,6 +34,7 @@ public class Engine {
         allColonies.add(colony4);
 
         board.initFields();
+        frame.getInfoPanel().getColonyPanel().init();
         frame.getGridPanel().setPositionReferences(board.getFields());
         board.start();
 

@@ -75,7 +75,13 @@ public class BoardRef {
     }
 
     public void updateColonyFrame(){
-        getFrame().getInfoPanel().getColonyPanel().updateColonies();
+        getFrame().getInfoPanel().getColonyPanel().update(this.person);
     }
+
+    public void removePersonFromFrame(){
+        getFrame().getInfoPanel().getColonyPanel().removePersonLabel(this.person);
+    }
+
+
 
 }

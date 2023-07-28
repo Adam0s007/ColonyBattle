@@ -230,6 +230,7 @@ public abstract class Person implements Runnable{
                 kills.addKill(message.getPerson());
                 addPoints(30);
                 System.out.println(message.getPerson() + " was killed by " + this);
+                message.getPerson().getBoardRef().removePersonFromFrame();//making sure that person is removed from frame
             }
         }
     }
@@ -258,6 +259,9 @@ public abstract class Person implements Runnable{
                 boardRef.updateColonyFrame();
             }
         });
+    }
+    public boolean isDead(){
+        return this.status.getHealth() <= 0;
     }
 
 }
