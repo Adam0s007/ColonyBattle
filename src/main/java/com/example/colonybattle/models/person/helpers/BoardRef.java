@@ -23,6 +23,8 @@ public class BoardRef {
     }
 
     public Board getBoard() {
+        if(person.getColony() == null)
+            return null;
         return person.getColony().getBoard();
     }
 

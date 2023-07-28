@@ -5,6 +5,9 @@ import javax.swing.border.Border;
 
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.models.person.characters.Defender;
+import com.example.colonybattle.models.person.characters.Warrior;
+import com.example.colonybattle.models.person.messages.DestinationMessage;
 import com.example.colonybattle.utils.InitialConventer;
 
 import java.awt.*;
@@ -21,7 +24,10 @@ public class Cell extends JLabel {
     private ImageIcon image= null;
     private Border border;
 
+    private boolean isTargeted = false;
+
     public Cell(int x, int y) {
+        this.setFocusable(true);  // Ensure the cell can receive focus.
         this.setLayout(new BorderLayout());
         this.position = new Point2d(x, y);
         this.setOpaque(true);
@@ -32,7 +38,7 @@ public class Cell extends JLabel {
     private void initializeCell() {
         setInitialCellProperties();
         initColor();
-        setFont(new Font("Sans Serif", Font.BOLD, 7));
+        setFont(new Font("Sans Serif", Font.BOLD, 12));
         this.setHorizontalAlignment(JLabel.CENTER);
         this.setVerticalAlignment(JLabel.CENTER);
         this.setIconTextGap(-15);
@@ -57,13 +63,44 @@ public class Cell extends JLabel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Person personRef = position.getPerson();
-                if(personRef == null || (personPanel.getPerson() != null && personPanel.getPerson().equals(personRef))) return;
-                if(personPanel.getPerson() != null) personPanel.getPerson().setBeingFocused(false);
-                personRef.setBeingFocused(true);
-                personPanel.setPerson(personRef);
+                //System.out.println(personRef);
+                if (SwingUtilities.isRightMouseButton(e) && personRef == null && personPanel.getPerson() != null) {
+                    setNewTarget();
+                    return;
+                }
+                if (SwingUtilities.isLeftMouseButton(e) && personRef != null && !(personPanel.getPerson() != null && personPanel.getPerson().equals(personRef))) {
+                    focusOnPerson(personRef);
+                }
             }
         });
     }
+
+    private void setNewTarget() {
+        System.out.println("new target");
+        Person focusedPerson = personPanel.getPerson();
+
+        focusedPerson.setNewTarget(new DestinationMessage(position));
+        Color originalColor = getBackground();
+        setBackground(new Color(255, 255, 255));
+        repaint();
+
+        Timer timer = new Timer(1200, e -> {
+            setBackground(originalColor);
+            repaint();
+        });
+
+        timer.setRepeats(false);
+        timer.start();
+    }
+
+    private void focusOnPerson(Person personRef) {
+        if(personPanel.getPerson() != null) personPanel.getPerson().setBeingFocused(false);
+        personRef.setBeingFocused(true);
+        personPanel.setPerson(personRef);
+    }
+
+
+
 
     public void updateHealthBar() {
         healthBar.update(this);
@@ -81,8 +118,9 @@ public class Cell extends JLabel {
     }
 
     public void updateInitial(Character initial) {
-        String convertedInitial = InitialConventer.getInstance().convertInitial(initial);
-        this.setText(convertedInitial != null ? convertedInitial : "");
+        if(initial == null || position.getPerson() == null) {this.setText("");return;}
+        String convertedInitial = String.valueOf(initial);
+        this.setText(convertedInitial+" "+position.getPerson().getStatus().getId());
     }
 
     public void setImageIcon(ImageIcon icon) {
@@ -143,5 +181,13 @@ public class Cell extends JLabel {
             this.setCursor(Cursor.getDefaultCursor());
         }
     }
+
+    public void setTarget(boolean targeted) {
+        isTargeted = targeted;
+    }
+    public boolean isTargeted() {
+        return isTargeted;
+    }
+
 }
 

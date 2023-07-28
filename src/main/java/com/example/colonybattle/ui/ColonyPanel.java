@@ -7,16 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ColonyPanel extends JPanel {
 
     public final List<Colony> allColonies;
-    private final Map<Colony, JPanel> colonyPanels = new ConcurrentHashMap<>();
-    private final Map<Person, JLabel> personLabels = new ConcurrentHashMap<>();
+    private final Map<Colony, JPanel> colonyPanelsMap = new ConcurrentHashMap<>();
+    private final Map<Person, JLabel> personLabelsMap = new ConcurrentHashMap<>();
     private final Font font = new Font("Arial", Font.BOLD, 10); // Definiujemy czcionkę tylko raz
 
     public ColonyPanel(List<Colony> allColonies){
@@ -53,66 +51,79 @@ public class ColonyPanel extends JPanel {
         for (Person person : colony.getPeople()) {
             JLabel personLabel = createPersonLabel(person, font);
             colonyPanel.add(personLabel);
-            personLabels.put(person, personLabel);
+            personLabelsMap.put(person, personLabel);
         }
 
         this.add(colonyPanel);
-        colonyPanels.put(colony, colonyPanel);
+        colonyPanelsMap.put(colony, colonyPanel);
     }
 
     public void updateColonyPanel(Colony colony){
-        JPanel colonyPanel = colonyPanels.get(colony);
+        JPanel colonyPanel = colonyPanelsMap.get(colony);
         if(colonyPanel == null)return; // Check if colonyPanel is null, not colony
         ((JLabel) colonyPanel.getComponent(0)).setText(colony.getType() + ": " + colony.getPeopleCount());
         ((JLabel) colonyPanel.getComponent(1)).setText("Points: " + colony.getPoints());
     }
+    public void traverseToRemove(JLabel personLabel){// O(n) - traverse all colonies
+        for (Colony colony : allColonies) {//checking if Jpanel contains personLabel
+            if(Arrays.stream(colonyPanelsMap.get(colony).getComponents()).anyMatch(personLabel::equals)){
+                colonyPanelsMap.get(colony).remove(personLabel);
+                colonyPanelsMap.get(colony).revalidate();  // Re-check the layout
+                colonyPanelsMap.get(colony).repaint();  // Redraw the panel
+            }
+
+        }
+    }
 
     private void removeColonyPanel(Colony colony){
-        JPanel colonyPanel = colonyPanels.get(colony);
+        JPanel colonyPanel = colonyPanelsMap.get(colony);
         if(colonyPanel != null) {
             this.remove(colonyPanel);
-            colonyPanels.remove(colony);
+            colonyPanelsMap.remove(colony);
         }
     }
 
     private JLabel createPersonLabel(Person person, Font font){
         JLabel personLabel = new JLabel("" + person.getPosition());
         personLabel.setFont(font);
-        JPanel colonyPanel = colonyPanels.get(person.getColony());
+        JPanel colonyPanel = colonyPanelsMap.get(person.getColony());
         if(colonyPanel != null){
             colonyPanel.add(personLabel);
-            personLabels.put(person, personLabel);
+            personLabelsMap.put(person, personLabel);
         }
         return personLabel;
     }
 
     public void removePersonLabel(Person person){
-        JLabel personLabel = personLabels.get(person);
+        JLabel personLabel = personLabelsMap.get(person);
         if(personLabel != null) {
-            personLabels.remove(person);
-            JPanel colonyPanel = colonyPanels.get(person.getColony());
+            personLabelsMap.remove(person);
+            JPanel colonyPanel = null;
+            if(person.getColony() != null)
+                colonyPanel = colonyPanelsMap.get(person.getColony());
+            else traverseToRemove(personLabel);
             if(colonyPanel != null) {
                 colonyPanel.remove(personLabel);
                 colonyPanel.revalidate();  // Re-check the layout
                 colonyPanel.repaint();  // Redraw the panel
-                if(colonyPanel.getComponentCount() == 2)
-                    removeColonyPanel(person.getColony());
             }
         }
     }
+
+
 
     public void update(Person person){
         if(person.isDead()) {
             removePersonLabel(person);
         }else{
-            JLabel personLabel = personLabels.get(person);
+            JLabel personLabel = personLabelsMap.get(person);
             if(personLabel != null)
                 personLabel.setText("" + person.getPosition());
             else {
                 createPersonLabel(person, font); // Don't forget to add this newly created personLabel into your colonyPanel
             }
         }
-        JPanel colonyPanel = colonyPanels.get(person.getColony());
+        JPanel colonyPanel = colonyPanelsMap.get(person.getColony());
         if(colonyPanel != null)
             updateColonyPanel(person.getColony());
     }

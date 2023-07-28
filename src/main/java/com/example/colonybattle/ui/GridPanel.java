@@ -85,4 +85,13 @@ public class GridPanel extends JPanel {
         if(position == null) return null;
         return grid[position.getX()][position.getY()].getBackground();
     }
+
+    public void isTargeted(Point2d position){
+        if(position == null) return;
+        grid[position.getX()][position.getY()].isTargeted();
+    }
+    public void setTarget(Point2d position,boolean isTarget){
+        if(position == null) return;
+        grid[position.getX()][position.getY()].setTarget(isTarget);
+    }
 }

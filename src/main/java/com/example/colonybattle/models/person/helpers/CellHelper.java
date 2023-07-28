@@ -145,4 +145,6 @@ public class CellHelper {
         if(person.isBeingFocused())
             personPanel.updatePersonData();
     }
+
+
 }

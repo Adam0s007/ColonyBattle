@@ -4,6 +4,7 @@ import com.example.colonybattle.models.person.abilities.Magic;
 import com.example.colonybattle.models.person.achievements.Kills;
 import com.example.colonybattle.models.person.actions.defense.DefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.Movement;
+import com.example.colonybattle.models.person.messages.DestinationMessage;
 import com.example.colonybattle.models.person.messages.Message;
 import com.example.colonybattle.ui.PersonPanel;
 import com.example.colonybattle.ui.image.ImageLoader;
@@ -41,10 +42,12 @@ public abstract class Person implements Runnable{
     public final int MAX_DEPTH = 5;
     protected Movement movement;
     public final BlockingQueue<Message> queue;
+    public final BlockingQueue<DestinationMessage> destinationQueue;
     protected Kills kills;
     protected DefendStrategy defendStrategy;
     private boolean isBeingFocused = false;
     private Color focusColor = new Color(0, 255, 175, 255);
+
 
     @Override
     public int hashCode() {
@@ -74,6 +77,7 @@ public abstract class Person implements Runnable{
         posLock = new PosLock(boardRef);
         dyingSemaphore = new Semaphore(1);;
         queue = new LinkedBlockingQueue<>();
+        destinationQueue = new LinkedBlockingQueue<>();
         this.kills = new Kills();
 
     }
@@ -222,6 +226,10 @@ public abstract class Person implements Runnable{
     public void sendingMessage(Person person, Message message){
         person.queue.add(message);
     }
+
+    public void setNewTarget(DestinationMessage message){
+        this.destinationQueue.add(message);
+    }
     //method receivingMessgae() will be take all messages from BlockingQueue
     public void receivingMessage() {
         while (!queue.isEmpty()) {
@@ -264,4 +272,11 @@ public abstract class Person implements Runnable{
         return this.status.getHealth() <= 0;
     }
 
+    public Movement getMovement() {
+        return movement;
+    }
+
+    public BlockingQueue<DestinationMessage> getDestinationMessage() {
+        return destinationQueue;
+    }
 }

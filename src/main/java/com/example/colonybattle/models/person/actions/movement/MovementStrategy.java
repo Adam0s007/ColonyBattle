@@ -6,23 +6,28 @@ import com.example.colonybattle.board.position.Direction;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.models.person.characters.Defender;
 import com.example.colonybattle.models.person.characters.Farmer;
+import com.example.colonybattle.models.person.characters.Warrior;
 import com.example.colonybattle.models.person.characters.Wizard;
 import com.example.colonybattle.models.person.helpers.BoardRef;
 import com.example.colonybattle.models.person.helpers.CellHelper;
 import com.example.colonybattle.models.person.helpers.ConnectionHelper;
+import com.example.colonybattle.models.person.messages.DestinationMessage;
 import com.example.colonybattle.models.person.type.PersonType;
 import com.example.colonybattle.utils.Calculator;
 import com.example.colonybattle.utils.ThreadUtils;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 public abstract class MovementStrategy implements Movement {
     protected final Person person;
 
+    protected Point2d potentialTarget = null;
     public MovementStrategy(Person person) {
         this.person = person;
     }
@@ -36,6 +41,7 @@ public abstract class MovementStrategy implements Movement {
     }
 
     public void walk() {
+        processMessage();
         Point2d newPosition = newPoint();
         Point2d oldPosition = person.getPosition();
         if (isValidMove(newPosition)) {
@@ -63,9 +69,13 @@ public abstract class MovementStrategy implements Movement {
     }
 
     public Point2d newPoint() {//here it should be abstract
+
+        Point2d closestPersonPos = null;
+        closestPersonPos = potentialTargetVec();
+        if(closestPersonPos != null) return closestPersonPos;
         Point2d directionVecField = calculateDirectionVecField();
         Point2d newFieldPos = calculateNewFieldPos(directionVecField);
-        Point2d closestPersonPos = person.findClosestPosition();
+        closestPersonPos = person.findClosestPosition();
         if (closestPersonPos == null) return newFieldPos;
         Point2d directionVecPerson = calculateDirectionVecPerson(closestPersonPos);
         if (shouldReturnNewFieldPos(closestPersonPos)) return newFieldPos;
@@ -98,6 +108,15 @@ public abstract class MovementStrategy implements Movement {
                 .filter(vector -> !vector.equals(personPosition));
     }
 
+    public Point2d potentialTargetVec(){
+        if(this.potentialTarget != null && potentialTarget.equals(person.getPosition())) {
+            this.potentialTarget = null;
+        } else if(this.potentialTarget != null){
+            Point2d dir = Calculator.calculateDirection(person.getPosition(), this.potentialTarget);
+            return calculateNewPosition(person.getPosition(), dir);
+        }
+        return null;
+    }
 
     public Point2d closestField(Person person) {
         Stream<Point2d> fieldsStream = streamFilteredFields();
@@ -129,6 +148,20 @@ public abstract class MovementStrategy implements Movement {
         }
         Point2d directionVector = randomDirection.getVector();
         return calculateNewPosition(position, directionVector);
+    }
+
+    //wyciaga wszystkie wiadomosci z DesitnationMessage, i ostatnią przypisuje do potentialTarget
+    public void processMessage() {
+        BlockingQueue<DestinationMessage> messages = person.getDestinationMessage();
+        DestinationMessage message = null;
+        while(!messages.isEmpty()) {
+            message = messages.poll();
+        }
+        if(message != null) {
+            this.potentialTarget = message.getDestination();
+            if(this.potentialTarget != null) System.out.println("New target: " + this.potentialTarget);
+        }
+
     }
 
 
