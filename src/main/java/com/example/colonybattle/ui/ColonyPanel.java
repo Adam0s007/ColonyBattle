@@ -93,6 +93,8 @@ public class ColonyPanel extends JPanel {
             JPanel colonyPanel = colonyPanels.get(person.getColony());
             if(colonyPanel != null) {
                 colonyPanel.remove(personLabel);
+                colonyPanel.revalidate();  // Re-check the layout
+                colonyPanel.repaint();  // Redraw the panel
                 if(colonyPanel.getComponentCount() == 2)
                     removeColonyPanel(person.getColony());
             }
