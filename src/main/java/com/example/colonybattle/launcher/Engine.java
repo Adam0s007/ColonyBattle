@@ -27,19 +27,16 @@ public class Engine {
         Colony colony2 = colonyFactory.createColony(ColonyType.ICE_NATION,board);
         Colony colony3 = colonyFactory.createColony(ColonyType.JUNGLE_NATION,board);
         Colony colony4 = colonyFactory.createColony(ColonyType.DESERT_NATION,board);
-
         allColonies.add(colony1);
         allColonies.add(colony2);
         allColonies.add(colony3);
         allColonies.add(colony4);
-        for(Colony colony : allColonies){
-            colony.registerObserver(frame.getInfoPanel().getSpawnPanel());
-        }
-        frame.getInfoPanel().getSpawnPanel().runTimer();
-        board.initFields();
-        frame.getInfoPanel().getColonyPanel().init();
-        frame.getGridPanel().setPositionReferences(board.getFields());
-        board.start();
+
+        board.initFields();//dodajemy wszystkie pola osob z wszystkich kolonii do hashSetu fields i dodajemy wszystkie pozostale pola do tego hashsetu
+        frame.getInfoPanel().getColonyPanel().init(); //inicjalizujemy panel kolonii
+        frame.getGridPanel().setPositionReferences(board.getFields());//dodajemy wszystkie pola do gridPanelu
+        board.start();//uruchamiamy wszystkie watki osob
+        frame.getInfoPanel().getSpawnPanel().runTimer();//uruchamiamy timer od spawnu osob
 
         synchronized (EndgameMonitor.monitor) {
             while (!board.isOnlyOneColonyLeft()) {
@@ -50,8 +47,6 @@ public class Engine {
                 }
             }
         }
-
-
         // Zatrzymanie wszystkich osób (wątków)
         board.stop();
         frame.dispose();

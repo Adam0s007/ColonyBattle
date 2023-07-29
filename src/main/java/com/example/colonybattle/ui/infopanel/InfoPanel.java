@@ -39,7 +39,7 @@ public class InfoPanel extends JPanel {
 
         // Stworzenie panelu odliczajacego czas do nastepnego spawnu
         // Stworzenie panelu odliczajacego czas do nastepnego spawnu
-        this.spawnPanel = new SpawnPanel();
+        this.spawnPanel = new SpawnPanel(allColonies);
         gbc.weightx = 1.0; // Panel zajmuje całą przestrzeń w poziomie
         gbc.weighty = 1.0 / 6;
         gbc.gridy = 2;

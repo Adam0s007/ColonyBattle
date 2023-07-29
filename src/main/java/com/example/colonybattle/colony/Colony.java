@@ -5,7 +5,6 @@ import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.models.person.PersonFactory;
-import com.example.colonybattle.ui.infopanel.colony.TimerObserver;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -15,7 +14,6 @@ import java.util.Set;
 import java.util.concurrent.*;
 
 public class Colony {
-
     private ColonyColor color;
     private ColonyType type;
     private Set<Person> people;
@@ -25,21 +23,16 @@ public class Colony {
     public final PersonFactory personFactory;
     private Board board;
     private final Instant creationTime;
-    private final ScheduledExecutorService executorService;
     public final Semaphore pointSemaphore;
-    private List<TimerObserver> observers = new ArrayList<>();
-
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
         this.fields =ConcurrentHashMap.newKeySet();
         this.points = 0;
         this.creationTime = Instant.now();
-        this.executorService = Executors.newSingleThreadScheduledExecutor();
         this.personFactory = new PersonFactory();
         this.pointSemaphore = new Semaphore(1);
 
     }
-
     public Colony(ColonyType type, Set<Person> people, Set<Point2d> fields, int points, ColonyColor color, Board board, PersonFactory personFactory) {
         this.type = type;
         this.people = ConcurrentHashMap.newKeySet();
@@ -51,14 +44,7 @@ public class Colony {
         this.board = board;
         this.personFactory = personFactory;
         this.creationTime = Instant.now();
-        this.executorService = Executors.newSingleThreadScheduledExecutor();
         this.pointSemaphore = new Semaphore(1);
-        notifyObservers(PERIOD_SEC);
-        spawnPerson();
-
-    }
-    public void registerObserver(TimerObserver observer) {
-        observers.add(observer);
     }
     public ColonyColor getColor() {
         return color;
@@ -96,7 +82,6 @@ public class Colony {
             this.pointSemaphore.release();
         }
     }
-
     public Board getBoard() {
         return this.board;
     }
@@ -112,14 +97,12 @@ public class Colony {
     public void addPerson(Person person) {
         this.people.add(person);
     }
-
     public void removePerson(Person person) {
         this.people.remove(person);
     }
     public ColonyType getType() {
         return type;
     }
-
     public Person containsPerson(Point2d position) {
         for (Person person : people) {
             if (person.getPosition().equals(position)) {
@@ -147,30 +130,25 @@ public class Colony {
     public int hashCode() {
         return type.hashCode();
     }
-
     public int getPeopleCount() {
         return people.size();
     }
     public Duration getLifetime() {
         return Duration.between(creationTime, Instant.now());
     }
-
     public void addField(Point2d position) {
         fields.add(position);
     }
     public void removeField(Point2d position) {
         fields.remove(position);
     }
-
-
     public Point2d getFreeField(){
         return this.fields.stream()
                 .filter(field -> field.getPerson() == null)
                 .findAny().orElse(null);
     }
-
     public void spawnPerson() {
-        Runnable task = () -> {
+
             Point2d freeField;
             synchronized(this) { // Obtain lock on this Colony
                 freeField = getFreeField();
@@ -185,29 +163,6 @@ public class Colony {
                         }
 
                 } // Try to acquire lock on the free field (if it is not locked by another thread
-                notifyObservers(PERIOD_SEC);
             }
-        };
-        executorService.scheduleAtFixedRate(task, 0, PERIOD_SEC, TimeUnit.SECONDS);
     }
-
-    public void shutdown() {
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-                System.err.println("Executor service did not terminate in the allotted time.");
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void notifyObservers(int seconds) {
-        for (TimerObserver observer : observers) {
-            observer.updateTime(seconds);
-        }
-    }
-
-
-
 }

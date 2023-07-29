@@ -24,7 +24,6 @@ public class ConnectionHelper {
                 // Check if this person's colony is empty
                 if (this.person.getBoardRef().isColonyEmpty(this.person.getColony())) {
                     this.person.getBoardRef().removeDefeatedColony();
-                    this.person.getColony().shutdown();
                     if(this.person.getBoardRef().isOnlyOneColonyLeft()){
                         this.person.getBoardRef().getLongestSurvivingColony();
                     }

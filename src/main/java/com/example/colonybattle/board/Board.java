@@ -83,7 +83,6 @@ public class Board {
             for (Person person : colony.getPeople()) {
                 person.stop();
             }
-            colony.shutdown();
         }
     }
     public void stop() {
