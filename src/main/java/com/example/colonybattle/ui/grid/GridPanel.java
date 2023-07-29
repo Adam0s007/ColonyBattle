@@ -1,6 +1,8 @@
-package com.example.colonybattle.ui;
+package com.example.colonybattle.ui.grid;
 
 import com.example.colonybattle.board.position.Point2d;
+import com.example.colonybattle.ui.grid.cell.Cell;
+import com.example.colonybattle.ui.infopanel.person.PersonPanel;
 
 import javax.swing.*;
 import java.awt.*;

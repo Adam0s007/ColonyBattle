@@ -1,14 +1,16 @@
-package com.example.colonybattle.ui;
+package com.example.colonybattle.ui.grid.cell;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.example.colonybattle.board.position.Point2d;
+import com.example.colonybattle.command.Command;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.models.person.characters.Defender;
-import com.example.colonybattle.models.person.characters.Warrior;
 import com.example.colonybattle.models.person.messages.DestinationMessage;
-import com.example.colonybattle.utils.InitialConventer;
+
+import com.example.colonybattle.ui.grid.cell.interaction.LeftClickCommand;
+import com.example.colonybattle.ui.grid.cell.interaction.RightClickCommand;
+import com.example.colonybattle.ui.infopanel.person.PersonPanel;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -24,6 +26,8 @@ public class Cell extends JLabel {
     private ImageIcon image= null;
     private Border border;
 
+    private Command leftClickCommand;
+    private Command rightClickCommand;
     private boolean isTargeted = false;
 
     public Cell(int x, int y) {
@@ -32,6 +36,8 @@ public class Cell extends JLabel {
         this.position = new Point2d(x, y);
         this.setOpaque(true);
         initializeCell();
+        leftClickCommand = new LeftClickCommand(this);
+        rightClickCommand = new RightClickCommand(this);
         addClickListener();
     }
 
@@ -62,20 +68,16 @@ public class Cell extends JLabel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Person personRef = position.getPerson();
-                //System.out.println(personRef);
-                if (SwingUtilities.isRightMouseButton(e) && personRef == null && personPanel.getPerson() != null) {
-                    setNewTarget();
-                    return;
-                }
-                if (SwingUtilities.isLeftMouseButton(e) && personRef != null && !(personPanel.getPerson() != null && personPanel.getPerson().equals(personRef))) {
-                    focusOnPerson(personRef);
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    rightClickCommand.execute(e);
+                } else if (SwingUtilities.isLeftMouseButton(e)) {
+                    leftClickCommand.execute(e);
                 }
             }
         });
     }
 
-    private void setNewTarget() {
+    public void setNewTarget() {
         System.out.println("new target");
         Person focusedPerson = personPanel.getPerson();
 
@@ -93,7 +95,7 @@ public class Cell extends JLabel {
         timer.start();
     }
 
-    private void focusOnPerson(Person personRef) {
+    public void focusOnPerson(Person personRef) {
         if(personPanel.getPerson() != null) personPanel.getPerson().setBeingFocused(false);
         personRef.setBeingFocused(true);
         personPanel.setPerson(personRef);
@@ -187,6 +189,10 @@ public class Cell extends JLabel {
     }
     public boolean isTargeted() {
         return isTargeted;
+    }
+
+    public PersonPanel getPersonPanel() {
+        return personPanel;
     }
 
 }

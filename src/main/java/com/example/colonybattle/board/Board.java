@@ -6,7 +6,7 @@ import com.example.colonybattle.board.boardlocks.LockMapPosition;
 import com.example.colonybattle.statistics.StatisticsPrinter;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.ui.MyFrame;
+import com.example.colonybattle.ui.frame.MyFrame;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

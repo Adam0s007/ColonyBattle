@@ -1,4 +1,4 @@
-package com.example.colonybattle.ui;
+package com.example.colonybattle.ui.infopanel.colony;
 
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;

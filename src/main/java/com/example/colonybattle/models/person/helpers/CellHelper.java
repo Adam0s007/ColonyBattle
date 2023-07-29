@@ -1,9 +1,7 @@
 package com.example.colonybattle.models.person.helpers;
 
 import com.example.colonybattle.colors.ConsoleColor;
-import com.example.colonybattle.ui.InfoPanel;
-import com.example.colonybattle.ui.MyFrame;
-import com.example.colonybattle.ui.PersonPanel;
+import com.example.colonybattle.ui.infopanel.person.PersonPanel;
 import com.example.colonybattle.utils.ColorConverter;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;

@@ -6,7 +6,6 @@ import com.example.colonybattle.models.person.actions.defense.DefendStrategy;
 import com.example.colonybattle.models.person.actions.movement.Movement;
 import com.example.colonybattle.models.person.messages.DestinationMessage;
 import com.example.colonybattle.models.person.messages.Message;
-import com.example.colonybattle.ui.PersonPanel;
 import com.example.colonybattle.ui.image.ImageLoader;
 import com.example.colonybattle.ui.image.ImageLoaderInterface;
 import com.example.colonybattle.board.boardlocks.PosLock;
@@ -23,7 +22,6 @@ import com.example.colonybattle.utils.ThreadUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class Person implements Runnable{

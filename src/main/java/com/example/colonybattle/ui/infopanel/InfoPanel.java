@@ -1,12 +1,12 @@
-package com.example.colonybattle.ui;
+package com.example.colonybattle.ui.infopanel;
 
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.ui.infopanel.colony.ColonyPanel;
+import com.example.colonybattle.ui.infopanel.person.PersonPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 public class InfoPanel extends JPanel {

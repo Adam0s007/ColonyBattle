@@ -1,12 +1,13 @@
-package com.example.colonybattle.ui;
+package com.example.colonybattle.ui.frame;
 
-import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.ui.grid.GridPanel;
+import com.example.colonybattle.ui.infopanel.InfoPanel;
+import com.example.colonybattle.ui.infopanel.person.PersonPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Map;
 
 public class MyFrame extends JFrame {
 

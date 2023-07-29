@@ -1,19 +1,12 @@
 package com.example.colonybattle.models.person.helpers;
 
 import com.example.colonybattle.board.Board;
-import com.example.colonybattle.board.position.Direction;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.models.person.type.PersonType;
-import com.example.colonybattle.ui.MyFrame;
-import com.example.colonybattle.utils.ThreadUtils;
+import com.example.colonybattle.ui.frame.MyFrame;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
 
 public class BoardRef {
     Person person;

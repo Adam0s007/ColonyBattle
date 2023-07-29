@@ -1,7 +1,7 @@
 package com.example.colonybattle.launcher;
 
 import com.example.colonybattle.board.Board;
-import com.example.colonybattle.ui.MyFrame;
+import com.example.colonybattle.ui.frame.MyFrame;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.colony.ColonyFactory;
 import com.example.colonybattle.colony.ColonyType;

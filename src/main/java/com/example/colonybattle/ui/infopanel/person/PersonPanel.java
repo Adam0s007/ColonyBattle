@@ -1,4 +1,4 @@
-package com.example.colonybattle.ui;
+package com.example.colonybattle.ui.infopanel.person;
 
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;

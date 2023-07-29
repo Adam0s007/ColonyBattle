@@ -1,4 +1,6 @@
-package com.example.colonybattle.ui;
+package com.example.colonybattle.ui.grid.cell;
+
+import com.example.colonybattle.ui.grid.cell.Cell;
 
 import java.awt.*;
 
