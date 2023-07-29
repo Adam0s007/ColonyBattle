@@ -3,6 +3,7 @@ package com.example.colonybattle.models.person.status;
 import com.example.colonybattle.models.person.helpers.CellHelper;
 import com.example.colonybattle.models.person.type.PersonType;
 
+import java.math.BigDecimal;
 import java.util.concurrent.Semaphore;
 
 public class PersonStatus {
@@ -13,6 +14,7 @@ public class PersonStatus {
     final int landAppropriation;
     PersonType type;
 
+    private BigDecimal age = BigDecimal.valueOf(0);
     private  CellHelper cellHelper= null;
 
     private final Semaphore healthSemaphore = new Semaphore(1);
@@ -110,5 +112,11 @@ public class PersonStatus {
             this.id = id;
             idSemaphore.release();
         }
+    }
+    public void incrementAge(){
+        age = age.add(BigDecimal.valueOf(0.1));
+    }
+    public BigDecimal getAge(){
+        return age;
     }
 }

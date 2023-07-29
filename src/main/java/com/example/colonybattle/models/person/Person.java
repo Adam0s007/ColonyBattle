@@ -105,6 +105,8 @@ public abstract class Person implements Runnable{
         checkWizardingQualifications();
         updateColonyFrame();
         while(running){
+            this.getStatus().incrementAge();
+            this.getBoardRef().updateRankingPanel();
             PersonWaiting();
             receivingMessage();
             if(this.getStatus().getHealth() <= 0){
@@ -143,7 +145,6 @@ public abstract class Person implements Runnable{
         }
     }
     public void PersonWaiting(){
-
         long timeEnd = waitingTiming();
         //funckja AttackingTime powinna sie tutaj wykonywac rownolegle w osobnym wątku
         ExecutorService executor = Executors.newFixedThreadPool(1);

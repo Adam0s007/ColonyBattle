@@ -6,6 +6,7 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.ui.frame.MyFrame;
 
+import javax.swing.*;
 import java.util.List;
 
 public class BoardRef {
@@ -77,6 +78,9 @@ public class BoardRef {
         getFrame().getInfoPanel().getColonyPanel().removePersonLabel(this.person);
     }
 
+    public void updateRankingPanel() {
+        SwingUtilities.invokeLater(() -> this.getBoard().getFrame().getInfoPanel().getRankingPanel().update());
+    }
 
 
 }

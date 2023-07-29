@@ -5,6 +5,7 @@ import com.example.colonybattle.models.person.Person;
 
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,13 +18,17 @@ public class PersonPanel extends JPanel {
     private JLabel positionLabel;
     private JLabel colonyLabel;
     private JLabel killsLabel;
+    private JLabel ageLabel;
+    private JLabel strengthLabel;
 
     public PersonPanel() {
         setPanelLayout();
         addImagePanel();
         idLabel = addLabel();
+        ageLabel = addLabel();
         lifeLabel = addLabel();
         energyLabel = addLabel();
+        strengthLabel = addLabel();
         positionLabel = addLabel();
         colonyLabel = addLabel();
         killsLabel = addLabel();
@@ -63,11 +68,17 @@ public class PersonPanel extends JPanel {
         imageLabel.setIcon(scaleImageIcon(person.getImage(), 100, 100));
         idLabel.setText("ID: " + person.toString());
 
+        BigDecimal age = person.getStatus().getAge();
+        ageLabel.setText("Age: " + age);
+
         if(person.getStatus().getHealth() <= 0) {
             updateDeadPersonData();
         } else {
             updateAlivePersonData();
         }
+
+        int strength = person.getStatus().getStrength();
+        strengthLabel.setText("Strength: " + strength);
 
         String colonyName = person.getColony().toString();
         colonyLabel.setText("Colony: " + colonyName);

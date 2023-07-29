@@ -14,6 +14,7 @@ public class Kills {
 
     public void addKill(Person person) {
         this.killedPersons.add(person);
+
     }
 
     public boolean hasKilled(Person person) {
