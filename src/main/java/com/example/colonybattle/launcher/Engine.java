@@ -32,7 +32,10 @@ public class Engine {
         allColonies.add(colony2);
         allColonies.add(colony3);
         allColonies.add(colony4);
-
+        for(Colony colony : allColonies){
+            colony.registerObserver(frame.getInfoPanel().getSpawnPanel());
+        }
+        frame.getInfoPanel().getSpawnPanel().runTimer();
         board.initFields();
         frame.getInfoPanel().getColonyPanel().init();
         frame.getGridPanel().setPositionReferences(board.getFields());

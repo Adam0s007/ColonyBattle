@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 public class Board {
-    public static final int SIZE = 20;
+    public static final int SIZE = 25;
     private Map<String, Point2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
     private  final LockMapPosition lockManager = new LockMapPosition();
     private List<Colony> allColonies;
@@ -32,7 +32,7 @@ public class Board {
     }
     public void start() {
         int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
-        this.executorService = Executors.newFixedThreadPool(100);
+        this.executorService = Executors.newFixedThreadPool(totalPeopleCount);
         for (Colony colony : allColonies) {
             for (Person person : colony.getPeople()) {
                 executorService.submit(person);

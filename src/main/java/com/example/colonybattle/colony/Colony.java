@@ -5,9 +5,12 @@ import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.models.person.PersonFactory;
+import com.example.colonybattle.ui.infopanel.colony.TimerObserver;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -17,13 +20,15 @@ public class Colony {
     private ColonyType type;
     private Set<Person> people;
     private Set<Point2d> fields;
-    private final int PERIOD_SEC = 60;
+    public final static int PERIOD_SEC = 30;
     private int points;
     public final PersonFactory personFactory;
     private Board board;
     private final Instant creationTime;
     private final ScheduledExecutorService executorService;
     public final Semaphore pointSemaphore;
+    private List<TimerObserver> observers = new ArrayList<>();
+
     public Colony() {
         this.people = ConcurrentHashMap.newKeySet();
         this.fields =ConcurrentHashMap.newKeySet();
@@ -48,9 +53,12 @@ public class Colony {
         this.creationTime = Instant.now();
         this.executorService = Executors.newSingleThreadScheduledExecutor();
         this.pointSemaphore = new Semaphore(1);
+        notifyObservers(PERIOD_SEC);
         spawnPerson();
 
-
+    }
+    public void registerObserver(TimerObserver observer) {
+        observers.add(observer);
     }
     public ColonyColor getColor() {
         return color;
@@ -177,7 +185,7 @@ public class Colony {
                         }
 
                 } // Try to acquire lock on the free field (if it is not locked by another thread
-
+                notifyObservers(PERIOD_SEC);
             }
         };
         executorService.scheduleAtFixedRate(task, 0, PERIOD_SEC, TimeUnit.SECONDS);
@@ -191,6 +199,12 @@ public class Colony {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void notifyObservers(int seconds) {
+        for (TimerObserver observer : observers) {
+            observer.updateTime(seconds);
         }
     }
 
