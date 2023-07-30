@@ -3,7 +3,6 @@ package com.example.colonybattle.board;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colors.ConsoleColor;
 import com.example.colonybattle.board.boardlocks.LockMapPosition;
-import com.example.colonybattle.statistics.StatisticsPrinter;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.ui.frame.MyFrame;
@@ -20,11 +19,9 @@ public class Board {
     private  final LockMapPosition lockManager = new LockMapPosition();
     private List<Colony> allColonies;
     public ExecutorService executorService;
-    private StatisticsPrinter statisticsPrinter;
     private  MyFrame frame = null;
     public Board(List<Colony> allColonies) {
         this.allColonies = allColonies;
-        this.statisticsPrinter = new StatisticsPrinter();
     }
 
     public Map<String, Point2d> getFields() {

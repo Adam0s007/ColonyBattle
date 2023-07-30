@@ -17,7 +17,7 @@ public class RightClickCommand implements Command {
     @Override
     public void execute(MouseEvent e) {
         Person personRef = cell.getPosition().getPerson();
-        if (personRef == null && cell.getPersonPanel().getPerson() != null) {
+        if (cell.getPersonPanel().getPerson() != null) {
             cell.setNewTarget();
         }
     }

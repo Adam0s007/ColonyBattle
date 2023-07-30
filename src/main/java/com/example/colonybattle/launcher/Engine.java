@@ -1,6 +1,7 @@
 package com.example.colonybattle.launcher;
 
 import com.example.colonybattle.board.Board;
+import com.example.colonybattle.time.GameTimer;
 import com.example.colonybattle.ui.frame.MyFrame;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.colony.ColonyFactory;
@@ -18,8 +19,8 @@ public class Engine {
     public static void main(String[] args) throws InterruptedException {
         List<Colony> allColonies = new ArrayList<>();
         frame = new MyFrame(Board.SIZE,allColonies);
-
         Board board = new Board(allColonies);
+        GameTimer gameTimer = new GameTimer(allColonies);
         board.initFrame(frame);
         ColonyFactory colonyFactory = new ColonyFactory();
 
@@ -37,7 +38,7 @@ public class Engine {
         frame.getGridPanel().setPositionReferences(board.getFields());//dodajemy wszystkie pola do gridPanelu
         board.start();//uruchamiamy wszystkie watki osob
         frame.getInfoPanel().getSpawnPanel().runTimer();//uruchamiamy timer od spawnu osob
-
+        gameTimer.start();
         synchronized (EndgameMonitor.monitor) {
             while (!board.isOnlyOneColonyLeft()) {
                 try {
@@ -48,6 +49,7 @@ public class Engine {
             }
         }
         // Zatrzymanie wszystkich osób (wątków)
+        gameTimer.stop();
         board.stop();
         frame.dispose();
         System.exit(0);

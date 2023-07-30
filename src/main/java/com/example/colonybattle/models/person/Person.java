@@ -105,7 +105,6 @@ public abstract class Person implements Runnable{
         checkWizardingQualifications();
         updateColonyFrame();
         while(running){
-            this.getStatus().incrementAge();
             this.getBoardRef().updateRankingPanel();
             PersonWaiting();
             receivingMessage();
@@ -277,5 +276,9 @@ public abstract class Person implements Runnable{
 
     public BlockingQueue<DestinationMessage> getDestinationMessage() {
         return destinationQueue;
+    }
+
+    public void increaseAge(){
+        this.status.incrementAge();
     }
 }
