@@ -11,33 +11,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Engine {
-    private static MyFrame frame;
-    public static MyFrame getFrame() {
-        return frame;
-    }
-
-    public static void main(String[] args) throws InterruptedException {
+    public void run() {
+        MyFrame frame; // Lokalna deklaracja
         List<Colony> allColonies = new ArrayList<>();
-        frame = new MyFrame(Board.SIZE,allColonies);
+        frame = new MyFrame(Board.SIZE, allColonies);
         Board board = new Board(allColonies);
         GameTimer gameTimer = new GameTimer(allColonies);
+
+        initializeGame(board, allColonies, frame);
+        gameLoop(board, gameTimer);
+        shutdownGame(board, gameTimer, frame);
+    }
+
+    private void initializeGame(Board board, List<Colony> allColonies, MyFrame frame) {
         board.initFrame(frame);
+        createColonies(allColonies, board);
+
+        // Code executed after adding all colonies to the list allColonies
+        board.initFields();
+        frame.getInfoPanel().getColonyPanel().init();
+        frame.getGridPanel().setPositionReferences(board.getFields());
+        board.start();
+        frame.getInfoPanel().getSpawnPanel().runTimer();
+    }
+
+    private void createColonies(List<Colony> allColonies, Board board) {
         ColonyFactory colonyFactory = new ColonyFactory();
+        for (ColonyType type : ColonyType.values()) {
+            Colony colony = colonyFactory.createColony(type, board);
+            allColonies.add(colony);
+        }
+    }
 
-        Colony colony1 = colonyFactory.createColony(ColonyType.VOLCANIC_NATION,board);
-        Colony colony2 = colonyFactory.createColony(ColonyType.ICE_NATION,board);
-        Colony colony3 = colonyFactory.createColony(ColonyType.JUNGLE_NATION,board);
-        Colony colony4 = colonyFactory.createColony(ColonyType.DESERT_NATION,board);
-        allColonies.add(colony1);
-        allColonies.add(colony2);
-        allColonies.add(colony3);
-        allColonies.add(colony4);
-
-        board.initFields();//dodajemy wszystkie pola osob z wszystkich kolonii do hashSetu fields i dodajemy wszystkie pozostale pola do tego hashsetu
-        frame.getInfoPanel().getColonyPanel().init(); //inicjalizujemy panel kolonii
-        frame.getGridPanel().setPositionReferences(board.getFields());//dodajemy wszystkie pola do gridPanelu
-        board.start();//uruchamiamy wszystkie watki osob
-        frame.getInfoPanel().getSpawnPanel().runTimer();//uruchamiamy timer od spawnu osob
+    private void gameLoop(Board board, GameTimer gameTimer) {
         gameTimer.start();
         synchronized (EndgameMonitor.monitor) {
             while (!board.isOnlyOneColonyLeft()) {
@@ -48,11 +54,12 @@ public class Engine {
                 }
             }
         }
-        // Zatrzymanie wszystkich osób (wątków)
+    }
+
+    private void shutdownGame(Board board, GameTimer gameTimer, MyFrame frame) {
         gameTimer.stop();
         board.stop();
         frame.dispose();
         System.exit(0);
     }
 }
-
