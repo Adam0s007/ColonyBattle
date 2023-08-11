@@ -18,7 +18,6 @@ public class Point2d {
     private final int INIT_APPROPRIATION; //okresla stopien przynaleznosci do kolonii
     private int currentAppropriation = 0;
     private Person person;
-
     public Point2d(int x, int y, int INIT_APPROPRIATION) {
         this.x = x;
         this.y = y;
@@ -43,15 +42,12 @@ public class Point2d {
         this.currentAppropriation = INIT_APPROPRIATION;
         this.person = null;
     }
-
     public Point2d addVector(Point2d vector) {
         return new Point2d(this.x + vector.x, this.y + vector.y, this.INIT_APPROPRIATION);
     }
-    // odejmij vector
     public Point2d subtractVector(Point2d vector) {
         return new Point2d(this.x - vector.x, this.y - vector.y, this.INIT_APPROPRIATION);
     }
-
     public Point2d oppositeVector() {
         return new Point2d(-this.x, -this.y, this.INIT_APPROPRIATION);
     }
@@ -61,7 +57,6 @@ public class Point2d {
     public int hashCode() {
         return this.x*31 + this.y;
     }
-
     @Override
     public boolean equals(Object other) {
         if (this == other)
@@ -109,18 +104,11 @@ public class Point2d {
             updateMembershipAndField(person, true);
         }
     }
-
-    public synchronized void changeMembershipForcefully(Person person) {
-        this.currentAppropriation = this.INIT_APPROPRIATION;
-        updateMembershipAndField(person, false);
-    }
-
     private void adjustCurrentAppropriation(Person person) {
         if (this.membership != person.getColony()) {
             this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
         }
     }
-
     private void updateMembershipAndField(Person person, boolean rewardPoints) {
         Colony oldColony = this.membership;
         this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
@@ -138,7 +126,6 @@ public class Point2d {
             }
         }
     }
-
     public Color getColonyColor(){
         if(this.membership == null)
             return null;

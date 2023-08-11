@@ -55,7 +55,6 @@ public abstract class Person implements Runnable {
         this.connectionHelper = new ConnectionHelper(this);
         connectionHelper.changePosConnections(null, position);
         connectionHelper.connectColony(colony);
-        this.position.changeMembershipForcefully(this);
         posLock = new PosLock(boardRef);
         queue = new LinkedBlockingQueue<>();
         destinationMessages = new LinkedBlockingQueue<>();
