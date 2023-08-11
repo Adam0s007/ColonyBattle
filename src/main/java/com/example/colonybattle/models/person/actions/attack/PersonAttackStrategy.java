@@ -4,7 +4,9 @@ import com.example.colonybattle.board.position.Direction;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.actions.movement.Movement;
+import com.example.colonybattle.utils.ThreadUtils;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PersonAttackStrategy implements AttackStrategy {
@@ -57,6 +59,17 @@ public class PersonAttackStrategy implements AttackStrategy {
             }
         } else {
             System.out.println("Unable to lock, skipping attack.");
+        }
+    }
+
+    public void AttackingTime(long timeEnd) {
+        int maxIter = ThreadLocalRandom.current().nextInt(1, 3);
+        int currIter = 0;
+        //podziel timeEnd przez 5 , zrzutuj na long
+        long passingTime = (int) (Math.abs(timeEnd) / maxIter);
+        while (currIter++ < maxIter) {
+            executeNearbyAttack();
+            ThreadUtils.getInstance().pause((int)(passingTime));
         }
     }
 

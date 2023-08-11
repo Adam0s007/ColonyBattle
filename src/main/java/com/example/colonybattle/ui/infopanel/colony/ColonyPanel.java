@@ -109,9 +109,6 @@ public class ColonyPanel extends JPanel {
             }
         }
     }
-
-
-
     public void update(Person person){
         if(person.isDead()) {
             removePersonLabel(person);
@@ -127,9 +124,6 @@ public class ColonyPanel extends JPanel {
         if(colonyPanel != null)
             updateColonyPanel(person.getColony());
     }
-
-
-
 }
 
 

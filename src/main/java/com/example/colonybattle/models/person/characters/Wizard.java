@@ -23,8 +23,8 @@ public class Wizard extends Person implements Magic {
     private  final int MIN_PROTECTION_ENERGY = 4;
     //Random value between 0 and 4:
     private final int INITIAL_DELAY;
-    private final int HEALING_PERIOD = 10;
-    private final int WAND_PERIOD = 4;
+    private final int HEALING_PERIOD = 4;
+    private final int WAND_PERIOD = 3;
     private final int MIN_WAIT = 800;
     private final int MAX_WAIT = 1000;
     public Wizard(PersonType type, Point2d position, Colony colony, int id) {
@@ -34,6 +34,8 @@ public class Wizard extends Person implements Magic {
         status.setType(type);
         INITIAL_DELAY = ThreadLocalRandom.current().nextInt(0, 4);
         this.defendStrategy = new WizardDefendStrategy(this);
+        healFriends();
+        performAbsorption();
     }
 
     @Override

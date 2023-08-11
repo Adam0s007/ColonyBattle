@@ -84,7 +84,6 @@ public abstract class Person implements Runnable {
     public void run() {
         initGUI();
         if (!isNew) posLock.aquirePositionLock(position);
-        checkWizardingQualifications();
         updateColonyFrame();
         while (running) {
             this.getBoardRef().updateRankingPanel();
@@ -102,13 +101,6 @@ public abstract class Person implements Runnable {
         cellHelper.newCellAt(this.position);
         cellHelper.spawningColor();
     }
-    private void checkWizardingQualifications(){
-        if(this instanceof Wizard){
-            Magic wizard = (Wizard) this;
-            wizard.healFriends();
-            wizard.performAbsorption();
-        }
-    }
     public void die(){
         setFocused(false); // nie wazne czy byl czy nie byl, focus sie skonczyl
         Point2d oldPosition = new Point2d(this.position.getX(),this.position.getY());
@@ -124,17 +116,7 @@ public abstract class Person implements Runnable {
         running = false;
     }
     public void AttackingTime(long timeEnd) {
-        int maxIter = ThreadLocalRandom.current().nextInt(1, 3);
-        int currIter = 0;
-        //podziel timeEnd przez 5 , zrzutuj na long
-        long passingTime = (int) (Math.abs(timeEnd) / maxIter);
-        while (currIter++ < maxIter) {
-            attackNearby();
-            ThreadUtils.getInstance().pause((int)(passingTime));
-        }
-    }
-    public void attackNearby() {
-        attackPerformer.executeNearbyAttack();
+        this.attackPerformer.AttackingTime(timeEnd);
     }
     public void attack(Person person) {
         this.attackPerformer.attack(person);
