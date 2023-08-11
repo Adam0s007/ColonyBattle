@@ -152,7 +152,7 @@ public abstract class MovementStrategy implements Movement {
 
     //wyciaga wszystkie wiadomosci z DesitnationMessage, i ostatnią przypisuje do potentialTarget
     public void processMessage() {
-        BlockingQueue<DestinationMessage> messages = person.getDestinationMessage();
+        BlockingQueue<DestinationMessage> messages = person.getDestinationMessages();
         DestinationMessage message = null;
         while(!messages.isEmpty()) {
             message = messages.poll();

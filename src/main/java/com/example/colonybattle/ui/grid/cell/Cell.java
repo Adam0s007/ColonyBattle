@@ -96,8 +96,8 @@ public class Cell extends JLabel {
     }
 
     public void focusOnPerson(Person personRef) {
-        if(personPanel.getPerson() != null) personPanel.getPerson().setBeingFocused(false);
-        personRef.setBeingFocused(true);
+        if(personPanel.getPerson() != null) personPanel.getPerson().setFocused(false);
+        personRef.setFocused(true);
         personPanel.setPerson(personRef);
     }
 
@@ -144,7 +144,7 @@ public class Cell extends JLabel {
 
     public void updateColors(Color color) {
         border = BorderFactory.createLineBorder(color, 2);
-        if(position.getPerson() != null && position.getPerson().isBeingFocused()){
+        if(position.getPerson() != null && position.getPerson().isFocused()){
             this.border = BorderFactory.createLineBorder(position.getPerson().getFocusColor(), 2);
         }
         this.setBorder(border);

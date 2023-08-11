@@ -4,6 +4,7 @@ module com.example.colonybattle {
             
                         requires org.kordamp.bootstrapfx.core;
     requires java.desktop;
+    requires lombok;
 
     opens com.example.colonybattle to javafx.fxml;
     exports com.example.colonybattle;

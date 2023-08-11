@@ -36,7 +36,7 @@ public class CellHelper {
 
     public void deathColor() {
         setColor(ConsoleColor.PURPLE, person.getPosition());
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 
@@ -59,7 +59,7 @@ public class CellHelper {
         setEnergy(person.getStatus().getEnergy(), newPosition);
         setInitial(person.getInitial(), newPosition);
         addImageToCell(newPosition);
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 
@@ -73,13 +73,13 @@ public class CellHelper {
 
     public void healingColor() {
         changeColorTemporarily(ConsoleColor.BLUE);
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 
     public void energyEmitionColor() {
         changeColorTemporarily(ConsoleColor.BRIGHT_WHITE);
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 
@@ -94,13 +94,13 @@ public class CellHelper {
 
     private void setLife(int life, Point2d position) {
         boardRef.getFrame().getGridPanel().setLifeAtPosition(position, life);
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 
     private void setEnergy(int energy, Point2d position) {
         boardRef.getFrame().getGridPanel().setEnergyAtPosition(position, energy);
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 
@@ -134,13 +134,13 @@ public class CellHelper {
 
     private void setLife(int life) {
         setLife(life, person.getPosition());
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 
     private void setEnergy(int energy) {
         setEnergy(energy, person.getPosition());
-        if(person.isBeingFocused())
+        if(person.isFocused())
             personPanel.updatePersonData();
     }
 

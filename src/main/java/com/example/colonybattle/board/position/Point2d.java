@@ -4,9 +4,13 @@ import com.example.colonybattle.utils.ColorConverter;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.type.PersonType;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
 
+@Getter
+@Setter
 public class Point2d {
     private int x;
     private int y;
@@ -40,7 +44,6 @@ public class Point2d {
         this.person = null;
     }
 
-
     public Point2d addVector(Point2d vector) {
         return new Point2d(this.x + vector.x, this.y + vector.y, this.INIT_APPROPRIATION);
     }
@@ -68,42 +71,9 @@ public class Point2d {
         Point2d that = (Point2d) other;
         return this.x == that.x && this.y == that.y;
     }
-
     @Override
     public String toString() {
         return "(" + this.x + "," + this.y + ")";
-    }
-
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public Colony getMembership() {
-        return membership;
-    }
-
-
-    public int getINIT_APPROPRIATION() {
-        return INIT_APPROPRIATION;
-    }
-
-
-
-    public Person getPerson() {
-        return person;
     }
     public void setPerson(Person person) {
         this.person = person;
@@ -132,50 +102,47 @@ public class Point2d {
     public double distanceTo(Point2d other) {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
-
-    public double magnitude() {
-        return Math.sqrt(x * x + y * y);
-    }
-
     public synchronized void changeMembership(Person person) {
-        if(this.membership != person.getColony())
-            this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
+        adjustCurrentAppropriation(person);
 
-        if(this.currentAppropriation == 0) {
-            Colony oldColony = this.membership;
-            this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
-            this.currentAppropriation = this.INIT_APPROPRIATION;
-            if(this.membership != null) {
-                this.membership.addField(this);
-                person.addPoints(1);
-            }
-            if(oldColony != null) {
-                oldColony.removeField(this);
-                person.addPoints(1);
-            }
+        if (this.currentAppropriation == 0) {
+            updateMembershipAndField(person, true);
         }
     }
 
-    public synchronized void changeMembershipForcefully(Person person){
-        Colony oldColony = this.membership;
-        this.membership = person.getColony();
+    public synchronized void changeMembershipForcefully(Person person) {
         this.currentAppropriation = this.INIT_APPROPRIATION;
-        if(this.membership != null) {
-            this.membership.addField(this);
-        }
-        if(oldColony != null) {
-            oldColony.removeField(this);
+        updateMembershipAndField(person, false);
+    }
+
+    private void adjustCurrentAppropriation(Person person) {
+        if (this.membership != person.getColony()) {
+            this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
         }
     }
 
+    private void updateMembershipAndField(Person person, boolean rewardPoints) {
+        Colony oldColony = this.membership;
+        this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
+
+        if (this.membership != null) {
+            this.membership.addField(this);
+            if (rewardPoints) {
+                person.addPoints(1);
+            }
+        }
+        if (oldColony != null) {
+            oldColony.removeField(this);
+            if (rewardPoints) {
+                person.addPoints(1);
+            }
+        }
+    }
 
     public Color getColonyColor(){
         if(this.membership == null)
             return null;
         return ColorConverter.convertColor(this.membership.getColor().getColor());
     }
-
-
-
 }
 
