@@ -84,7 +84,7 @@ public class ColonyPanel extends JPanel {
     }
 
     private JLabel createPersonLabel(Person person, Font font){
-        JLabel personLabel = new JLabel("" + person.getPosition());
+        JLabel personLabel = new JLabel("" + person);
         personLabel.setFont(font);
         JPanel colonyPanel = colonyPanelsMap.get(person.getColony());
         if(colonyPanel != null){
@@ -115,11 +115,15 @@ public class ColonyPanel extends JPanel {
         }else{
             JLabel personLabel = personLabelsMap.get(person);
             if(personLabel != null)
-                personLabel.setText("" + person.getPosition());
+                personLabel.setText("" + person);
             else {
                 createPersonLabel(person, font); // Don't forget to add this newly created personLabel into your colonyPanel
             }
         }
+        updateColonyPoints(person);
+    }
+
+    public void updateColonyPoints(Person person){
         JPanel colonyPanel = colonyPanelsMap.get(person.getColony());
         if(colonyPanel != null)
             updateColonyPanel(person.getColony());

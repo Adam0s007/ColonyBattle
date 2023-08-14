@@ -144,7 +144,6 @@ public abstract class Person implements Runnable {
     }
     public void walk(){
         this.movement.walk();
-        updateColonyFrame();
     }
     public boolean CheckingKill(){
         if(this.getStatus().getHealth() <= 0){
@@ -174,7 +173,7 @@ public abstract class Person implements Runnable {
     public void  addPoints(int points){
         if(this.colony != null)
             this.colony.addPoints(points);
-        this.updateColonyFrame();
+        this.updateColonyPoints();
     }
 
     public void updateColonyFrame(){
@@ -182,6 +181,14 @@ public abstract class Person implements Runnable {
             @Override
             public void run() {
                 boardRef.updateColonyFrame();
+            }
+        });
+    }
+    public void updateColonyPoints(){
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                boardRef.updateColonyPoints();
             }
         });
     }
