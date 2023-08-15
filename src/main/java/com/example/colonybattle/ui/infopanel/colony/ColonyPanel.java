@@ -1,10 +1,15 @@
 package com.example.colonybattle.ui.infopanel.colony;
 
+import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
+import com.example.colonybattle.ui.grid.GridPanel;
+import com.example.colonybattle.ui.grid.cell.Cell;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 
 import java.util.List;
@@ -16,11 +21,21 @@ public class ColonyPanel extends JPanel {
     private final Map<Colony, JPanel> colonyPanelsMap = new ConcurrentHashMap<>();
     private final Map<Person, JLabel> personLabelsMap = new ConcurrentHashMap<>();
     private final Font font = new Font("Arial", Font.BOLD, 10); // Definiujemy czcionkę tylko raz
-
-    public ColonyPanel(List<Colony> allColonies){
+    private final GridPanel gridPanel;
+    public ColonyPanel(List<Colony> allColonies, GridPanel gridPanel){
+        this.gridPanel = gridPanel;
         this.allColonies = allColonies;
         this.setLayout(new GridLayout(1, allColonies.size()));
 
+    }
+    public Cell getTargetedCell(Point2d point){
+        return gridPanel.getCellAtPosition(point);
+    }
+    public void PerformFocus(Point2d point, MouseEvent e){
+        Cell cell = getTargetedCell(point);
+        if(cell != null) {
+            cell.executeLeftClickCommand(e);
+        }
     }
 
     public void init(){
@@ -86,6 +101,7 @@ public class ColonyPanel extends JPanel {
     private JLabel createPersonLabel(Person person, Font font){
         JLabel personLabel = new JLabel("" + person);
         personLabel.setFont(font);
+        addLabelListener(personLabel, person);
         JPanel colonyPanel = colonyPanelsMap.get(person.getColony());
         if(colonyPanel != null){
             colonyPanel.add(personLabel);
@@ -93,6 +109,17 @@ public class ColonyPanel extends JPanel {
         }
         return personLabel;
     }
+
+    public void addLabelListener(JLabel label, Person person){
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                PerformFocus(person.getPosition(), e); // Assuming Person class has a getPoint() method to get the position
+            }
+        });
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Change cursor to pointer
+    }
+
 
     public void removePersonLabel(Person person){
         JLabel personLabel = personLabelsMap.get(person);

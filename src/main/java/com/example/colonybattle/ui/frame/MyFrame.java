@@ -4,15 +4,17 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.ui.grid.GridPanel;
 import com.example.colonybattle.ui.infopanel.InfoPanel;
 import com.example.colonybattle.ui.infopanel.person.PersonPanel;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+@Getter
 public class MyFrame extends JFrame {
 
-    public final GridPanel gridPanel;
-    public final InfoPanel infoPanel;
+    private final GridPanel gridPanel;
+    private final InfoPanel infoPanel;
 
     public MyFrame(int gridSize,List<Colony> allColonies) {
         // ... konstruktor ...
@@ -26,18 +28,12 @@ public class MyFrame extends JFrame {
         PersonPanel personPanel = new PersonPanel();
         gridPanel = new GridPanel(gridSize,personPanel);
         this.add(gridPanel, BorderLayout.CENTER);
-        this.infoPanel = new InfoPanel(personPanel,allColonies);
+        this.infoPanel = new InfoPanel(personPanel,allColonies,gridPanel);
         infoPanel.setPreferredSize(new Dimension(500, 800));
         this.add(infoPanel, BorderLayout.EAST);
         this.setVisible(true);
     }
 
     // Metoda do pobierania komórki na danej pozycji
-   public GridPanel getGridPanel(){
-        return this.gridPanel;
-   }
 
-    public InfoPanel getInfoPanel(){
-          return this.infoPanel;
-    }
 }

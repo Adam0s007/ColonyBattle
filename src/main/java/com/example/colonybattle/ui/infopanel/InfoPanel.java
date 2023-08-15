@@ -1,25 +1,27 @@
 package com.example.colonybattle.ui.infopanel;
 
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.ui.grid.GridPanel;
 import com.example.colonybattle.ui.infopanel.colony.ColonyPanel;
 import com.example.colonybattle.ui.infopanel.colony.SpawnPanel;
 import com.example.colonybattle.ui.infopanel.person.PersonPanel;
 import com.example.colonybattle.ui.infopanel.colony.ranking.RankingPanel;
+import lombok.Getter;
+
 import javax.swing.*;
 import java.awt.*;
 
 import java.util.List;
 
+@Getter
 public class InfoPanel extends JPanel {
-    public final PersonPanel personPanel;
-    public final ColonyPanel colonyPanel;
+    private final  PersonPanel personPanel;
+    private final  ColonyPanel colonyPanel;
+    private final  SpawnPanel spawnPanel;
+    private final RankingPanel rankingPanel;
 
-    public final SpawnPanel spawnPanel;
+    public InfoPanel(PersonPanel personPanel, List<Colony> allColonies, GridPanel gridPanel) {
 
-    // Nowe panele
-    public final RankingPanel rankingPanel;
-
-    public InfoPanel(PersonPanel personPanel, List<Colony> allColonies) {
         this.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -34,7 +36,7 @@ public class InfoPanel extends JPanel {
         this.add(personPanel, gbc);
 
         // Stworzenie drugiego panelu
-        this.colonyPanel = new ColonyPanel(allColonies);
+        this.colonyPanel = new ColonyPanel(allColonies,gridPanel);
         gbc.weightx = 1.0; // Panel zajmuje całą przestrzeń w poziomie
         gbc.weighty = 2.0 / 6; // Panel zajmuje 2/3 przestrzeni
         gbc.gridy = 1;
@@ -55,23 +57,7 @@ public class InfoPanel extends JPanel {
         gbc.weighty = 1.0 / 6;
         gbc.gridy = 3;
         this.add(rankingPanel, gbc);
-
-        // Stworzenie panelu z rankingiem
-
-
-
-
-
     }
 
-    public PersonPanel getPersonPanel() {
-        return personPanel;
-    }
-
-    public ColonyPanel getColonyPanel() {
-        return colonyPanel;
-    }
-    public SpawnPanel getSpawnPanel() {return spawnPanel;}
-    public RankingPanel getRankingPanel() {return rankingPanel;}
 }
 

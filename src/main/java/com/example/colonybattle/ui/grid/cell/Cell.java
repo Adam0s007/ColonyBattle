@@ -173,9 +173,6 @@ public class Cell extends JLabel {
         border = BorderFactory.createLineBorder(new Color(0,0,0,0), 2);
         this.setBorder(border);
     }
-
-
-
     public void cursorChanger(){
         if (position.getPerson() != null) {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -193,6 +190,10 @@ public class Cell extends JLabel {
 
     public PersonPanel getPersonPanel() {
         return personPanel;
+    }
+
+    public void executeLeftClickCommand(MouseEvent e) {
+        leftClickCommand.execute(e);
     }
 
 }
