@@ -69,7 +69,8 @@ public class Cell extends JLabel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    rightClickCommand.execute(e);
+                    if(personPanel.getPerson() != null && personPanel.getPerson().getStatus().getHealth() > 0)
+                        rightClickCommand.execute(e);
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
                     leftClickCommand.execute(e);
                 }

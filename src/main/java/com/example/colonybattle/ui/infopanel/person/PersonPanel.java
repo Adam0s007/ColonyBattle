@@ -20,18 +20,21 @@ public class PersonPanel extends JPanel {
     private JLabel killsLabel;
     private JLabel ageLabel;
     private JLabel strengthLabel;
+    private JLabel hintLabel;
+    private int size = 17;
 
     public PersonPanel() {
         setPanelLayout();
         addImagePanel();
-        idLabel = addLabel();
-        ageLabel = addLabel();
-        lifeLabel = addLabel();
-        energyLabel = addLabel();
-        strengthLabel = addLabel();
-        positionLabel = addLabel();
-        colonyLabel = addLabel();
-        killsLabel = addLabel();
+        idLabel = addLabel(Font.PLAIN,size);
+        ageLabel = addLabel(Font.PLAIN,size);
+        lifeLabel = addLabel(Font.PLAIN,size);
+        energyLabel = addLabel(Font.PLAIN,size);
+        strengthLabel = addLabel(Font.PLAIN,size);
+        positionLabel = addLabel(Font.PLAIN,size);
+        colonyLabel = addLabel(Font.PLAIN,size);
+        killsLabel = addLabel(Font.PLAIN,size);
+        hintLabel = addLabel(Font.BOLD,12);
         updatePersonData();
     }
 
@@ -51,9 +54,10 @@ public class PersonPanel extends JPanel {
         this.add(imagePanel);
     }
 
-    private JLabel addLabel() {
+
+    private JLabel addLabel(int font, int size) {
         JLabel label = new JLabel();
-        label.setFont(new Font("Arial", Font.PLAIN, 17));
+        label.setFont(new Font("Arial", font, size));
         label.setForeground(Color.BLACK);
         this.add(label);
         return label;
@@ -66,7 +70,7 @@ public class PersonPanel extends JPanel {
         }
 
         imageLabel.setIcon(scaleImageIcon(person.getImage(), 100, 100));
-        idLabel.setText("ID: " + person.toString());
+        idLabel.setText(person.toString());
 
         BigDecimal age = person.getStatus().getAge();
         ageLabel.setText("Age: " + age);
@@ -85,6 +89,10 @@ public class PersonPanel extends JPanel {
 
         int kills = person.getKills().getKills();
         this.killsLabel.setText("Killed: " + kills);
+        if(person.getStatus().getHealth() > 0)
+            this.hintLabel.setText("Right-click on the map to make the focused character go there");
+        else
+            this.hintLabel.setText("");
     }
 
     private ImageIcon scaleImageIcon(ImageIcon originalIcon, int width, int height) {

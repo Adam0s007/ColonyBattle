@@ -1,6 +1,7 @@
 package com.example.colonybattle.ui.frame;
 
 import com.example.colonybattle.colony.Colony;
+
 import com.example.colonybattle.ui.grid.GridPanel;
 import com.example.colonybattle.ui.infopanel.InfoPanel;
 import com.example.colonybattle.ui.infopanel.person.PersonPanel;
@@ -32,6 +33,8 @@ public class MyFrame extends JFrame {
         infoPanel.setPreferredSize(new Dimension(500, 800));
         this.add(infoPanel, BorderLayout.EAST);
         this.setVisible(true);
+
+
     }
 
     // Metoda do pobierania komórki na danej pozycji

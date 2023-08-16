@@ -15,6 +15,7 @@ public class GridPanel extends JPanel {
         setPreferredSize(new Dimension(800, 800));
         this.setLayout(new GridLayout(gridSize, gridSize,0,0));
         this.personPanel = personPanel;
+
         grid = new Cell[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
