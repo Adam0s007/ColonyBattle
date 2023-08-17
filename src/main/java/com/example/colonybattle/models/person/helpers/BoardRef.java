@@ -27,7 +27,7 @@ public class BoardRef {
         return getBoard() != null ? getBoard().isFieldOccupied(field.toString()) : false;
     }
     public Point2d getVectorFromBoard(Point2d field){
-        return getBoard() != null ? getBoard().getVector2d(field.toString()) : null;
+        return getBoard() != null ? getBoard().getPoint2d(field.toString()) : null;
     }
 
     void addVectorToBoard(Point2d vector){
@@ -37,6 +37,12 @@ public class BoardRef {
             getBoard().getLockManager().initializeLock(vector);
             getBoard().getFields().put(vector.toString(),vector);
         }
+    }
+
+    public boolean isFieldAccessible(Point2d vector){
+        if(!getBoard().getObstacleFields().containsKey(vector.toString()))
+            return true;
+        return false;
     }
 
 

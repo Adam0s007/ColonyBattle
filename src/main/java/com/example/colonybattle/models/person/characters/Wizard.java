@@ -20,7 +20,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class Wizard extends Person implements Magic {
-    private  final int MIN_PROTECTION_ENERGY = 4;
     //Random value between 0 and 4:
     private final int INITIAL_DELAY;
     private final int HEALING_PERIOD = 4;

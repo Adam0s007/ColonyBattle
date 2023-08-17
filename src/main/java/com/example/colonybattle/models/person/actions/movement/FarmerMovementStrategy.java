@@ -1,12 +1,10 @@
 package com.example.colonybattle.models.person.actions.movement;
 
 import com.example.colonybattle.board.position.Point2d;
-import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.utils.Calculator;
 
 import java.util.Comparator;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class FarmerMovementStrategy extends MovementStrategy{
@@ -20,7 +18,7 @@ public class FarmerMovementStrategy extends MovementStrategy{
         fieldsStream = fieldsStream.filter(vector -> vector.getMembership() == null || !vector.getMembership().equals(person.getColony()));
         Point2d newPosition = fieldsStream.min(Comparator.comparing(vector -> vector.distanceTo(person.getPosition())))
                 .orElse(null);
-        if(newPosition == null) newPosition = generateRandomPosition(person.getPosition());
+        if(newPosition == null) newPosition = generateNextPosition(person.getPosition());
         return newPosition;
     }
 

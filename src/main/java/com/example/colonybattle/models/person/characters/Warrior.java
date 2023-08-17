@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Warrior extends Person {
 
-    private final int MIN_PROTECTION_ENERGY = 4;
     private final int MIN_WAIT = 800;
     private final int MAX_WAIT = 1400;
 

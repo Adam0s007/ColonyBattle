@@ -1,5 +1,7 @@
 package com.example.colonybattle.board.position;
 
+import com.example.colonybattle.models.obstacle.ObstacleType;
+import com.example.colonybattle.ui.image.ObstacleImageLoader;
 import com.example.colonybattle.utils.ColorConverter;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
@@ -7,6 +9,7 @@ import com.example.colonybattle.models.person.type.PersonType;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.swing.*;
 import java.awt.*;
 
 @Getter
@@ -18,18 +21,23 @@ public class Point2d {
     private final int INIT_APPROPRIATION; //okresla stopien przynaleznosci do kolonii
     private int currentAppropriation = 0;
     private Person person;
+    private ObstacleType obstacleType;
+    private ImageIcon obstacleImage = null;
     public Point2d(int x, int y, int INIT_APPROPRIATION) {
         this.x = x;
         this.y = y;
         this.INIT_APPROPRIATION = INIT_APPROPRIATION;
         this.currentAppropriation = INIT_APPROPRIATION;
         this.person = null;
+        this.obstacleType = null;
+
     }
     public Point2d(int x, int y, int INIT_APPROPRIATION, Person person) {//wiemy ze osoba bedzie miec unikalną pozycje na poczatku
         this.x = x;
         this.y = y;
         this.INIT_APPROPRIATION = INIT_APPROPRIATION;
         this.currentAppropriation = INIT_APPROPRIATION;
+        this.obstacleType = null;
         this.person = person;
         if(person != null)
             changeMembership(person);
@@ -41,6 +49,7 @@ public class Point2d {
         this.INIT_APPROPRIATION = PersonType.FARMER.getLandAppropriation();
         this.currentAppropriation = INIT_APPROPRIATION;
         this.person = null;
+        this.obstacleType = null;
     }
     public Point2d addVector(Point2d vector) {
         return new Point2d(this.x + vector.x, this.y + vector.y, this.INIT_APPROPRIATION);
@@ -130,6 +139,11 @@ public class Point2d {
         if(this.membership == null)
             return null;
         return ColorConverter.convertColor(this.membership.getColor().getColor());
+    }
+
+    public void setObstacleType(ObstacleType obstacleType) {
+        this.obstacleType = obstacleType;
+        this.obstacleImage = ObstacleImageLoader.getInstance().getImageForType(obstacleType);
     }
 }
 

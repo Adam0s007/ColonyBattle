@@ -4,6 +4,7 @@ import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colors.ConsoleColor;
 import com.example.colonybattle.board.boardlocks.LockMapPosition;
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.models.obstacle.ObstacleType;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.ui.frame.MyFrame;
 
@@ -15,7 +16,9 @@ import java.util.stream.IntStream;
 
 public class Board {
     public static final int SIZE = 25;
+    public static final int OBSTACLE_COUNT = 10;
     private Map<String, Point2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
+    private Map<String,Point2d> obstacleFields = new ConcurrentHashMap<>(); //zawiera pola, ktore sa zajete przez przeszkody
     private  final LockMapPosition lockManager = new LockMapPosition();
     private List<Colony> allColonies;
     public ExecutorService executorService;
@@ -49,6 +52,18 @@ public class Board {
                 .flatMap(i -> IntStream.range(0, SIZE).mapToObj(j -> new Point2d(i, j)))
                 .filter(position -> !fields.containsKey(position.toString()))
                 .forEach(this::initFieldAndLock);
+    initObstacleFields();
+    }
+    public void initObstacleFields(){//randomowe pola, na ktorych nie ma osob
+        Random random = new Random();
+        IntStream.range(0, OBSTACLE_COUNT)
+                .boxed()
+                .map(i -> fields.get(new Point2d(random.nextInt(SIZE), random.nextInt(SIZE)).toString()))
+                .filter(position -> fields.get(position.toString()).getPerson() == null)
+                .forEach(position -> {
+                    obstacleFields.put(position.toString(), position);
+                    position.setObstacleType(ObstacleType.STONE);
+                });
     }
     public void initFrame(MyFrame frame) {
         this.frame = frame;
@@ -63,7 +78,7 @@ public class Board {
     public boolean isFieldOccupied(String stringPos) {
         return fields.containsKey(stringPos);
     }
-    public Point2d getVector2d(String stringPos) {
+    public Point2d getPoint2d(String stringPos) {
         return fields.get(stringPos);
     }
 
@@ -164,5 +179,9 @@ public class Board {
 
     public MyFrame getFrame() {
         return frame;
+    }
+
+    public Map<String, Point2d> getObstacleFields() {
+        return obstacleFields;
     }
 }

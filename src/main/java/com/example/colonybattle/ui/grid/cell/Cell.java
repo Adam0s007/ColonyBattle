@@ -165,6 +165,9 @@ public class Cell extends JLabel {
 
     public void setPosition(Point2d position) {
         this.position = position;
+        if(this.position.getObstacleType() != null) {
+            this.setImageIcon(this.position.getObstacleImage());
+        }
     }
     public void setPersonPanel(PersonPanel personPanel) {
         this.personPanel = personPanel;

@@ -1,20 +1,11 @@
 package com.example.colonybattle.models.person.actions.movement;
 
 import com.example.colonybattle.board.Board;
-import com.example.colonybattle.board.boardlocks.PosLock;
 import com.example.colonybattle.board.position.Direction;
 import com.example.colonybattle.board.position.Point2d;
-import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.Person;
-import com.example.colonybattle.models.person.characters.Defender;
-import com.example.colonybattle.models.person.characters.Farmer;
-import com.example.colonybattle.models.person.characters.Warrior;
-import com.example.colonybattle.models.person.characters.Wizard;
 import com.example.colonybattle.models.person.helpers.BoardRef;
-import com.example.colonybattle.models.person.helpers.CellHelper;
-import com.example.colonybattle.models.person.helpers.ConnectionHelper;
 import com.example.colonybattle.models.person.messages.DestinationMessage;
-import com.example.colonybattle.models.person.type.PersonType;
 import com.example.colonybattle.utils.Calculator;
 import com.example.colonybattle.utils.ThreadUtils;
 
@@ -27,9 +18,12 @@ import java.util.stream.Stream;
 public abstract class MovementStrategy implements Movement {
     protected final Person person;
 
+    protected final BoardRef boardRef;
+    public int directionIndex = 0;
     protected Point2d potentialTarget = null;
     public MovementStrategy(Person person) {
         this.person = person;
+        this.boardRef = person.getBoardRef();
     }
 
     private void move(Point2d newPosition) {
@@ -55,11 +49,14 @@ public abstract class MovementStrategy implements Movement {
     }
 
     private boolean isValidMove(Point2d newPosition) {
-        return newPosition != null && newPosition.properCoordinates(Board.SIZE) && !person.getPosition().equals(newPosition);
+        return newPosition != null &&
+                newPosition.properCoordinates(Board.SIZE) &&
+                !person.getPosition().equals(newPosition) &&
+                person.getBoardRef().isFieldAccessible(newPosition);
     }
     private void attemptAlternateMoves(Point2d oldPosition) {
-        for(int i = 0; i < person.MAX_DEPTH; i++) {
-            Point2d alternatePosition = generateRandomPosition(person.getPosition());
+        while(true) {
+            Point2d alternatePosition = generateNextPosition(person.getPosition());
             if (isValidMove(alternatePosition) && person.getPosLock().aquirePositionLock(alternatePosition)) {
                 this.move(alternatePosition);
                 person.getPosLock().releasePositionLock(oldPosition);
@@ -123,7 +120,7 @@ public abstract class MovementStrategy implements Movement {
         fieldsStream = fieldsStream.filter(vector -> vector.getMembership() != null && !vector.getMembership().equals(person.getColony()));
         Point2d newPosition = fieldsStream.min(Comparator.comparing(vector -> vector.distanceTo(person.getPosition())))
                 .orElse(null);
-        if(newPosition == null) newPosition = generateRandomPosition(person.getPosition());
+        if(newPosition == null) newPosition = generateNextPosition(person.getPosition());
         return newPosition;
     }
 
@@ -131,15 +128,15 @@ public abstract class MovementStrategy implements Movement {
     @Override
     public Point2d calculateNewPosition(Point2d position, Point2d directionVector) {
         Point2d newPosition = position.addVector(directionVector);
-        if(!newPosition.properCoordinates(Board.SIZE)) newPosition = generateRandomPosition(position);
+        if(!isValidMove(newPosition)) newPosition = generateNextPosition(position);
         if (person.getBoardRef().isFieldOccupied(newPosition))
             newPosition = person.getBoardRef().getVectorFromBoard(newPosition);
         return newPosition;
     }
 
-    public Point2d generateRandomPosition(Point2d position) {
+    public Point2d generateNextPosition(Point2d position) {
         Direction[] directions = Direction.values();
-        Direction randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        Direction randomDirection = directions[directionIndex++ % directions.length];
         while(!position
                 .addVector(randomDirection.getVector())
                 .properCoordinates(Board.SIZE)){
