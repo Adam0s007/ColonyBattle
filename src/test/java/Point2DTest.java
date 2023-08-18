@@ -39,7 +39,6 @@ public class Point2DTest {
         set.add(vector1);
         assertFalse(set.contains(vector2));
         Point2d vector3 = new Point2d(2, 1);
-        vector3.setAPPROPRIATION_RATE(2222);
         assertEquals(vector1,vector3);
     }
 }

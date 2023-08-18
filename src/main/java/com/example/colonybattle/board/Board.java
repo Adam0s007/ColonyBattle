@@ -108,35 +108,6 @@ public class Board {
         }
 
     }
-    public void printBoard() {
-        // Wyczyszczenie okna konsoli
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                Person person = getPersonAtPosition(i, j); // Metoda do implementacji: zwraca osobę na danej pozycji lub null, jeśli nie ma tam osoby
-                if (person != null) {
-                    System.out.print(person.getColony().getColonyColor().getColor() + "x" + ConsoleColor.RESET+" ");
-                } else {
-                    System.out.print(ConsoleColor.YELLOW+"o "+ ConsoleColor.RESET);
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-    private Person getPersonAtPosition(int i, int j) {
-        Point2d position = new Point2d(i, j);
-
-        for (Colony colony : allColonies) {
-            Person person = colony.containsPerson(position);
-            if (person != null) {
-                return person;
-            }
-        }
-        return null;
-    }
-
     public LockMapPosition getLockManager() {
         return lockManager;
     }
