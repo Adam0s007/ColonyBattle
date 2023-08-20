@@ -1,5 +1,6 @@
 package com.example.colonybattle.models.person.characters;
 
+import com.example.colonybattle.board.position.finder.DefenderClosestPositionFinder;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
@@ -26,6 +27,7 @@ public class Defender extends Person {
         status.setType(type);
         this.attackPerformer = new DefenderAttackStrategy(this,movement);
         this.defendStrategy = new DefenderDefendStrategy(this);
+        this.closestPositionFinder = new DefenderClosestPositionFinder();
 
     }
     @Override
@@ -46,22 +48,6 @@ public class Defender extends Person {
     @Override
     public void attack(Person person) {
         this.attackPerformer.attack(person);
-    }
-    //szuka najblizszej osoby ze swojej kolonii (do bronienia)
-    @Override
-    public Point2d findClosestPosition() {
-        Point2d closestPersonPosition = null;
-        List<Colony> colonies = this.boardRef.getAllColonies();
-        Optional<Person> closestPerson = colonies.stream()
-                .filter(colony -> colony.equals(this.getColony())) // filter out this person's colony
-                .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
-                .filter(person -> person.getType() != PersonType.DEFENDER)            // filter out this person
-                .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
-        if (closestPerson.isPresent()) {
-            closestPersonPosition = closestPerson.get().getPosition();
-        }
-        //System.out.println(this.colony.getType()+"Wywoluje sie!!");
-        return closestPersonPosition;
     }
     @Override
     public long waitingTiming() {

@@ -1,5 +1,6 @@
 package com.example.colonybattle.models.person.characters;
 
+import com.example.colonybattle.board.position.finder.WizardClosestPositionFinder;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.abilities.Magic;
 import com.example.colonybattle.board.position.Point2d;
@@ -33,6 +34,7 @@ public class Wizard extends Person implements Magic {
         status.setType(type);
         INITIAL_DELAY = ThreadLocalRandom.current().nextInt(0, 4);
         this.defendStrategy = new WizardDefendStrategy(this);
+        this.closestPositionFinder = new WizardClosestPositionFinder();
         healFriends();
         performAbsorption();
     }
@@ -57,7 +59,6 @@ public class Wizard extends Person implements Magic {
             }
         }
     }
-    // Implementacja pozostałych metod...
     @Override
     public ImageIcon getImage() {
         return imageLoader.getImageForType(getType());
@@ -111,26 +112,11 @@ public class Wizard extends Person implements Magic {
         };
         executorService.scheduleAtFixedRate(task, INITIAL_DELAY, WAND_PERIOD, TimeUnit.SECONDS);
     }
-
     @Override
     public void die(){
         //System.out.println("Wizard died");
         super.die();
     }
-    @Override
-    public Point2d findClosestPosition() {
-        Point2d closestPersonPosition = null;
-        List<Colony> colonies = this.boardRef.getAllColonies();
-        Optional<Person> closestPerson = colonies.stream()
-                .filter(colony -> !colony.equals(this.getColony())) // filter out this person's colony
-                .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
-                .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
-        if (closestPerson.isPresent()) {
-            closestPersonPosition = closestPerson.get().getPosition();
-        }
-        return closestPersonPosition;
-    }
-  
     @Override
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);

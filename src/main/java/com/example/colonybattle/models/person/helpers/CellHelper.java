@@ -134,13 +134,13 @@ public class CellHelper {
 
     private void setLife(int life) {
         setLife(life, person.getPosition());
-        if(person.isFocused())
+        if(person.isFocused() && personPanel != null && personPanel.getPerson() != null)
             personPanel.updatePersonData();
     }
 
     private void setEnergy(int energy) {
         setEnergy(energy, person.getPosition());
-        if(person.isFocused())
+        if(person.isFocused()  && personPanel != null && personPanel.getPerson() != null)
             personPanel.updatePersonData();
     }
 

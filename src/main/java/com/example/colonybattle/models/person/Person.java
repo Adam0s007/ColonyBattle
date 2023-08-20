@@ -1,5 +1,6 @@
 package com.example.colonybattle.models.person;
 
+import com.example.colonybattle.board.position.finder.ClosestPositionFinder;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.board.boardlocks.PosLock;
 import com.example.colonybattle.colony.Colony;
@@ -44,6 +45,7 @@ public abstract class Person implements Runnable {
     public final BlockingQueue<DestinationMessage> destinationMessages;
     protected Kills kills;
     protected DefendStrategy defendStrategy;
+    protected ClosestPositionFinder closestPositionFinder;
     private boolean isFocused = false;
     private Color focusColor = new Color(0, 255, 175, 255);
     public Person(int health, int energy, int strength, Point2d position, Colony colony, int landAppropriation, int id) {
@@ -61,7 +63,6 @@ public abstract class Person implements Runnable {
     public abstract Character getInitial();
     public abstract ImageIcon getImage();
     public abstract void defend(Person person, int attackStrength);
-    public abstract Point2d findClosestPosition();
     public abstract long waitingTiming();
     @Override
     public int hashCode() {
@@ -196,4 +197,11 @@ public abstract class Person implements Runnable {
     public void increaseAge(){
         this.status.incrementAge();
     }
+
+    public Point2d findClosestPosition() {
+        return this.closestPositionFinder.findClosestPosition(this);
+    }
+//   // public void defend(Person person,int damage) {
+//        this.defendStrategy.defend(person,damage);
+//    }
 }

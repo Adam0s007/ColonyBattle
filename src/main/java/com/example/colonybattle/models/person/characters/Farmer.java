@@ -1,5 +1,6 @@
 package com.example.colonybattle.models.person.characters;
 
+import com.example.colonybattle.board.position.finder.FarmerClosestPositionFinder;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
@@ -25,41 +26,21 @@ public class Farmer extends Person {
         status.setType(type);
         attackPerformer = new PersonAttackStrategy(this,movement);
         this.defendStrategy = new FarmerDefendStrategy(this);
-
+        this.closestPositionFinder = new FarmerClosestPositionFinder();
     }
     @Override
     public Character getInitial() {
         return 'F'; // Dla Obrońcy
     }
-
     // Implementacja metod...
     @Override
     public ImageIcon getImage() {
         return imageLoader.getImageForType(getType());
     }
-
     @Override
     public void defend(Person person,int damage) {
         this.defendStrategy.defend(person,damage);
     }
-
-    //szuka najbliższej osoby z pobliskiej kolonii, ktora nie jest Farmerem (przed innymi ucieka)
-    @Override
-    public Point2d findClosestPosition() {
-        Point2d closestPersonPosition = null;
-        List<Colony> colonies = this.boardRef.getAllColonies();
-        Optional<Person> closestPerson = colonies.stream()
-                .filter(colony -> !colony.equals(this.getColony())) // filter out this person's colony
-                .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
-                .filter(person -> person.getType() != PersonType.FARMER)
-                .min(Comparator.comparing(person -> this.position.distanceTo(person.getPosition()))); // find person with minimum distance
-
-        if (closestPerson.isPresent()) {
-            closestPersonPosition = closestPerson.get().getPosition();
-        }
-        return closestPersonPosition;
-    }
-
     @Override
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
