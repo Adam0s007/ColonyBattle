@@ -62,7 +62,6 @@ public abstract class Person implements Runnable {
     }
     public abstract Character getInitial();
     public abstract ImageIcon getImage();
-    public abstract void defend(Person person, int attackStrength);
     public abstract long waitingTiming();
     @Override
     public int hashCode() {
@@ -119,6 +118,9 @@ public abstract class Person implements Runnable {
     }
     public void attack(Person person) {
         this.attackPerformer.attack(person);
+    }
+    public void defend(Person person,int damage) {
+        this.defendStrategy.defend(person,damage);
     }
     public void PersonWaiting(){
         long timeEnd = waitingTiming();
@@ -201,7 +203,4 @@ public abstract class Person implements Runnable {
     public Point2d findClosestPosition() {
         return this.closestPositionFinder.findClosestPosition(this);
     }
-//   // public void defend(Person person,int damage) {
-//        this.defendStrategy.defend(person,damage);
-//    }
 }

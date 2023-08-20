@@ -43,14 +43,6 @@ public class Warrior extends Person {
         return imageLoader.getImageForType(getType());
     }
     @Override
-    public void defend(Person person,int damage) {
-        this.defendStrategy.defend(person,damage);
-    }
-    @Override
-    public void attack(Person person) {
-        this.attackPerformer.attack(person);
-    }
-    @Override
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
         return timeEnd;

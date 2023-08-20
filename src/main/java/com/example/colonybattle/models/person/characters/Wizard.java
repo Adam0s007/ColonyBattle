@@ -63,14 +63,6 @@ public class Wizard extends Person implements Magic {
     public ImageIcon getImage() {
         return imageLoader.getImageForType(getType());
     }
-    @Override
-    public void defend(Person person,int damage) {
-        this.defendStrategy.defend(person,damage);
-    }
-    @Override
-    public void attack(Person person) {
-        this.attackPerformer.attack(person);
-    }
     public  void healFriends(){
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         //System.out.println("ja sie wywoluję!");

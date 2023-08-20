@@ -32,22 +32,11 @@ public class Defender extends Person {
     }
     @Override
     public Character getInitial() {
-        return 'D'; // Dla Obrońcy
+        return 'D';
     }
-    // Implementacja metod...
-
     @Override
     public ImageIcon getImage() {
         return imageLoader.getImageForType(getType());
-    }
-
-    @Override
-    public void defend(Person person,int damage) {
-        this.defendStrategy.defend(person,damage);
-    }
-    @Override
-    public void attack(Person person) {
-        this.attackPerformer.attack(person);
     }
     @Override
     public long waitingTiming() {
@@ -55,13 +44,6 @@ public class Defender extends Person {
         return timeEnd;
     }
 
-    @Override
-    public void die() {
-        //System.out.println("Defender died at position: "+this.getPosition().toString()+ " with id: "+this.getStatus().getId()+" and colony: "+this.getColony().getType()+"\n");
-        super.die();
-
-    }
-    //override to string (PersonType + id)
     @Override
     public String toString() {
         return this.getType().toString() + "[" + this.getStatus().getId()+"]";

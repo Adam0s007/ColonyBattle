@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Farmer extends Person {
-
     private final int MIN_PROTECTION_ENERGY = 5;
     private final int MIN_WAIT = 600;
     private final int MAX_WAIT = 900;
@@ -38,19 +37,12 @@ public class Farmer extends Person {
         return imageLoader.getImageForType(getType());
     }
     @Override
-    public void defend(Person person,int damage) {
-        this.defendStrategy.defend(person,damage);
-    }
-    @Override
     public long waitingTiming() {
         long timeEnd = ThreadLocalRandom.current().nextInt(MIN_WAIT, MAX_WAIT);
         return timeEnd;
     }
-
     @Override
     public String toString() {
         return this.getType().toString() + "[" + this.getStatus().getId()+"]";
     }
-
-
 }
