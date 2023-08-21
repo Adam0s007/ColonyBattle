@@ -4,7 +4,7 @@ public enum PersonType {
     FARMER(8, 8, 5,20,5),
     DEFENDER(20, 12, 10,20,3),
     WARRIOR(12, 15, 20,20,4),
-    WIZARD(14, 20, 14,20,4);
+    WIZARD(14, 20, 12,20,4);
 
     private final int health;
     private final int energy;

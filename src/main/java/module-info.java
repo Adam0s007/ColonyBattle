@@ -26,8 +26,6 @@ module com.example.colonybattle {
     opens com.example.colonybattle.models.person.actions to javafx.fxml;
     exports com.example.colonybattle.models.person.status;
     opens com.example.colonybattle.models.person.status to javafx.fxml;
-    exports com.example.colonybattle.models.person.abilities;
-    opens com.example.colonybattle.models.person.abilities to javafx.fxml;
     exports com.example.colonybattle.utils;
     opens com.example.colonybattle.utils to javafx.fxml;
     exports com.example.colonybattle.board.position;
@@ -40,4 +38,6 @@ module com.example.colonybattle {
     opens com.example.colonybattle.models.person.id to javafx.fxml;
     exports com.example.colonybattle.models.person.actions.attack;
     opens com.example.colonybattle.models.person.actions.attack to javafx.fxml;
+    exports com.example.colonybattle.models.person.actions.magic;
+    opens com.example.colonybattle.models.person.actions.magic to javafx.fxml;
 }
