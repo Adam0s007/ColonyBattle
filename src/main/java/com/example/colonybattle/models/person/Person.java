@@ -13,6 +13,7 @@ import com.example.colonybattle.models.person.helpers.CellHelper;
 import com.example.colonybattle.models.person.helpers.ConnectionHelper;
 import com.example.colonybattle.models.person.messages.DestinationMessage;
 import com.example.colonybattle.models.person.messages.Message;
+import com.example.colonybattle.models.person.messages.MessageHandler;
 import com.example.colonybattle.models.person.status.PersonStatus;
 import com.example.colonybattle.models.person.type.PersonType;
 import com.example.colonybattle.ui.image.PersonImageLoader;
@@ -41,8 +42,7 @@ public abstract class Person implements Runnable {
     protected ImageLoaderInterface imageLoader;
     public final int MAX_DEPTH = 5;
     protected Movement movement;
-    public final BlockingQueue<Message> queue;
-    public final BlockingQueue<DestinationMessage> destinationMessages;
+    public final MessageHandler messageHandler;
     protected Kills kills;
     protected DefendStrategy defendStrategy;
     protected ClosestPositionFinder closestPositionFinder;
@@ -56,8 +56,7 @@ public abstract class Person implements Runnable {
         connectionHelper.changePosConnections(null, position);
         connectionHelper.connectColony(colony);
         posLock = new PosLock(boardRef);
-        queue = new LinkedBlockingQueue<>();
-        destinationMessages = new LinkedBlockingQueue<>();
+        this.messageHandler = new MessageHandler();
         this.kills = new Kills();
     }
     public abstract Character getInitial();
@@ -153,23 +152,15 @@ public abstract class Person implements Runnable {
         }
         return false;
     }
-    public void sendingMessage(Person person, Message message){
-        person.queue.add(message);
+    public void sendingMessage(Person person, Message message) {
+        this.messageHandler.send(person, message);
+    }
+    public void setNewTarget(DestinationMessage message) {
+        this.messageHandler.setNewTarget(message);
     }
 
-    public void setNewTarget(DestinationMessage message){
-        this.destinationMessages.add(message);
-    }
     public void receivingMessage() {
-        while (!queue.isEmpty()) {
-            Message message = queue.poll();
-            if (!kills.hasKilled(message.getPerson())) {
-                kills.addKill(message.getPerson());
-                addPoints(30);
-                System.out.println(message.getPerson() + " was killed by " + this);
-                message.getPerson().getBoardRef().removePersonFromFrame();//making sure that person is removed from frame
-            }
-        }
+        this.messageHandler.handleReceivedMessages(this);
     }
     public void  addPoints(int points){
         if(this.colony != null)

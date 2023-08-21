@@ -146,19 +146,11 @@ public abstract class MovementStrategy implements Movement {
         Point2d directionVector = randomDirection.getVector();
         return calculateNewPosition(position, directionVector);
     }
-
-    //wyciaga wszystkie wiadomosci z DesitnationMessage, i ostatnią przypisuje do potentialTarget
     public void processMessage() {
-        BlockingQueue<DestinationMessage> messages = person.getDestinationMessages();
-        DestinationMessage message = null;
-        while(!messages.isEmpty()) {
-            message = messages.poll();
+        Point2d potentialTarget = person.getMessageHandler().processMessage();
+        if(potentialTarget != null) {
+            this.potentialTarget = potentialTarget;
         }
-        if(message != null) {
-            this.potentialTarget = message.getDestination();
-            if(this.potentialTarget != null) System.out.println("New target: " + this.potentialTarget);
-        }
-
     }
 
 
