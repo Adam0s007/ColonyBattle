@@ -14,9 +14,11 @@ import java.util.stream.Collectors;
 public class PersonFactory {
     private IdAllocator idAllocator;
     private Map<PersonType, Integer> personCountMap;
+    private PeopleNumber peopleConfig;
 
     public PersonFactory() {
         this.idAllocator = IdAllocator.getInstance();
+        this.peopleConfig = PeopleNumber.getInstance();
         initPersonCountMap();
     }
 
@@ -55,7 +57,7 @@ public class PersonFactory {
 
     public synchronized boolean isFull() {
         return Arrays.stream(PersonType.values())
-                .allMatch(type -> personCountMap.get(type) >= PeopleNumber.valueOf(type.toString().toUpperCase() + "_NUMBER").getNumber());
+                .allMatch(type -> personCountMap.get(type) >= getPeopleNumberForType(type));
     }
 
     public Person generateRandom(Colony colony, Point2d pos) {
@@ -64,10 +66,26 @@ public class PersonFactory {
         List<PersonType> types = Arrays.asList(PersonType.values());
         Collections.shuffle(types);
         return types.stream()
-                .filter(type -> personCountMap.get(type) < PeopleNumber.valueOf(type.toString().toUpperCase() + "_NUMBER").getNumber())
+                .filter(type -> personCountMap.get(type) < getPeopleNumberForType(type))
                 .findFirst()
                 .map(type -> createPerson(type, pos, colony))
                 .orElse(null);
+    }
+
+    // Pomocnicza metoda, która zwraca liczbę osób danego typu na podstawie konfiguracji
+    private int getPeopleNumberForType(PersonType type) {
+        switch (type) {
+            case FARMER:
+                return peopleConfig.getFarmerNumber();
+            case DEFENDER:
+                return peopleConfig.getDefenderNumber();
+            case WARRIOR:
+                return peopleConfig.getWarriorNumber();
+            case WIZARD:
+                return peopleConfig.getWizardNumber();
+            default:
+                throw new IllegalArgumentException("Nieznany typ osoby: " + type);
+        }
     }
 
     public void personCounterExecutor(Colony colony) {

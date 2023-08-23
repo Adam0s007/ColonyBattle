@@ -4,20 +4,25 @@ import com.example.colonybattle.colors.ColonyColor;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.models.person.PersonFactory;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.board.position.Point2d;
+import com.example.colonybattle.models.person.type.PeopleNumber;
 import com.example.colonybattle.models.person.type.PersonType;
 
 
 public class ColonyFactory {
 
     private Set<Point2d> usedPositions;
+    private PeopleNumber peopleNumber;
     public ColonyFactory() {
         usedPositions = new HashSet<>();
+        peopleNumber = PeopleNumber.getInstance();
     }
     //make function creating proper color type of ColonyColor based on enum ColonyType
     public ColonyColor getColonyColor(ColonyType type){
@@ -67,30 +72,19 @@ public class ColonyFactory {
                 throw new IllegalArgumentException("Invalid colony type");
         }
 
-        // Dodajemy rolników (farmers)
-        for (int i = 0; i < 3; i++) {
-            Point2d position = getRandomPositionWithin(startPos, endPos);
-            colony.addField(position);
-            personFactory.createPerson(PersonType.FARMER, position, colony);
-        }
+        Map<PersonType, Integer> personTypeToNumberMap = Map.of(
+                PersonType.FARMER, peopleNumber.getFarmerNumber(),
+                PersonType.DEFENDER, peopleNumber.getDefenderNumber(),
+                PersonType.WARRIOR, peopleNumber.getWarriorNumber(),
+                PersonType.WIZARD, peopleNumber.getWizardNumber()
+        );
+        personTypeToNumberMap.forEach((personType, number) -> {
+            IntStream.range(0, number).forEach(i -> {
+                Point2d position = getRandomPositionWithin(startPos, endPos);
 
-        // Dodajemy obrońców (defenders)
-        for (int i = 0; i < 2; i++) {
-            Point2d position = getRandomPositionWithin(startPos, endPos);
-            personFactory.createPerson(PersonType.DEFENDER, position, colony);
-
-        }
-
-        // Dodajemy maga (wizard)
-        Point2d wizardPosition = getRandomPositionWithin(startPos, endPos);
-        personFactory.createPerson(PersonType.WIZARD, wizardPosition, colony);
-
-        // Dodajemy wojowników (warriors)
-        for (int i = 0; i < 4; i++) {
-            Point2d position = getRandomPositionWithin(startPos, endPos);
-            personFactory.createPerson(PersonType.WARRIOR, position, colony);
-        }
-
+                personFactory.createPerson(personType, position, colony);
+            });
+        });
         return colony;
     }
 

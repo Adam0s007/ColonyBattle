@@ -1,23 +1,23 @@
 package com.example.colonybattle.models.person.type;
 
-public enum PeopleNumber {
-    FARMER_NUMBER(3),
-    DEFENDER_NUMBER(2),
-    WARRIOR_NUMBER(4),
-    WIZARD_NUMBER(1);
 
-    private final int number;
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
+public class PeopleNumber {
 
-    PeopleNumber(int number){
-        this.number = number;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString().toLowerCase();
+    private static PeopleNumber instance;
+    private int farmerNumber = 1;
+    private int defenderNumber = 1;
+    private int warriorNumber = 1;
+    private int wizardNumber = 1;
+    private PeopleNumber() {}
+    public static PeopleNumber getInstance() {
+        if (instance == null) {
+            instance = new PeopleNumber();
+        }
+        return instance;
     }
 }
+

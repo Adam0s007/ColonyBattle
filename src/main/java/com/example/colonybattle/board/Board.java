@@ -7,6 +7,7 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.obstacle.ObstacleType;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.ui.frame.MyFrame;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,8 +15,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
+@Getter
 public class Board {
-    public static final int SIZE = 25;
+    public static final int SIZE = 15;
     public static final int OBSTACLE_COUNT = 10;
     private Map<String, Point2d> fields = new ConcurrentHashMap<>(); //zawiera pola, ktora byly odwiedzone, bądź aktualnie są okupowane
     private Map<String,Point2d> obstacleFields = new ConcurrentHashMap<>(); //zawiera pola, ktore sa zajete przez przeszkody
@@ -27,9 +29,6 @@ public class Board {
         this.allColonies = allColonies;
     }
 
-    public Map<String, Point2d> getFields() {
-        return fields;
-    }
     public void start() {
         int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
         this.executorService = Executors.newFixedThreadPool(totalPeopleCount);
