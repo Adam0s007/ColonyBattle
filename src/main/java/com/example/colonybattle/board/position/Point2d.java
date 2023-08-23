@@ -39,8 +39,6 @@ public class Point2d {
         this.currentAppropriation = INIT_APPROPRIATION;
         this.obstacleType = null;
         this.person = person;
-        if(person != null)
-            changeMembership(person);
     }
     public Point2d(int x, int y) {
         this.x = x;
@@ -107,7 +105,7 @@ public class Point2d {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
     public void changeMembership(Person person) {
-
+        Colony oldMembership = this.membership;
         if(this.membership != person.getColony())
             this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
 
@@ -116,6 +114,12 @@ public class Point2d {
             this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
             this.currentAppropriation = this.INIT_APPROPRIATION;
         }
+        if(oldMembership != null && oldMembership != this.membership)
+            oldMembership.removeField(this);
+        if(this.membership != null && oldMembership != this.membership)
+            this.membership.addField(this);
+
+
     }
     public Color getColonyColor(){
         if(this.membership == null)
