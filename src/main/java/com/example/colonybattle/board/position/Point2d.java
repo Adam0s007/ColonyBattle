@@ -106,33 +106,15 @@ public class Point2d {
     public double distanceTo(Point2d other) {
         return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
-    public synchronized void changeMembership(Person person) {
-        adjustCurrentAppropriation(person);
+    public void changeMembership(Person person) {
 
-        if (this.currentAppropriation == 0) {
-            updateMembershipAndField(person, true);
-        }
-    }
-    private void adjustCurrentAppropriation(Person person) {
-        if (this.membership != person.getColony()) {
+        if(this.membership != person.getColony())
             this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
-        }
-    }
-    private void updateMembershipAndField(Person person, boolean rewardPoints) {
-        Colony oldColony = this.membership;
-        this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
 
-        if (this.membership != null) {
-            this.membership.addField(this);
-            if (rewardPoints) {
-                person.addPoints(1);
-            }
-        }
-        if (oldColony != null) {
-            oldColony.removeField(this);
-            if (rewardPoints) {
-                person.addPoints(1);
-            }
+        if(this.currentAppropriation == 0) {
+            this.membership = person.getColony();
+            this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
+            this.currentAppropriation = this.INIT_APPROPRIATION;
         }
     }
     public Color getColonyColor(){
