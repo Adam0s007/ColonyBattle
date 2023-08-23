@@ -12,15 +12,18 @@ import java.util.List;
 
 public class Engine {
     public void run() {
-        MyFrame frame; // Lokalna deklaracja
-        List<Colony> allColonies = new ArrayList<>();
-        frame = new MyFrame(Board.SIZE, allColonies);
-        Board board = new Board(allColonies);
-        GameTimer gameTimer = new GameTimer(allColonies);
+        new Thread(() -> {
+            MyFrame frame; // Lokalna deklaracja
+            List<Colony> allColonies = new ArrayList<>();
+            frame = new MyFrame(Board.SIZE, allColonies);
 
-        initializeGame(board, allColonies, frame);
-        gameLoop(board, gameTimer);
-        shutdownGame(board, gameTimer, frame);
+            Board board = new Board(allColonies);
+            GameTimer gameTimer = new GameTimer(allColonies);
+
+            initializeGame(board, allColonies, frame);
+            gameLoop(board, gameTimer);
+            shutdownGame(board, gameTimer, frame);
+        }).start();
     }
 
     private void initializeGame(Board board, List<Colony> allColonies, MyFrame frame) {
