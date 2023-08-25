@@ -25,7 +25,7 @@ public class RankingPanel extends JPanel {
     public void update() {
         if(!updatingFunc.tryAcquire()) return;
         List<Person> people = allColonies.stream()
-                .flatMap(colony -> colony.getPeople().stream())
+                .flatMap(colony -> colony.getPeopleManager().getPeople().stream())
                 .collect(Collectors.toList());
 
         List<Person> topKills = getTopKillsPeople(people);

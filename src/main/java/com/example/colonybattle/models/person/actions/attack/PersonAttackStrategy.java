@@ -45,7 +45,7 @@ public class PersonAttackStrategy implements AttackStrategy {
         if(person != null && person.isRunning() && person.getStatus().getHealth() <= 0){
             //System.out.println(person.getColony());
             if(person.getColony() != null)
-                person.getColony().removePerson(person);
+                person.getColony().getPeopleManager().removePerson(person);
         }
     }
     @Override

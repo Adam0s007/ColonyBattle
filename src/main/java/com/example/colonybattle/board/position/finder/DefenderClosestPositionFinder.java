@@ -17,7 +17,7 @@ public class DefenderClosestPositionFinder implements ClosestPositionFinder{
         List<Colony> colonies = myPerson.getBoardRef().getAllColonies();
         Optional<Person> closestPerson = colonies.stream()
                 .filter(colony -> colony.equals(myPerson.getColony())) // filter out this person's colony
-                .flatMap(colony -> colony.getPeople().stream())     // get stream of people from other colonies
+                .flatMap(colony -> colony.getPeopleManager().getPeople().stream())     // get stream of people from other colonies
                 .filter(person -> person.getType() != PersonType.DEFENDER)            // filter out this person
                 .min(Comparator.comparing(person -> myPerson.getPosition().distanceTo(person.getPosition()))); // find person with minimum distance
         if (closestPerson.isPresent()) {

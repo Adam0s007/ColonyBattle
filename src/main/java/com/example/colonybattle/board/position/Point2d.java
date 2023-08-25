@@ -115,9 +115,9 @@ public class Point2d {
             this.currentAppropriation = this.INIT_APPROPRIATION;
         }
         if(oldMembership != null && oldMembership != this.membership)
-            oldMembership.removeField(this);
+            oldMembership.getFieldsManager().removeField(this);
         if(this.membership != null && oldMembership != this.membership)
-            this.membership.addField(this);
+            this.membership.getFieldsManager().addField(this);
 
 
     }

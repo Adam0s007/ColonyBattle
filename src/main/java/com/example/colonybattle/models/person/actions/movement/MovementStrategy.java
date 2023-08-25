@@ -136,13 +136,15 @@ public abstract class MovementStrategy implements Movement {
 
     public Point2d generateNextPosition(Point2d position) {
         Direction[] directions = Direction.values();
-        Direction randomDirection = directions[directionIndex++ % directions.length];
-        while(!position
+        Direction randomDirection;
+        do {
+            randomDirection = directions[directionIndex++ % directions.length];
+            if (directionIndex % directions.length == 0)
+                ThreadUtils.getInstance().pause(200);
+        } while(!position
                 .addVector(randomDirection.getVector())
-                .properCoordinates(Board.SIZE)){
-            randomDirection = directions[ThreadLocalRandom.current().nextInt(directions.length)];
-            ThreadUtils.getInstance().pause(200);
-        }
+                .properCoordinates(Board.SIZE));
+
         Point2d directionVector = randomDirection.getVector();
         return calculateNewPosition(position, directionVector);
     }

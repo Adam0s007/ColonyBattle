@@ -26,7 +26,7 @@ public class HealCommand implements MagicCommand{
             if (!myPerson.isRunning())
                 executorService.shutdown();
             else {
-                myPerson.getColony().getPeople().stream()
+                myPerson.getColony().getPeopleManager().getPeople().stream()
                         .filter(person -> person != myPerson && person.getStatus().getHealth() < person.getType().getHealth())
                         .findFirst()
                         .ifPresent(person -> {

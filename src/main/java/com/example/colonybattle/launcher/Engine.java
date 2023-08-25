@@ -27,7 +27,7 @@ public class Engine {
     }
 
     private void initializeGame(Board board, List<Colony> allColonies, MyFrame frame) {
-        board.initFrame(frame);
+        board.setFrame(frame);
         createColonies(allColonies, board);
 
         // Code executed after adding all colonies to the list allColonies

@@ -54,7 +54,7 @@ public class ColonyPanel extends JPanel {
         JPanel colonyPanel = new JPanel();
         colonyPanel.setLayout(new BoxLayout(colonyPanel, BoxLayout.Y_AXIS));
 
-        JLabel colonyLabel = new JLabel(colony.getType() + ": " + colony.getPeopleCount());
+        JLabel colonyLabel = new JLabel(colony.getType() + ": " + colony.getPeopleManager().getPeopleCount());
         colonyLabel.setFont(font);
 
         JLabel pointsLabel = new JLabel("Points: " + colony.getPoints());
@@ -63,7 +63,7 @@ public class ColonyPanel extends JPanel {
         colonyPanel.add(colonyLabel);
         colonyPanel.add(pointsLabel);
 
-        for (Person person : colony.getPeople()) {
+        for (Person person : colony.getPeopleManager().getPeople()) {
             JLabel personLabel = createPersonLabel(person, font);
             colonyPanel.add(personLabel);
             personLabelsMap.put(person, personLabel);
@@ -76,7 +76,7 @@ public class ColonyPanel extends JPanel {
     public void updateColonyPanel(Colony colony){
         JPanel colonyPanel = colonyPanelsMap.get(colony);
         if(colonyPanel == null)return; // Check if colonyPanel is null, not colony
-        ((JLabel) colonyPanel.getComponent(0)).setText(colony.getType() + ": " + colony.getPeopleCount());
+        ((JLabel) colonyPanel.getComponent(0)).setText(colony.getType() + ": " + colony.getPeopleManager().getPeopleCount());
         ((JLabel) colonyPanel.getComponent(1)).setText("Points: " + colony.getPoints());
     }
     public void traverseToRemove(JLabel personLabel){// O(n) - traverse all colonies

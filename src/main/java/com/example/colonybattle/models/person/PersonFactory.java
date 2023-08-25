@@ -94,7 +94,7 @@ public class PersonFactory {
     }
 
     private Map<PersonType, Integer> getCountMapFromColony(Colony colony) {
-        return colony.getPeople().stream()
+        return colony.getPeopleManager().getPeople().stream()
                 .collect(Collectors.groupingBy(Person::getType, Collectors.summingInt(p -> 1)));
     }
 

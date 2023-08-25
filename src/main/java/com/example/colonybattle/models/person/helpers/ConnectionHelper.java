@@ -20,7 +20,7 @@ public class ConnectionHelper {
     public void disconnectColony(){
         synchronized (EndgameMonitor.monitor) {
             if(this.person.getColony() != null){
-                this.person.getColony().removePerson(this.person);
+                this.person.getColony().getPeopleManager().removePerson(this.person);
                 // Check if this person's colony is empty
                 if (this.person.getBoardRef().isColonyEmpty(this.person.getColony())) {
                     this.person.getBoardRef().removeDefeatedColony();

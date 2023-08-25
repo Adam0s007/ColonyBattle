@@ -37,7 +37,7 @@ public class GameTimer {
 
     private void increaseAge() {
         allColonies.stream()
-                .flatMap(colony -> colony.getPeople().stream())
+                .flatMap(colony -> colony.getPeopleManager().getPeople().stream())
                 .forEach(Person::increaseAge);
     }
 
