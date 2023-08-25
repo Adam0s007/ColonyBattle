@@ -18,10 +18,10 @@ import java.util.concurrent.*;
 @Getter
 @Setter
 public class Colony {
-    private ColonyColor color;
+    private ColonyColor color = ColonyColor.DEFAULT_COLOR;
     private ColonyType type;
     public final static int PERIOD_SEC = 30;
-    private final Instant creationTime;
+    private final Instant creationTime = Instant.now();;
     public final PersonFactory personFactory;
     private Board board;
     private PointsManager pointsManager;
@@ -29,50 +29,22 @@ public class Colony {
     private FieldsManager fieldsManager;
 
     public Colony() {
-        this.creationTime = Instant.now();
         this.personFactory = new PersonFactory();
         this.pointsManager = new PointsManager();
         this.peopleManager = new PeopleManager();
         this.fieldsManager = new FieldsManager();
-
     }
     public Colony(ColonyType type, Set<Person> people, Set<Point2d> fields, int points, ColonyColor color, Board board, PersonFactory personFactory) {
         this.type = type;
         this.color = color;
         this.board = board;
         this.personFactory = personFactory;
-        this.creationTime = Instant.now();
         this.pointsManager = new PointsManager(points);
         this.peopleManager = new PeopleManager(people);
         this.fieldsManager = new FieldsManager(fields);
     }
-
-    public void addPoints(int points) {
-        pointsManager.addPoints(points);
-    }
-
-    public void addPeople(Set<Person> people) {
-        peopleManager.addPeople(people, this);
-    }
-
-    public void addField(Point2d position) {
-        fieldsManager.addField(position);
-    }
-
-    public void addPerson(Person person) {
-        peopleManager.addPerson(person);
-    }
-
-    public int getTotalPeopleCount() {
-        return peopleManager.getTotalPeopleCount();
-    }
-
     public Duration getLifetime() {
         return Duration.between(creationTime, Instant.now());
-    }
-
-    public int getPoints() {
-        return pointsManager.getPoints();
     }
     @Override
     public String toString() {

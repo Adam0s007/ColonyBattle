@@ -15,7 +15,7 @@ public class ConnectionHelper {
     public void connectColony(Colony colony){
         this.person.setColony(colony);
         if(this.person.getColony() != null)
-            this.person.getColony().addPerson(this.person);
+            this.person.getColony().getPeopleManager().addPerson(this.person);
     }
     public void disconnectColony(){
         synchronized (EndgameMonitor.monitor) {

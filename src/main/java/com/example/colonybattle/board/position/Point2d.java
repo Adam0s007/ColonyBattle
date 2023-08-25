@@ -110,8 +110,12 @@ public class Point2d {
             this.currentAppropriation = Math.max(0, this.currentAppropriation - person.getStatus().getLandAppropriation());
 
         if(this.currentAppropriation == 0) {
-            this.membership = person.getColony();
-            this.membership = (this.person.getType() == PersonType.FARMER) ? person.getColony() : null;
+            boolean isFarmer = (this.person.getType() == PersonType.FARMER) ? true : false;
+            this.membership = isFarmer ? person.getColony() : null;
+            if(isFarmer)
+                person.addPoints(2);
+            else
+                person.addPoints(1);
             this.currentAppropriation = this.INIT_APPROPRIATION;
         }
         if(oldMembership != null && oldMembership != this.membership)

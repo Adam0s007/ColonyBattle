@@ -164,7 +164,7 @@ public abstract class Person implements Runnable {
     }
     public void  addPoints(int points){
         if(this.colony != null)
-            this.colony.addPoints(points);
+            this.colony.getPointsManager().addPoints(points);
         this.updateColonyPoints();
     }
 

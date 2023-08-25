@@ -29,7 +29,7 @@ public class Board {
         this.allColonies = allColonies;
     }
     public void start() {
-        int totalPeopleCount = allColonies.stream().mapToInt(Colony::getTotalPeopleCount).sum();
+        int totalPeopleCount = allColonies.stream().mapToInt((colony) -> colony.getPeopleManager().getTotalPeopleCount()).sum();
         threadPoolManager.start(totalPeopleCount);
         for (Colony colony : allColonies) {
             for (Person person : colony.getPeopleManager().getPeople()) {
