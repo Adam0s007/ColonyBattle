@@ -1,4 +1,4 @@
-package com.example.colonybattle.models.person.type;
+package com.example.colonybattle.config;
 
 
 import lombok.Getter;

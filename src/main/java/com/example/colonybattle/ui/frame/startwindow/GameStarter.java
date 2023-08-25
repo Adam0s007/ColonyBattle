@@ -1,11 +1,10 @@
 package com.example.colonybattle.ui.frame.startwindow;
 
 import com.example.colonybattle.launcher.Engine;
-import com.example.colonybattle.models.person.type.PeopleNumber;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+
 class GameStarter {
 
     private final SpinnerController spinnerController;
@@ -16,6 +15,7 @@ class GameStarter {
 
     public void startGame() {
         spinnerController.updatePeopleNumbers();
+        spinnerController.updateConfigurations(); // Aktualizacja nowych konfiguracji
         new Engine().run();
     }
 

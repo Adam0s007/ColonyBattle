@@ -1,10 +1,6 @@
 package com.example.colonybattle.ui.frame.startwindow;
 
-import com.example.colonybattle.launcher.Engine;
-import com.example.colonybattle.models.person.type.PeopleNumber;
-
 import javax.swing.*;
-import java.awt.*;
 
 public class StartWindow extends JFrame {
 

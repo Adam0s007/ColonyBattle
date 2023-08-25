@@ -6,6 +6,7 @@ import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.obstacle.ObstacleType;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.ui.frame.MyFrame;
+import com.example.colonybattle.config.BoardConfig;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,8 +17,8 @@ import java.util.stream.IntStream;
 @Getter
 @Setter
 public class Board {
-    public static final int SIZE = 15;
-    public static final int OBSTACLE_COUNT = 10;
+    public static final int SIZE = BoardConfig.getInstance().getBoardSize();
+    public static final int OBSTACLE_COUNT = BoardConfig.getInstance().getObstaclesAmount();
     private Map<String, Point2d> fields = new ConcurrentHashMap<>();
     private Map<String, Point2d> obstacleFields = new ConcurrentHashMap<>();
     private final LockMapPosition lockManager = new LockMapPosition();

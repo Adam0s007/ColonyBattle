@@ -2,6 +2,7 @@ package com.example.colonybattle.models.person.characters;
 
 import com.example.colonybattle.board.position.finder.WizardClosestPositionFinder;
 import com.example.colonybattle.colony.Colony;
+import com.example.colonybattle.config.WizardMagic;
 import com.example.colonybattle.models.person.actions.magic.AbsorbCommand;
 import com.example.colonybattle.models.person.actions.magic.HealCommand;
 import com.example.colonybattle.board.position.Point2d;
@@ -24,11 +25,13 @@ public class Wizard extends Person {
         super(type.getHealth(), type.getEnergy(), type.getStrength(), position, colony, type.getLandAppropriation(),id);  // Wartość 10 to przykładowa wartość landAppropriation dla Warrior
         super.movement = new WizardMovementStrategy(this);
         this.attackPerformer = new WizardAttackStrategy(this,movement);
-        status.setType(type);
+        this.status.setType(type);
         this.defendStrategy = new WizardDefendStrategy(this);
         this.closestPositionFinder = new WizardClosestPositionFinder();
-        new AbsorbCommand(this).execute();
-        new HealCommand(this).execute();
+        if(WizardMagic.getInstance().isMagicEnabled()){
+            new AbsorbCommand(this).execute();
+            new HealCommand(this).execute();
+        }
     }
     @Override
     public Character getInitial() {

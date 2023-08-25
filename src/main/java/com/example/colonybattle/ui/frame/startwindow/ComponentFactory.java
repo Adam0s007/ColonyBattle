@@ -1,12 +1,13 @@
 package com.example.colonybattle.ui.frame.startwindow;
 
-import com.example.colonybattle.launcher.Engine;
-import com.example.colonybattle.models.person.type.PeopleNumber;
+import com.example.colonybattle.config.BoardConfig;
+import com.example.colonybattle.config.SpawningTime;
+import com.example.colonybattle.config.WizardMagic;
 import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+
 @Getter
 class ComponentFactory {
 
@@ -18,6 +19,10 @@ class ComponentFactory {
     private JSpinner defenderSpinner;
     private JSpinner warriorSpinner;
     private JSpinner wizardSpinner;
+    private JSpinner boardSizeSpinner;
+    private JSpinner obstaclesAmountSpinner;
+    private JSpinner spawningTimeSpinner;
+    private JCheckBox magicEnabledCheckBox;
 
     public ComponentFactory(JFrame frame) {
         this.frame = frame;
@@ -28,10 +33,18 @@ class ComponentFactory {
 
         ChangeListener listener = gameStarter.getSpinnerValueAdjuster();
 
-        farmerSpinner = addSpinnerWithLabel("Farmers:", 20, 3, listener);
-        defenderSpinner = addSpinnerWithLabel("Defenders:", 60, 2, listener);
-        warriorSpinner = addSpinnerWithLabel("Warriors:", 100, 4, listener);
-        wizardSpinner = addSpinnerWithLabel("Wizards:", 140, 1, listener);
+        farmerSpinner = addSpinnerWithLabel("Farmers:", 20, 3,1 ,MAX_TOTAL_CHARACTERS,1,listener);
+        defenderSpinner = addSpinnerWithLabel("Defenders:", 40, 2, 1,MAX_TOTAL_CHARACTERS,1,listener);
+        warriorSpinner = addSpinnerWithLabel("Warriors:", 60, 4, 1,MAX_TOTAL_CHARACTERS,1,listener);
+        wizardSpinner = addSpinnerWithLabel("Wizards:", 80, 1, 1,MAX_TOTAL_CHARACTERS,1,listener);
+
+        boardSizeSpinner = addSpinnerWithLabel("Board Size:", 100, BoardConfig.getInstance().getBoardSize(), 15, 25, 1, null);
+        obstaclesAmountSpinner = addSpinnerWithLabel("Max Obstacles:", 120, BoardConfig.getInstance().getObstaclesAmount(), 0, 10, 1, null);
+        spawningTimeSpinner = addSpinnerWithLabel("Spawning Time:", 140, SpawningTime.getInstance().getSpawningTime(), 15, 60, 15, null);
+
+        magicEnabledCheckBox = new JCheckBox("Enable Magic:", WizardMagic.getInstance().isMagicEnabled());
+        magicEnabledCheckBox.setBounds(50, 160, 150, 25);
+        frame.add(magicEnabledCheckBox);
 
         JButton startButton = new JButton("Start");
         startButton.setBounds(150, 200, 100, 50);
@@ -43,14 +56,16 @@ class ComponentFactory {
         header.setBounds(50, 0, 300, 20);
         frame.add(header);
     }
-    private JSpinner addSpinnerWithLabel(String labelText, int yPosition, int initialValue, ChangeListener listener) {
+    private JSpinner addSpinnerWithLabel(String labelText, int yPosition, int initialValue, int min, int max, int step, ChangeListener listener) {
         JLabel label = new JLabel(labelText);
-        label.setBounds(50, yPosition, 80, 25);
+        label.setBounds(50, yPosition, 120, 25);
         frame.add(label);
 
-        JSpinner spinner = new JSpinner(new SpinnerNumberModel(initialValue, 1, MAX_TOTAL_CHARACTERS, 1));
-        spinner.setBounds(150, yPosition, 50, 25);
-        spinner.addChangeListener(listener);
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(initialValue, min, max, step));
+        spinner.setBounds(150, yPosition, 60, 25);
+        if (listener != null) {
+            spinner.addChangeListener(listener);
+        }
         frame.add(spinner);
 
         return spinner;

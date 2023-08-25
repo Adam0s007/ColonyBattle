@@ -5,22 +5,20 @@ import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.models.person.Person;
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.models.person.PersonFactory;
+import com.example.colonybattle.config.SpawningTime;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.*;
 
 @Getter
 @Setter
 public class Colony {
     private ColonyColor color = ColonyColor.DEFAULT_COLOR;
     private ColonyType type;
-    public final static int PERIOD_SEC = 30;
+    public final static int PERIOD_SEC = SpawningTime.getInstance().getSpawningTime();
     private final Instant creationTime = Instant.now();;
     public final PersonFactory personFactory;
     private Board board;

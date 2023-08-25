@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 
 import com.example.colonybattle.board.Board;
 import com.example.colonybattle.board.position.Point2d;
-import com.example.colonybattle.models.person.type.PeopleNumber;
+import com.example.colonybattle.config.PeopleNumber;
 import com.example.colonybattle.models.person.type.PersonType;
 
 

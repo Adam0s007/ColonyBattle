@@ -4,7 +4,7 @@ import com.example.colonybattle.board.position.Point2d;
 import com.example.colonybattle.colony.Colony;
 import com.example.colonybattle.models.person.characters.*;
 import com.example.colonybattle.models.person.id.IdAllocator;
-import com.example.colonybattle.models.person.type.PeopleNumber;
+import com.example.colonybattle.config.PeopleNumber;
 import com.example.colonybattle.models.person.type.PersonType;
 
 import java.util.*;

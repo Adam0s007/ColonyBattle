@@ -40,4 +40,6 @@ module com.example.colonybattle {
     opens com.example.colonybattle.models.person.actions.attack to javafx.fxml;
     exports com.example.colonybattle.models.person.actions.magic;
     opens com.example.colonybattle.models.person.actions.magic to javafx.fxml;
+    exports com.example.colonybattle.config;
+    opens com.example.colonybattle.config to javafx.fxml;
 }
