@@ -81,11 +81,30 @@ public enum PersonType {
     // health: Represents the amount of health a character has. If health drops to 0, the character dies.
 }
 ```
-## GUI description:
-![defender](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/defender.png)
-![warrior](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/warrior.png)
-![wizard](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/wizard.png)
-![farmer](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/farmer.png)
+## GUI Description
+
+In the game's graphical user interface, each character class is represented by a unique icon. Below are the icons for each character:
+
+### Defender
+<img src="https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/defender.png" width="100" height="100" alt="Defender Icon">
+
+### Warrior
+<img src="https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/warrior.png" width="100" height="100" alt="Warrior Icon">
+
+### Wizard
+<img src="https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/wizard.png" width="100" height="100" alt="Wizard Icon">
+
+### Farmer
+<img src="https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/farmer.png" width="100" height="100" alt="Farmer Icon">
+
+## Character Outlines
+Each character may have a colored outline to indicate a specific state or action:
+
+- White Outline: Indicates the character has been attacked from a distance.
+- Purple Outline: Denotes that the character has died.
+- Light Green Outline: Signifies that the character is being tracked.
+- Dark Blue Outline: Represents that the character is regenerating health or energy.
+
 
 ## How to Run the Project
 
