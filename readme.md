@@ -105,6 +105,12 @@ Each character may have a colored outline to indicate a specific state or action
 - Light Green Outline: Signifies that the character is being tracked.
 - Dark Blue Outline: Represents that the character is regenerating health or energy.
 
+## Health and Energy Bars
+<img src="healthAndEnergy.png">
+The bars above the character represent their health and energy status:
+
+- light-red bar: Represents the current health status of the character.
+- light-yellow bar: Denotes the character's current energy level.
 
 ## How to Run the Project
 
