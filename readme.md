@@ -4,6 +4,8 @@
 
 Colony Battle is a Java-based simulation game where players get to customize the settings of a colony war that ensues between four colonies. Each colony is distinguished by its characters: Farmers, Defenders, Warriors, and Wizards. The game offers various strategic elements, interactive game-play, and captivating visuals for an immersive gaming experience.
 
+### Preview: 
+[click here](https://github.com/Adam0s007/ColonyBattle/assets/109285249/0075f201-e7ed-40bc-84b7-2f5b0ee8b1b4).
 ## Game Setup
 
 At the beginning of the game, users are prompted with default configurations:
