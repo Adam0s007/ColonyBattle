@@ -81,6 +81,11 @@ public enum PersonType {
     // health: Represents the amount of health a character has. If health drops to 0, the character dies.
 }
 ```
+## GUI description:
+![defender](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/defender.png)
+![warrior](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/warrior.png)
+![wizard](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/wizard.png)
+![farmer](https://github.com/Adam0s007/ColonyBattle/blob/main/src/main/resources/heads/farmer.png)
 
 ## How to Run the Project
 
